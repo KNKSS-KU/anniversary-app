@@ -378,30 +378,41 @@ async function handleFiles(files) {
   const fileArr = Array.from(files).filter(f => f.type.startsWith('image/'));
   if (!fileArr.length) { toast('กรุณาเลือกไฟล์รูปภาพเท่านั้น', false); return; }
 
+  // เช็คขนาดไฟล์ก่อน
+  const MAX_MB = 2;
+  const bigFiles = fileArr.filter(f => f.size > MAX_MB * 1024 * 1024);
+  if (bigFiles.length) {
+    const names = bigFiles.map(f => `• ${f.name} (${(f.size/1024/1024).toFixed(1)} MB)`).join('\n');
+    const ok = confirm(`⚠️ ไฟล์ต่อไปนี้ใหญ่เกิน ${MAX_MB}MB อาจอัปโหลดช้า:\n${names}\n\nแนะนำให้บีบอัดก่อนที่ squoosh.app\n\nอัปโหลดต่อไปเลยไหม?`);
+    if (!ok) { document.getElementById('fileInput').value = ''; return; }
+  }
+
   prog.style.display = 'block';
   let done = 0;
 
   for (const file of fileArr) {
     const ext      = file.name.split('.').pop().toLowerCase();
     const fileName = `${uid()}.${ext}`;
-    msg.textContent = `กำลังอัปโหลด ${file.name}...`;
+    const sizeMB   = (file.size / 1024 / 1024).toFixed(1);
+    msg.textContent = `กำลังอัปโหลด ${file.name} (${sizeMB} MB) — ${done+1}/${fileArr.length}`;
 
     try {
       const url = await sbAdmin.uploadFile('cards', fileName, file);
-      // บันทึก path ลง DB
       await sbAdmin.post('card_images', {
         image_path: url,
         file_name: file.name
       });
       done++;
       fill.style.width = `${(done / fileArr.length) * 100}%`;
+      fill.style.background = '#3DAA6B';
     } catch(e) {
       toast(`❌ ${file.name}: ${e.message}`, false);
+      fill.style.background = '#E53935';
     }
   }
 
   msg.textContent = `✓ อัปโหลดสำเร็จ ${done}/${fileArr.length} ไฟล์`;
-  setTimeout(() => { prog.style.display = 'none'; fill.style.width = '0'; }, 2000);
+  setTimeout(() => { prog.style.display = 'none'; fill.style.width = '0'; fill.style.background = '#FF8200'; }, 3000);
   document.getElementById('fileInput').value = '';
   loadCardImages();
   toast(`✓ เพิ่มรูปการ์ด ${done} ไฟล์แล้ว`);
