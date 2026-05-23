@@ -1,10 +1,10 @@
 /* ================================================================
-   Supabase Config — แก้ 2 บรรทัดนี้เท่านั้น
+   Supabase Config
    ================================================================ */
 const SUPABASE_URL = 'https://jrnlyarpshxegtggtdnj.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_z9gBERtLSWsFzSh2w4hX8A_yLcPkMsJ';
 
-/* ── Public API (anon) ── */
+/* ── Public API ── */
 const sb = {
     async get(table, params = '') {
         const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}${params}`, {
@@ -20,10 +20,14 @@ const sb = {
             body: JSON.stringify(data)
         });
         if (!r.ok) { const e = await r.json().catch(() => ({})); throw new Error(e.message || `POST failed: ${r.status}`); }
+    },
+    // URL รูปจาก Storage
+    storageUrl(bucket, path) {
+        return `${SUPABASE_URL}/storage/v1/object/public/${bucket}/${path}`;
     }
 };
 
-/* ── Auth API ── */
+/* ── Auth ── */
 const sbAuth = {
     token: null,
     async login(email, password) {
@@ -39,14 +43,17 @@ const sbAuth = {
         return this.token;
     },
     async logout() {
-        await fetch(`${SUPABASE_URL}/auth/v1/logout`, { method: 'POST', headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${this.token}` } }).catch(() => {});
+        await fetch(`${SUPABASE_URL}/auth/v1/logout`, {
+            method: 'POST',
+            headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${this.token}` }
+        }).catch(() => {});
         this.token = null;
         sessionStorage.removeItem('sb_token');
     },
     restore() { this.token = sessionStorage.getItem('sb_token'); return !!this.token; }
 };
 
-/* ── Admin API (auth required) ── */
+/* ── Admin API ── */
 const sbAdmin = {
     h() { return { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${sbAuth.token}`, 'Content-Type': 'application/json' }; },
     async get(table, params = '') {
@@ -54,17 +61,42 @@ const sbAdmin = {
         if (!r.ok) throw new Error(`GET failed: ${r.status}`);
         return r.json();
     },
-    async patch(table, params, data) {
-        const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}${params}`, { method: 'PATCH', headers: { ...this.h(), 'Prefer': 'return=minimal' }, body: JSON.stringify(data) });
-        if (!r.ok) throw new Error(`PATCH failed: ${r.status}`);
-    },
     async post(table, data) {
-        const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, { method: 'POST', headers: { ...this.h(), 'Prefer': 'return=minimal' }, body: JSON.stringify(data) });
+        const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
+            method: 'POST', headers: { ...this.h(), 'Prefer': 'return=minimal' }, body: JSON.stringify(data)
+        });
         if (!r.ok) throw new Error(`POST failed: ${r.status}`);
     },
+    async patch(table, params, data) {
+        const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}${params}`, {
+            method: 'PATCH', headers: { ...this.h(), 'Prefer': 'return=minimal' }, body: JSON.stringify(data)
+        });
+        if (!r.ok) throw new Error(`PATCH failed: ${r.status}`);
+    },
     async delete(table, params) {
-        const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}${params}`, { method: 'DELETE', headers: this.h() });
+        const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}${params}`, {
+            method: 'DELETE', headers: this.h()
+        });
         if (!r.ok) throw new Error(`DELETE failed: ${r.status}`);
+    },
+    // อัปโหลดไฟล์ขึ้น Storage
+    async uploadFile(bucket, path, file) {
+        const r = await fetch(`${SUPABASE_URL}/storage/v1/object/${bucket}/${path}`, {
+            method: 'POST',
+            headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${sbAuth.token}`, 'Content-Type': file.type, 'x-upsert': 'true' },
+            body: file
+        });
+        if (!r.ok) { const e = await r.json().catch(() => ({})); throw new Error(e.error || `Upload failed: ${r.status}`); }
+        return `${SUPABASE_URL}/storage/v1/object/public/${bucket}/${path}`;
+    },
+    // ลบไฟล์จาก Storage
+    async deleteFile(bucket, paths) {
+        const r = await fetch(`${SUPABASE_URL}/storage/v1/object/${bucket}`, {
+            method: 'DELETE',
+            headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${sbAuth.token}`, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prefixes: paths })
+        });
+        if (!r.ok) throw new Error(`Delete storage failed: ${r.status}`);
     }
 };
 
@@ -81,3 +113,4 @@ function timeAgo(iso) {
 }
 function escHtml(s) { return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function isNewEntry(iso) { return Date.now() - new Date(iso) < 86400000; }
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
