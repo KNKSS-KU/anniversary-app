@@ -2,56 +2,69 @@
 //  Translations
 // ============================
 const translations = {
-    th: { btn_write: '+ เขียนคำอวยพร' },
-    en: { btn_write: '+ Write a Wish' }
+    th: {
+        header_title:      '30 ปี แห่งความภาคภูมิใจ',
+        header_subtitle:   'คลิกที่รูปเพื่ออ่านคำอวยพรจากเพื่อนพนักงาน',
+        btn_write:         '+ เขียนคำอวยพร',
+        modal_topic_label: 'คำอวยพร:'
+    },
+    en: {
+        header_title:      '30 Years of Pride',
+        header_subtitle:   'Click the photo to read wishes from colleagues',
+        btn_write:         '+ Write a Wish',
+        modal_topic_label: 'Message:'
+    }
 };
 
 let currentLang = 'th';
 let settings    = {};
 
 // ============================
-//  Load Settings จาก Supabase
+//  Load Settings
 // ============================
 async function loadSettings() {
     try {
         const rows = await sb.get('settings', '?select=setting_key,setting_value');
         rows.forEach(r => settings[r.setting_key] = r.setting_value);
-
-        updateTexts();
-
         if (settings.bg_image) {
             document.body.style.backgroundImage = `url('${settings.bg_image}')`;
         }
-    } catch (e) {
-        console.warn('loadSettings error:', e);
-    }
-}
-
-function updateTexts() {
-    const lang = currentLang;
-    document.getElementById('headerTitle').innerText =
-        settings[`header_${lang}`] || (lang === 'th' ? '30 ปี แห่งความภาคภูมิใจ' : '30 Years of Pride');
-    document.getElementById('headerSubtitle').innerText =
-        settings[`subtitle_${lang}`] || (lang === 'th' ? 'คลิกที่รูปเพื่ออ่านคำอวยพร' : 'Click a photo to read wishes');
+        // อัปเดต translations จาก DB
+        if (settings.header_th)   translations.th.header_title    = settings.header_th;
+        if (settings.header_en)   translations.en.header_title    = settings.header_en;
+        if (settings.subtitle_th) translations.th.header_subtitle = settings.subtitle_th;
+        if (settings.subtitle_en) translations.en.header_subtitle = settings.subtitle_en;
+    } catch (e) { console.warn('loadSettings:', e); }
 }
 
 // ============================
-//  Load Wishes (การ์ด)
+//  Language Switch
+// ============================
+function changeLanguage(lang) {
+    currentLang = lang;
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (translations[lang][key]) el.innerText = translations[lang][key];
+    });
+    document.getElementById('btn-th').classList.toggle('active', lang === 'th');
+    document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+}
+
+// ============================
+//  Load & Render Cards
 // ============================
 async function loadWishes() {
     try {
         const wishes = await sb.get('wishes', '?status=eq.approved&order=created_at.desc');
         renderCards(wishes);
-    } catch (e) {
-        console.warn('loadWishes error:', e);
-    }
+    } catch (e) { console.warn('loadWishes:', e); }
 }
 
 function renderCards(wishes) {
     const area = document.getElementById('wishArea');
     area.innerHTML = '';
 
-    if (wishes.length === 0) {
+    if (!wishes.length) {
         area.innerHTML = '<p style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:white;font-size:1.2rem;opacity:0.7">ยังไม่มีคำอวยพร</p>';
         return;
     }
@@ -62,7 +75,8 @@ function renderCards(wishes) {
         card.style.top  = w.top_pos + '%';
         card.style.left = w.left_pos + '%';
         card.style.animationDelay = -(Math.random() * 5) + 's';
-        card.style.transform = `rotate(${Math.floor(Math.random() * 10) - 5}deg)`;
+        const rot = Math.floor(Math.random() * 10) - 5;
+        card.style.transform = `rotate(${rot}deg)`;
         card.innerHTML = `
             <img src="${esc(w.avatar)}" alt="${esc(w.name)}"
                  onerror="this.src='https://cdn-icons-png.flaticon.com/512/4140/4140037.png'">
@@ -79,9 +93,9 @@ function openModal(w) {
     const img = document.getElementById('modalImg');
     img.src = w.avatar;
     img.onerror = () => img.src = 'https://cdn-icons-png.flaticon.com/512/4140/4140037.png';
-    document.getElementById('modalName').innerText = w.name;
-    document.getElementById('modalDept').innerText = w.dept;
-    document.getElementById('modalMsg').innerText  = w.message;
+    document.getElementById('modalName').innerText  = w.name;
+    document.getElementById('modalDept').innerText  = w.dept;
+    document.getElementById('modalMsgB').innerText  = w.message;
     document.getElementById('wishModal').style.display = 'block';
     document.body.style.overflow = 'hidden';
 }
@@ -97,8 +111,8 @@ function closeModal() {
 async function openSubmitModal() {
     document.getElementById('submitModal').style.display = 'block';
     document.body.style.overflow = 'hidden';
-    loadAvatars();
-    loadPredefined();
+    loadAvatarPicker();
+    loadPredefinedPicker();
 }
 
 function closeSubmitModal() {
@@ -106,7 +120,7 @@ function closeSubmitModal() {
     document.body.style.overflow = 'auto';
 }
 
-async function loadAvatars() {
+async function loadAvatarPicker() {
     try {
         const avatars = await sb.get('avatars', '?select=id,image_path&order=id.asc');
         const grid = document.getElementById('avatarGrid');
@@ -122,14 +136,11 @@ async function loadAvatars() {
             };
             grid.appendChild(img);
         });
-        // เลือกอันแรกไว้ก่อน
         grid.querySelector('.avatar-option')?.click();
-    } catch (e) {
-        console.warn('loadAvatars error:', e);
-    }
+    } catch (e) { console.warn('loadAvatarPicker:', e); }
 }
 
-async function loadPredefined() {
+async function loadPredefinedPicker() {
     try {
         const rows = await sb.get('predefined_wishes', '?select=id,message_text&order=id.asc');
         const sel = document.getElementById('predefinedSelect');
@@ -140,9 +151,7 @@ async function loadPredefined() {
             opt.text  = r.message_text;
             sel.appendChild(opt);
         });
-    } catch (e) {
-        console.warn('loadPredefined error:', e);
-    }
+    } catch (e) { console.warn('loadPredefinedPicker:', e); }
 }
 
 function usePredefined() {
@@ -159,9 +168,9 @@ async function submitWish() {
     const errEl   = document.getElementById('submitError');
     errEl.style.display = 'none';
 
-    if (!name)    { showError('กรุณากรอกชื่อ'); return; }
-    if (!dept)    { showError('กรุณากรอกแผนก'); return; }
-    if (!message) { showError('กรุณากรอกคำอวยพร'); return; }
+    if (!name)    { showFormError('กรุณากรอกชื่อ'); return; }
+    if (!dept)    { showFormError('กรุณากรอกแผนก'); return; }
+    if (!message) { showFormError('กรุณากรอกคำอวยพร'); return; }
 
     const btn = document.getElementById('submitBtn');
     btn.disabled = true;
@@ -174,19 +183,18 @@ async function submitWish() {
             left_pos: Math.floor(Math.random() * 78) + 5,
             status: 'pending'
         });
-
         closeSubmitModal();
         alert('🎉 ส่งคำอวยพรเรียบร้อยแล้ว!\nรอการตรวจสอบจากทีมงานสักครู่นะครับ');
         resetForm();
     } catch (e) {
-        showError('เกิดข้อผิดพลาด: ' + e.message);
+        showFormError('เกิดข้อผิดพลาด: ' + e.message);
     } finally {
         btn.disabled = false;
         btn.innerText = 'ส่งคำอวยพร 🎉';
     }
 }
 
-function showError(msg) {
+function showFormError(msg) {
     const el = document.getElementById('submitError');
     el.innerText = msg;
     el.style.display = 'block';
@@ -201,17 +209,7 @@ function resetForm() {
 }
 
 // ============================
-//  Language Switch
-// ============================
-function changeLanguage(lang) {
-    currentLang = lang;
-    updateTexts();
-    document.getElementById('btn-th').classList.toggle('active', lang === 'th');
-    document.getElementById('btn-en').classList.toggle('active', lang === 'en');
-}
-
-// ============================
-//  Close modal on outside click
+//  Close on outside click
 // ============================
 window.onclick = e => {
     if (e.target === document.getElementById('wishModal'))   closeModal();
@@ -222,7 +220,9 @@ window.onclick = e => {
 //  Helper
 // ============================
 function esc(str) {
-    return String(str ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    return String(str ?? '')
+        .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+        .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
 // ============================
@@ -230,5 +230,6 @@ function esc(str) {
 // ============================
 (async () => {
     await loadSettings();
+    changeLanguage('th');
     await loadWishes();
 })();

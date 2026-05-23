@@ -7,114 +7,106 @@
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600&family=Mali:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root {
-            --primary: #FF8200; --dark: #2c3e50; --light: #ecf0f1;
-            --success: #27ae60; --danger: #e74c3c; --warning: #f1c40f; --info: #3498db;
-        }
-        * { box-sizing: border-box; }
+        :root { --primary:#FF8200; --dark:#2c3e50; --light:#ecf0f1; --success:#27ae60; --danger:#e74c3c; --warning:#f1c40f; --info:#3498db; }
+        * { box-sizing:border-box; }
 
-        /* ===== LOGIN PAGE ===== */
-        #loginPage {
-            display: flex; align-items: center; justify-content: center;
-            min-height: 100vh;
-            background: linear-gradient(135deg, var(--dark), #34495e);
-        }
-        .login-card {
-            background: white; border-radius: 16px; padding: 50px 40px;
-            width: 100%; max-width: 400px; text-align: center;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
-        }
-        .login-brand { font-family: 'Mali', cursive; color: var(--primary); font-size: 1.8rem; margin-bottom: 8px; }
-        .login-sub { color: #888; font-size: 0.9rem; margin-bottom: 35px; }
-        .login-card label { display: block; text-align: left; font-weight: 600; color: #555; margin-bottom: 6px; }
-        .login-card input {
-            width: 100%; padding: 12px 15px; border: 1px solid #ddd;
-            border-radius: 8px; font-family: 'Sarabun', sans-serif; font-size: 1rem;
-            margin-bottom: 20px; transition: 0.3s;
-        }
-        .login-card input:focus { border-color: var(--primary); outline: none; }
-        .btn-login {
-            width: 100%; padding: 14px; background: var(--primary); color: white;
-            border: none; border-radius: 8px; font-size: 1rem; font-weight: 600;
-            cursor: pointer; font-family: 'Sarabun', sans-serif; transition: 0.3s;
-        }
-        .btn-login:hover { background: #e67e22; }
-        .btn-login:disabled { opacity: 0.6; cursor: not-allowed; }
-        .login-error { background: #fdecea; color: #c0392b; padding: 12px; border-radius: 8px; margin-bottom: 20px; font-size: 0.9rem; display: none; }
+        /* LOGIN */
+        #loginPage { display:flex; align-items:center; justify-content:center; min-height:100vh; background:linear-gradient(135deg,var(--dark),#34495e); font-family:'Sarabun',sans-serif; }
+        .login-card { background:white; border-radius:16px; padding:50px 40px; width:100%; max-width:400px; text-align:center; box-shadow:0 25px 50px rgba(0,0,0,0.3); }
+        .login-brand { font-family:'Mali',cursive; color:var(--primary); font-size:1.8rem; margin-bottom:8px; }
+        .login-sub { color:#888; font-size:0.9rem; margin-bottom:35px; }
+        .login-card label { display:block; text-align:left; font-weight:600; color:#555; margin-bottom:6px; }
+        .login-card input { width:100%; padding:12px 15px; border:1px solid #ddd; border-radius:8px; font-family:'Sarabun',sans-serif; font-size:1rem; margin-bottom:20px; transition:0.3s; }
+        .login-card input:focus { border-color:var(--primary); outline:none; }
+        .btn-login { width:100%; padding:14px; background:var(--primary); color:white; border:none; border-radius:8px; font-size:1rem; font-weight:600; cursor:pointer; font-family:'Sarabun',sans-serif; transition:0.3s; }
+        .btn-login:hover { background:#e67e22; }
+        .btn-login:disabled { opacity:0.6; cursor:not-allowed; }
+        .login-error { background:#fdecea; color:#c0392b; padding:12px; border-radius:8px; margin-bottom:20px; font-size:0.9rem; display:none; }
 
-        /* ===== DASHBOARD ===== */
-        #dashboardPage { display: none; }
-        body.logged-in #loginPage { display: none; }
-        body.logged-in #dashboardPage { display: flex; height: 100vh; overflow: hidden; }
+        /* DASHBOARD */
+        #dashboardPage { display:none; }
+        body.logged-in #loginPage { display:none; }
+        body.logged-in #dashboardPage { display:flex; height:100vh; overflow:hidden; font-family:'Sarabun',sans-serif; background:var(--light); }
 
         /* Sidebar */
-        .sidebar { width: 260px; background: var(--dark); color: white; display: flex; flex-direction: column; padding: 20px 0; box-shadow: 2px 0 5px rgba(0,0,0,0.1); flex-shrink: 0; }
-        .brand { font-family: 'Mali', cursive; color: var(--primary); text-align: center; font-size: 1.5rem; margin-bottom: 30px; padding: 0 20px; }
-        .menu-item { padding: 15px 25px; cursor: pointer; transition: 0.3s; color: #bdc3c7; border-left: 5px solid transparent; display: flex; align-items: center; justify-content: space-between; }
-        .menu-item:hover { background: rgba(255,255,255,0.05); color: white; }
-        .menu-item.active { background: rgba(255,130,0,0.1); color: white; border-left-color: var(--primary); font-weight: 600; }
-        .menu-item i { width: 25px; }
-        .badge { background: var(--danger); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.75rem; }
-        .logout-btn { margin-top: auto; padding: 15px 25px; color: #e74c3c; cursor: pointer; display: flex; align-items: center; gap: 10px; border-left: 5px solid transparent; }
-        .logout-btn:hover { background: rgba(231,76,60,0.1); }
+        .sidebar { width:260px; background:var(--dark); color:white; display:flex; flex-direction:column; padding:20px 0; box-shadow:2px 0 5px rgba(0,0,0,0.1); flex-shrink:0; }
+        .brand { font-family:'Mali',cursive; color:var(--primary); text-align:center; font-size:1.5rem; margin-bottom:30px; padding:0 20px; }
+        .menu-item { padding:15px 25px; cursor:pointer; transition:0.3s; color:#bdc3c7; border-left:5px solid transparent; display:flex; align-items:center; justify-content:space-between; }
+        .menu-item:hover { background:rgba(255,255,255,0.05); color:white; }
+        .menu-item.active { background:rgba(255,130,0,0.1); color:white; border-left-color:var(--primary); font-weight:600; }
+        .menu-item i { width:25px; }
+        .badge { background:var(--danger); color:white; padding:2px 8px; border-radius:12px; font-size:0.75rem; }
+        .logout-btn { margin-top:auto; padding:15px 25px; color:#e74c3c; cursor:pointer; display:flex; align-items:center; gap:10px; border-left:5px solid transparent; }
+        .logout-btn:hover { background:rgba(231,76,60,0.1); }
 
         /* Content */
-        .content { flex: 1; padding: 40px; overflow-y: auto; background: var(--light); }
-        .tab-content { display: none; animation: fadeIn 0.3s ease; }
-        .tab-content.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .content { flex:1; padding:40px; overflow-y:auto; }
+        .tab-content { display:none; animation:fadeIn 0.3s ease; }
+        .tab-content.active { display:block; }
+        @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
 
         /* Card */
-        .card { background: white; border-radius: 12px; padding: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
-        .card-header { font-size: 1.4rem; font-weight: 600; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 2px solid var(--light); color: var(--dark); display: flex; justify-content: space-between; align-items: center; }
+        .card { background:white; border-radius:12px; padding:30px; box-shadow:0 5px 15px rgba(0,0,0,0.05); margin-bottom:20px; }
+        .card-header { font-size:1.4rem; font-weight:600; margin-bottom:25px; padding-bottom:15px; border-bottom:2px solid var(--light); color:var(--dark); display:flex; justify-content:space-between; align-items:center; }
 
         /* Form */
-        .form-group { margin-bottom: 25px; }
-        label { display: block; margin-bottom: 10px; font-weight: 600; color: #555; }
-        .input-group { display: flex; align-items: center; margin-bottom: 10px; }
-        .flag-icon { font-size: 1.5rem; margin-right: 15px; width: 30px; text-align: center; }
-        input[type="text"], textarea {
-            width: 100%; padding: 12px 15px; border: 1px solid #ddd;
-            border-radius: 8px; font-family: 'Sarabun', sans-serif; font-size: 1rem; transition: 0.3s;
-        }
-        input[type="text"]:focus { border-color: var(--primary); outline: none; }
+        .form-group { margin-bottom:25px; }
+        label { display:block; margin-bottom:10px; font-weight:600; color:#555; }
+        .input-group { display:flex; align-items:center; margin-bottom:10px; }
+        .flag-icon { font-size:1.5rem; margin-right:15px; width:30px; text-align:center; }
+        input[type="text"], textarea { width:100%; padding:12px 15px; border:1px solid #ddd; border-radius:8px; font-family:'Sarabun',sans-serif; font-size:1rem; transition:0.3s; }
+        input[type="text"]:focus { border-color:var(--primary); outline:none; }
+
+        /* Upload */
+        .img-preview-container { position:relative; display:inline-block; margin-top:15px; }
+        .preview-img { max-width:300px; border-radius:10px; box-shadow:0 4px 10px rgba(0,0,0,0.1); border:2px solid #fff; }
+        .btn-delete-bg { position:absolute; top:-10px; right:-10px; background:var(--danger); color:white; border:none; width:35px; height:35px; border-radius:50%; cursor:pointer; box-shadow:0 2px 5px rgba(0,0,0,0.2); display:flex; align-items:center; justify-content:center; }
+        .btn-delete-bg:hover { transform:scale(1.1); }
+        .btn-upload { background:var(--light); border:2px dashed #bdc3c7; color:#7f8c8d; padding:20px; width:100%; text-align:center; border-radius:10px; cursor:pointer; transition:0.3s; }
+        .btn-upload:hover { border-color:var(--primary); color:var(--primary); background:#fffbf5; }
 
         /* Buttons */
-        .btn { padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer; font-size: 0.9rem; transition: 0.2s; display: inline-flex; align-items: center; gap: 5px; font-family: 'Sarabun', sans-serif; }
-        .btn-primary { background: var(--primary); color: white; padding: 12px 30px; font-size: 1rem; }
-        .btn-primary:hover { background: #e67e22; }
-        .btn-approve { background: rgba(39,174,96,0.1); color: var(--success); }
-        .btn-approve:hover { background: var(--success); color: white; }
-        .btn-reject { background: rgba(231,76,60,0.1); color: var(--danger); }
-        .btn-reject:hover { background: var(--danger); color: white; }
-        .btn-edit { background: rgba(52,152,219,0.1); color: var(--info); }
-        .btn-edit:hover { background: var(--info); color: white; }
-        .btn-save { background: var(--success); color: white; display: none; }
-        .editing .btn-save { display: inline-flex; }
-        .editing .btn-edit { display: none; }
+        .btn { padding:8px 16px; border:none; border-radius:6px; cursor:pointer; font-size:0.9rem; transition:0.2s; display:inline-flex; align-items:center; gap:5px; font-family:'Sarabun',sans-serif; }
+        .btn-primary { background:var(--primary); color:white; padding:12px 30px; font-size:1rem; }
+        .btn-primary:hover { background:#e67e22; }
+        .btn-approve { background:rgba(39,174,96,0.1); color:var(--success); }
+        .btn-approve:hover { background:var(--success); color:white; }
+        .btn-reject { background:rgba(231,76,60,0.1); color:var(--danger); }
+        .btn-reject:hover { background:var(--danger); color:white; }
+        .btn-edit { background:rgba(52,152,219,0.1); color:var(--info); }
+        .btn-edit:hover { background:var(--info); color:white; }
+        .btn-save { background:var(--success); color:white; display:none; margin-right:5px; }
+        .editing .btn-save { display:inline-flex; }
+        .editing .btn-edit { display:none; }
 
         /* Table */
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; vertical-align: middle; }
-        th { background: #f8f9fa; color: #666; font-weight: 600; }
-        .user-info { display: flex; align-items: center; gap: 10px; }
-        .user-avatar-small { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
-        .msg-display { font-style: italic; color: #555; }
-        .msg-edit-input { display: none; width: 100%; padding: 8px; border: 1px solid var(--info); border-radius: 5px; }
-        .editing .msg-display { display: none; }
-        .editing .msg-edit-input { display: block; }
+        table { width:100%; border-collapse:collapse; margin-top:10px; }
+        th, td { padding:15px; text-align:left; border-bottom:1px solid #eee; vertical-align:middle; }
+        th { background:#f8f9fa; color:#666; font-weight:600; }
+        .user-info { display:flex; align-items:center; gap:10px; }
+        .user-avatar-small { width:40px; height:40px; border-radius:50%; object-fit:cover; }
+        .msg-display { font-style:italic; color:#555; }
+        .msg-edit-input { display:none; width:100%; padding:8px; border:1px solid var(--info); border-radius:5px; color:var(--dark); font-family:'Sarabun',sans-serif; }
+        .editing .msg-display { display:none; }
+        .editing .msg-edit-input { display:block; }
+
+        /* Avatars */
+        .avatar-grid-admin { display:flex; flex-wrap:wrap; gap:15px; margin-top:20px; }
+        .avatar-item { position:relative; }
+        .avatar-item img { width:80px; height:80px; border-radius:10px; border:2px solid #ddd; object-fit:cover; }
+        .btn-del-avatar { position:absolute; top:-8px; right:-8px; background:var(--danger); color:white; border:none; width:24px; height:24px; border-radius:50%; cursor:pointer; font-size:0.7rem; display:flex; align-items:center; justify-content:center; }
 
         /* Predefined */
-        .wish-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; border: 1px solid #eee; border-radius: 8px; margin-bottom: 10px; gap: 10px; }
-        .wish-item span { flex: 1; }
+        .wish-item { display:flex; justify-content:space-between; align-items:center; padding:12px 15px; border:1px solid #eee; border-radius:8px; margin-bottom:10px; gap:10px; }
+        .wish-item span { flex:1; }
 
         /* Toast */
-        #toast { position: fixed; bottom: 30px; right: 30px; color: white; padding: 15px 25px; border-radius: 10px; display: none; z-index: 9999; font-size: 0.95rem; box-shadow: 0 5px 15px rgba(0,0,0,0.2); font-family: 'Sarabun', sans-serif; }
+        #toast { position:fixed; bottom:30px; right:30px; color:white; padding:15px 25px; border-radius:10px; display:none; z-index:9999; font-size:0.95rem; box-shadow:0 5px 15px rgba(0,0,0,0.2); font-family:'Sarabun',sans-serif; }
     </style>
 </head>
 <body>
 
-<!-- ===== LOGIN PAGE ===== -->
+<!-- LOGIN -->
 <div id="loginPage">
     <div class="login-card">
         <div class="login-brand">🎉 Admin Panel</div>
@@ -128,21 +120,24 @@
     </div>
 </div>
 
-<!-- ===== DASHBOARD PAGE ===== -->
+<!-- DASHBOARD -->
 <div id="dashboardPage">
     <div class="sidebar">
-        <div class="brand"><i class="fas fa-tree"></i> Admin</div>
-        <div class="menu-item active" onclick="openTab('settings', this)">
+        <div class="brand"><i class="fas fa-tree"></i> Admin Panel</div>
+        <div class="menu-item active" onclick="openTab('settings',this)">
             <div><i class="fas fa-cog"></i> ตั้งค่าทั่วไป</div>
         </div>
-        <div class="menu-item" onclick="openTab('predefined', this)">
+        <div class="menu-item" onclick="openTab('avatars',this)">
+            <div><i class="fas fa-users"></i> จัดการรูปผู้ใช้</div>
+        </div>
+        <div class="menu-item" onclick="openTab('predefined',this)">
             <div><i class="fas fa-list"></i> คำอวยพรสำเร็จรูป</div>
         </div>
-        <div class="menu-item" onclick="openTab('approval', this)">
+        <div class="menu-item" onclick="openTab('approval',this)">
             <div><i class="fas fa-comment-dots"></i> อนุมัติข้อความ</div>
             <span class="badge" id="pendingCount" style="display:none">0</span>
         </div>
-        <div class="menu-item" onclick="openTab('approved', this)">
+        <div class="menu-item" onclick="openTab('approved',this)">
             <div><i class="fas fa-check-circle"></i> อนุมัติแล้ว</div>
         </div>
         <div class="logout-btn" onclick="doLogout()">
@@ -155,41 +150,67 @@
         <!-- Settings -->
         <div id="settings" class="tab-content active">
             <div class="card">
-                <div class="card-header">ตั้งค่าหน้าแรก</div>
+                <div class="card-header">ตั้งค่าหน้าแรก (General Settings)</div>
                 <div class="form-group">
-                    <label>ข้อความหัวข้อ (Title)</label>
-                    <div class="input-group"><span class="flag-icon">🇹🇭</span><input type="text" id="header_th"></div>
-                    <div class="input-group"><span class="flag-icon">🇬🇧</span><input type="text" id="header_en"></div>
+                    <label>ข้อความหัวข้อ (Main Title)</label>
+                    <div class="input-group"><span class="flag-icon">🇹🇭</span><input type="text" id="header_th" placeholder="โหลด..."></div>
+                    <div class="input-group"><span class="flag-icon">🇬🇧</span><input type="text" id="header_en" placeholder="Loading..."></div>
                 </div>
                 <div class="form-group">
                     <label>ข้อความรอง (Subtitle)</label>
-                    <div class="input-group"><span class="flag-icon">🇹🇭</span><input type="text" id="subtitle_th"></div>
-                    <div class="input-group"><span class="flag-icon">🇬🇧</span><input type="text" id="subtitle_en"></div>
+                    <div class="input-group"><span class="flag-icon">🇹🇭</span><input type="text" id="subtitle_th" placeholder="โหลด..."></div>
+                    <div class="input-group"><span class="flag-icon">🇬🇧</span><input type="text" id="subtitle_en" placeholder="Loading..."></div>
                 </div>
-                <button class="btn btn-primary" onclick="saveSettings()"><i class="fas fa-save"></i> บันทึก</button>
+                <div class="form-group">
+                    <label>ภาพพื้นหลัง (Background Image)</label>
+                    <p style="font-size:0.9rem;color:#888">รองรับ JPG, PNG, WEBP (ไม่เกิน 5MB) — URL ของรูปที่อยู่บนอินเทอร์เน็ต</p>
+                    <input type="text" id="bg_image" placeholder="https://example.com/image.jpg">
+                    <div class="img-preview-container" id="bgContainer" style="display:none;margin-top:15px;">
+                        <img src="" class="preview-img" id="bgPreview">
+                        <button class="btn-delete-bg" onclick="deleteBg()" title="ลบรูปพื้นหลัง"><i class="fas fa-trash"></i></button>
+                    </div>
+                    <button class="btn" style="background:var(--light);margin-top:10px;" onclick="previewBg()"><i class="fas fa-eye"></i> Preview</button>
+                </div>
+                <button class="btn btn-primary" onclick="saveSettings()"><i class="fas fa-save"></i> บันทึกการเปลี่ยนแปลง</button>
             </div>
         </div>
 
-        <!-- Predefined Wishes -->
+        <!-- Avatars -->
+        <div id="avatars" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <span>จัดการรูปผู้ใช้ (User Avatars)</span>
+                </div>
+                <p style="color:#888;font-size:0.9rem">ใส่ URL รูปภาพที่ต้องการเพิ่ม (รูปจากอินเทอร์เน็ต)</p>
+                <div style="display:flex;gap:10px;margin-bottom:20px;">
+                    <input type="text" id="newAvatarUrl" placeholder="https://example.com/avatar.png" style="flex:1;">
+                    <button class="btn btn-primary" onclick="addAvatar()"><i class="fas fa-plus"></i> เพิ่ม</button>
+                </div>
+                <div class="avatar-grid-admin" id="avatarGridAdmin">กำลังโหลด...</div>
+            </div>
+        </div>
+
+        <!-- Predefined -->
         <div id="predefined" class="tab-content">
             <div class="card">
                 <div class="card-header">
                     <span>คำอวยพรสำเร็จรูป</span>
                     <button class="btn btn-primary" onclick="toggleAddForm()"><i class="fas fa-plus"></i> เพิ่ม</button>
                 </div>
-                <div id="addWishForm" style="display:none; margin-bottom:20px;">
-                    <textarea id="newWishText" rows="3" placeholder="พิมพ์คำอวยพรใหม่..." style="width:100%; margin-bottom:10px; padding:10px; border:1px solid #ddd; border-radius:8px; font-family:'Sarabun',sans-serif;"></textarea>
+                <div id="addWishForm" style="display:none;margin-bottom:20px;">
+                    <textarea id="newWishText" rows="3" placeholder="พิมพ์คำอวยพรใหม่..." style="width:100%;margin-bottom:10px;padding:10px;border:1px solid #ddd;border-radius:8px;font-family:'Sarabun',sans-serif;"></textarea>
                     <button class="btn btn-primary" onclick="addPredefined()"><i class="fas fa-save"></i> บันทึก</button>
-                    <button class="btn" onclick="toggleAddForm()" style="background:#eee; margin-left:5px">ยกเลิก</button>
+                    <button class="btn" onclick="toggleAddForm()" style="background:#eee;margin-left:5px">ยกเลิก</button>
                 </div>
                 <div id="predefinedList">กำลังโหลด...</div>
             </div>
         </div>
 
-        <!-- Approval (Pending) -->
+        <!-- Approval -->
         <div id="approval" class="tab-content">
             <div class="card">
-                <div class="card-header">อนุมัติข้อความ (Pending)</div>
+                <div class="card-header">อนุมัติข้อความ (Moderation Queue)</div>
+                <p style="color:#888;font-size:0.9rem">ข้อความที่ผู้ใช้พิมพ์เองจะต้องได้รับการตรวจสอบก่อนแสดงผล</p>
                 <table>
                     <thead><tr><th style="width:25%">ผู้ส่ง</th><th style="width:45%">ข้อความ</th><th style="width:30%">จัดการ</th></tr></thead>
                     <tbody id="pendingTable"><tr><td colspan="3" style="text-align:center;padding:30px;color:#aaa">กำลังโหลด...</td></tr></tbody>
@@ -214,234 +235,215 @@
 <div id="toast"></div>
 
 <script>
-// ============================
-//  Supabase Config
-// ============================
 const SUPABASE_URL = 'https://jrnlyarpshxegtggtdnj.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_z9gBERtLSWsFzSh2w4hX8A_yLcPkMsJ';
-
 let authToken = null;
 
-// ============================
-//  Auth API
-// ============================
+// ===== AUTH =====
 async function doLogin() {
-    const email    = document.getElementById('loginEmail').value.trim();
+    const email = document.getElementById('loginEmail').value.trim();
     const password = document.getElementById('loginPassword').value;
-    const errEl    = document.getElementById('loginError');
-    const btn      = document.getElementById('loginBtn');
-
-    errEl.style.display = 'none';
-    if (!email || !password) { showLoginError('กรุณากรอก Email และ Password'); return; }
-
-    btn.disabled = true;
-    btn.innerText = 'กำลังเข้าสู่ระบบ...';
-
+    const btn = document.getElementById('loginBtn');
+    document.getElementById('loginError').style.display = 'none';
+    if (!email || !password) { showLoginErr('กรุณากรอก Email และ Password'); return; }
+    btn.disabled = true; btn.innerText = 'กำลังเข้าสู่ระบบ...';
     try {
         const res = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`, {
-            method: 'POST',
-            headers: { 'apikey': SUPABASE_KEY, 'Content-Type': 'application/json' },
+            method:'POST',
+            headers:{ 'apikey':SUPABASE_KEY, 'Content-Type':'application/json' },
             body: JSON.stringify({ email, password })
         });
         const data = await res.json();
-
-        if (!res.ok) throw new Error(data.error_description || data.msg || 'Login failed');
-
+        if (!res.ok) throw new Error(data.error_description || 'Login failed');
         authToken = data.access_token;
         sessionStorage.setItem('sb_token', authToken);
         showDashboard();
-    } catch (e) {
-        showLoginError('Email หรือ Password ไม่ถูกต้อง');
-    } finally {
-        btn.disabled = false;
-        btn.innerText = 'เข้าสู่ระบบ →';
-    }
+    } catch(e) {
+        showLoginErr('Email หรือ Password ไม่ถูกต้อง');
+    } finally { btn.disabled = false; btn.innerText = 'เข้าสู่ระบบ →'; }
 }
 
 async function doLogout() {
     if (!confirm('ออกจากระบบ?')) return;
-    await fetch(`${SUPABASE_URL}/auth/v1/logout`, {
-        method: 'POST',
-        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${authToken}` }
-    }).catch(() => {});
-    authToken = null;
-    sessionStorage.removeItem('sb_token');
+    await fetch(`${SUPABASE_URL}/auth/v1/logout`,{ method:'POST', headers:{'apikey':SUPABASE_KEY,'Authorization':`Bearer ${authToken}`} }).catch(()=>{});
+    authToken = null; sessionStorage.removeItem('sb_token');
     document.body.classList.remove('logged-in');
 }
 
-function showLoginError(msg) {
-    const el = document.getElementById('loginError');
-    el.innerText = '❌ ' + msg;
-    el.style.display = 'block';
-}
+function showLoginErr(msg) { const e = document.getElementById('loginError'); e.innerText='❌ '+msg; e.style.display='block'; }
 
 function showDashboard() {
     document.body.classList.add('logged-in');
-    loadSettings();
-    loadPending();
+    loadSettings(); loadPending();
 }
 
-// ============================
-//  Supabase API (with Auth)
-// ============================
-async function sbGet(table, params = '') {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}${params}`, {
-        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${authToken}` }
-    });
-    if (!res.ok) throw new Error(`GET ${table} failed`);
-    return res.json();
-}
+// ===== API HELPERS =====
+const headers = () => ({ 'apikey':SUPABASE_KEY, 'Authorization':`Bearer ${authToken}`, 'Content-Type':'application/json' });
 
-async function sbPatch(table, params, data) {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}${params}`, {
-        method: 'PATCH',
-        headers: {
-            'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${authToken}`,
-            'Content-Type': 'application/json', 'Prefer': 'return=minimal'
-        },
-        body: JSON.stringify(data)
-    });
-    if (!res.ok) throw new Error(`PATCH ${table} failed`);
-    return true;
+async function sbGet(table, params='') {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}${params}`, { headers:headers() });
+    if (!r.ok) throw new Error('GET failed');
+    return r.json();
 }
-
 async function sbPost(table, data) {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
-        method: 'POST',
-        headers: {
-            'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${authToken}`,
-            'Content-Type': 'application/json', 'Prefer': 'return=minimal'
-        },
-        body: JSON.stringify(data)
-    });
-    if (!res.ok) throw new Error(`POST ${table} failed`);
-    return true;
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, { method:'POST', headers:{...headers(),'Prefer':'return=minimal'}, body:JSON.stringify(data) });
+    if (!r.ok) throw new Error('POST failed');
 }
-
+async function sbPatch(table, params, data) {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}${params}`, { method:'PATCH', headers:{...headers(),'Prefer':'return=minimal'}, body:JSON.stringify(data) });
+    if (!r.ok) throw new Error('PATCH failed');
+}
 async function sbDelete(table, params) {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}${params}`, {
-        method: 'DELETE',
-        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${authToken}` }
-    });
-    if (!res.ok) throw new Error(`DELETE ${table} failed`);
-    return true;
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}${params}`, { method:'DELETE', headers:headers() });
+    if (!r.ok) throw new Error('DELETE failed');
 }
 
-// ============================
-//  Tab Switching
-// ============================
-function openTab(tabId, el) {
-    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
-    document.getElementById(tabId).classList.add('active');
-    el.classList.add('active');
-    if (tabId === 'approval')   loadPending();
-    if (tabId === 'approved')   loadApproved();
-    if (tabId === 'predefined') loadPredefined();
+// ===== TAB =====
+function openTab(id, el) {
+    document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.menu-item').forEach(m=>m.classList.remove('active'));
+    document.getElementById(id).classList.add('active'); el.classList.add('active');
+    if (id==='approval')  loadPending();
+    if (id==='approved')  loadApproved();
+    if (id==='avatars')   loadAvatars();
+    if (id==='predefined') loadPredefined();
 }
 
-// ============================
-//  Settings
-// ============================
+// ===== SETTINGS =====
 async function loadSettings() {
     try {
-        const rows = await sbGet('settings', '?select=setting_key,setting_value');
-        rows.forEach(r => {
-            const el = document.getElementById(r.setting_key);
-            if (el) el.value = r.setting_value;
-        });
-    } catch (e) { toast('โหลด settings ไม่สำเร็จ', false); }
+        const rows = await sbGet('settings','?select=setting_key,setting_value');
+        rows.forEach(r => { const el=document.getElementById(r.setting_key); if(el) el.value=r.setting_value; });
+        // preview bg
+        const bgVal = document.getElementById('bg_image')?.value;
+        if (bgVal) { document.getElementById('bgPreview').src=bgVal; document.getElementById('bgContainer').style.display='inline-block'; }
+    } catch(e) { toast('โหลด settings ไม่สำเร็จ',false); }
 }
 
 async function saveSettings() {
-    const fields = ['header_th','header_en','subtitle_th','subtitle_en'];
     try {
-        for (const key of fields) {
+        for (const key of ['header_th','header_en','subtitle_th','subtitle_en','bg_image']) {
             const val = document.getElementById(key)?.value?.trim() ?? '';
-            await sbPatch('settings', `?setting_key=eq.${key}`, { setting_value: val });
+            await sbPatch('settings',`?setting_key=eq.${key}`,{ setting_value:val });
         }
         toast('บันทึกเรียบร้อย ✅');
-    } catch (e) { toast('บันทึกไม่สำเร็จ', false); }
+    } catch(e) { toast('บันทึกไม่สำเร็จ',false); }
 }
 
-// ============================
-//  Predefined Wishes
-// ============================
+function previewBg() {
+    const url = document.getElementById('bg_image').value.trim();
+    if (!url) return;
+    document.getElementById('bgPreview').src = url;
+    document.getElementById('bgContainer').style.display = 'inline-block';
+}
+
+function deleteBg() {
+    if (!confirm('ลบรูปพื้นหลัง?')) return;
+    document.getElementById('bg_image').value = '';
+    document.getElementById('bgContainer').style.display = 'none';
+    toast('ลบรูปพื้นหลังแล้ว (กดบันทึกเพื่อยืนยัน)');
+}
+
+// ===== AVATARS =====
+async function loadAvatars() {
+    try {
+        const avatars = await sbGet('avatars','?select=id,image_path&order=id.asc');
+        const grid = document.getElementById('avatarGridAdmin');
+        if (!avatars.length) { grid.innerHTML='<p style="color:#aaa">ยังไม่มีรูป</p>'; return; }
+        grid.innerHTML = avatars.map(a=>`
+            <div class="avatar-item" id="av_${a.id}">
+                <img src="${esc(a.image_path)}" onerror="this.src='https://cdn-icons-png.flaticon.com/512/4140/4140037.png'" title="ID:${a.id}">
+                <button class="btn-del-avatar" onclick="deleteAvatar(${a.id})"><i class="fas fa-times"></i></button>
+            </div>`).join('');
+    } catch(e) { toast('โหลด avatars ไม่สำเร็จ',false); }
+}
+
+async function addAvatar() {
+    const url = document.getElementById('newAvatarUrl').value.trim();
+    if (!url) { toast('กรุณากรอก URL รูป',false); return; }
+    try {
+        await sbPost('avatars',{ image_path:url });
+        document.getElementById('newAvatarUrl').value = '';
+        loadAvatars();
+        toast('เพิ่มรูปเรียบร้อย ✅');
+    } catch(e) { toast('เพิ่มรูปไม่สำเร็จ',false); }
+}
+
+async function deleteAvatar(id) {
+    if (!confirm('ลบรูปนี้?')) return;
+    try {
+        await sbDelete('avatars',`?id=eq.${id}`);
+        document.getElementById('av_'+id)?.remove();
+        toast('ลบรูปเรียบร้อย');
+    } catch(e) { toast('ลบรูปไม่สำเร็จ',false); }
+}
+
+// ===== PREDEFINED =====
 async function loadPredefined() {
     try {
-        const rows = await sbGet('predefined_wishes', '?select=id,message_text&order=id.asc');
-        const el   = document.getElementById('predefinedList');
-        if (!rows.length) { el.innerHTML = '<p style="color:#aaa">ยังไม่มีคำอวยพรสำเร็จรูป</p>'; return; }
-        el.innerHTML = rows.map(r => `
+        const rows = await sbGet('predefined_wishes','?select=id,message_text&order=id.asc');
+        const el = document.getElementById('predefinedList');
+        if (!rows.length) { el.innerHTML='<p style="color:#aaa">ยังไม่มีคำอวยพรสำเร็จรูป</p>'; return; }
+        el.innerHTML = rows.map(r=>`
             <div class="wish-item" id="pw_${r.id}">
                 <span>${esc(r.message_text)}</span>
                 <button class="btn btn-reject" onclick="deletePredefined(${r.id})"><i class="fas fa-trash"></i></button>
             </div>`).join('');
-    } catch (e) { toast('โหลดคำอวยพรไม่สำเร็จ', false); }
+    } catch(e) { toast('โหลดคำอวยพรไม่สำเร็จ',false); }
 }
 
 function toggleAddForm() {
     const f = document.getElementById('addWishForm');
-    f.style.display = f.style.display === 'none' ? 'block' : 'none';
+    f.style.display = f.style.display==='none' ? 'block' : 'none';
 }
 
 async function addPredefined() {
     const text = document.getElementById('newWishText').value.trim();
-    if (!text) { toast('กรุณากรอกข้อความ', false); return; }
+    if (!text) { toast('กรุณากรอกข้อความ',false); return; }
     try {
-        await sbPost('predefined_wishes', { message_text: text });
+        await sbPost('predefined_wishes',{ message_text:text });
         document.getElementById('newWishText').value = '';
-        toggleAddForm();
-        loadPredefined();
+        toggleAddForm(); loadPredefined();
         toast('เพิ่มคำอวยพรเรียบร้อย ✅');
-    } catch (e) { toast('เพิ่มไม่สำเร็จ', false); }
+    } catch(e) { toast('เพิ่มไม่สำเร็จ',false); }
 }
 
 async function deletePredefined(id) {
     if (!confirm('ลบคำอวยพรนี้?')) return;
     try {
-        await sbDelete('predefined_wishes', `?id=eq.${id}`);
-        document.getElementById('pw_' + id)?.remove();
+        await sbDelete('predefined_wishes',`?id=eq.${id}`);
+        document.getElementById('pw_'+id)?.remove();
         toast('ลบเรียบร้อย');
-    } catch (e) { toast('ลบไม่สำเร็จ', false); }
+    } catch(e) { toast('ลบไม่สำเร็จ',false); }
 }
 
-// ============================
-//  Wishes Table
-// ============================
+// ===== WISHES TABLE =====
 async function loadPending() {
     try {
-        const data = await sbGet('wishes', '?status=eq.pending&order=created_at.desc');
+        const data = await sbGet('wishes','?status=eq.pending&order=created_at.desc');
         renderTable('pendingTable', data, true);
         const cnt = document.getElementById('pendingCount');
-        if (data.length > 0) { cnt.innerText = data.length; cnt.style.display = 'inline'; }
-        else cnt.style.display = 'none';
-    } catch (e) { toast('โหลดข้อมูลไม่สำเร็จ', false); }
+        if (data.length>0) { cnt.innerText=data.length; cnt.style.display='inline'; }
+        else cnt.style.display='none';
+    } catch(e) { toast('โหลดข้อมูลไม่สำเร็จ',false); }
 }
 
 async function loadApproved() {
     try {
-        const data = await sbGet('wishes', '?status=eq.approved&order=created_at.desc');
+        const data = await sbGet('wishes','?status=eq.approved&order=created_at.desc');
         renderTable('approvedTable', data, false);
-    } catch (e) { toast('โหลดข้อมูลไม่สำเร็จ', false); }
+    } catch(e) { toast('โหลดข้อมูลไม่สำเร็จ',false); }
 }
 
 function renderTable(tableId, data, isPending) {
     const tbody = document.getElementById(tableId);
-    if (!data.length) {
-        tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;padding:30px;color:#aaa">ไม่มีข้อมูล 🎉</td></tr>`;
-        return;
-    }
-    tbody.innerHTML = data.map(w => `
+    if (!data.length) { tbody.innerHTML=`<tr><td colspan="3" style="text-align:center;padding:30px;color:#aaa">ไม่มีข้อมูล 🎉</td></tr>`; return; }
+    tbody.innerHTML = data.map(w=>`
         <tr id="row_${w.id}" class="wish-row">
             <td>
                 <div class="user-info">
-                    <img src="${esc(w.avatar)}" class="user-avatar-small"
-                         onerror="this.src='https://cdn-icons-png.flaticon.com/512/4140/4140037.png'">
-                    <div>
-                        <strong>${esc(w.name)}</strong><br>
-                        <small style="color:#888">${esc(w.dept)} • ${fmtDate(w.created_at)}</small>
-                    </div>
+                    <img src="${esc(w.avatar)}" class="user-avatar-small" onerror="this.src='https://cdn-icons-png.flaticon.com/512/4140/4140037.png'">
+                    <div><strong>${esc(w.name)}</strong><br><small style="color:#888">${esc(w.dept)} • ${fmtDate(w.created_at)}</small></div>
                 </div>
             </td>
             <td class="msg-cell">
@@ -450,77 +452,65 @@ function renderTable(tableId, data, isPending) {
             </td>
             <td>
                 <button class="btn btn-save" onclick="saveEdit(${w.id})"><i class="fas fa-save"></i> บันทึก</button>
-                <button class="btn btn-edit" onclick="toggleEdit(${w.id})"><i class="fas fa-pen"></i></button>
+                <button class="btn btn-edit" onclick="toggleEdit(${w.id})" title="แก้ไขข้อความ"><i class="fas fa-pen"></i></button>
                 ${isPending
-                    ? `<button class="btn btn-approve" onclick="updateStatus(${w.id},'approved')"><i class="fas fa-check"></i></button>`
-                    : `<button class="btn btn-reject" onclick="updateStatus(${w.id},'pending')" title="ถอน"><i class="fas fa-undo"></i></button>`
+                    ? `<button class="btn btn-approve" onclick="updateStatus(${w.id},'approved')" title="อนุมัติ"><i class="fas fa-check"></i></button>`
+                    : `<button class="btn btn-reject" onclick="updateStatus(${w.id},'pending')" title="ถอนการอนุมัติ"><i class="fas fa-undo"></i></button>`
                 }
-                <button class="btn btn-reject" onclick="deleteWish(${w.id})"><i class="fas fa-trash"></i></button>
+                <button class="btn btn-reject" onclick="deleteWish(${w.id})" title="ลบ"><i class="fas fa-times"></i></button>
             </td>
         </tr>`).join('');
 }
 
-function toggleEdit(id) { document.getElementById('row_' + id).classList.add('editing'); }
+// ===== Edit / Approve / Delete =====
+function toggleEdit(id) { document.getElementById('row_'+id).classList.add('editing'); }
 
 async function saveEdit(id) {
-    const row = document.getElementById('row_' + id);
+    const row = document.getElementById('row_'+id);
     const msg = row.querySelector('.msg-edit-input').value.trim();
     try {
-        await sbPatch('wishes', `?id=eq.${id}`, { message: msg });
+        await sbPatch('wishes',`?id=eq.${id}`,{ message:msg });
         row.querySelector('.msg-display').innerText = `"${msg}"`;
         row.classList.remove('editing');
-        toast('แก้ไขเรียบร้อย ✅');
-    } catch (e) { toast('แก้ไขไม่สำเร็จ', false); }
+        toast('แก้ไขข้อความเรียบร้อย ✅');
+    } catch(e) { toast('แก้ไขไม่สำเร็จ',false); }
 }
 
 async function updateStatus(id, status) {
-    const label = status === 'approved' ? 'อนุมัติ' : 'ถอนการอนุมัติ';
+    const label = status==='approved' ? 'อนุมัติ' : 'ถอนการอนุมัติ';
     if (!confirm(`${label}ข้อความนี้?`)) return;
     try {
-        await sbPatch('wishes', `?id=eq.${id}`, { status });
-        const row = document.getElementById('row_' + id);
-        row.style.background = status === 'approved' ? '#d4edda' : '#fff3cd';
-        setTimeout(() => { row.remove(); loadPending(); }, 500);
+        await sbPatch('wishes',`?id=eq.${id}`,{ status });
+        const row = document.getElementById('row_'+id);
+        row.style.background = status==='approved' ? '#d4edda' : '#fff3cd';
+        setTimeout(()=>{ row.remove(); loadPending(); }, 500);
         toast(`${label}เรียบร้อย ✅`);
-    } catch (e) { toast('ดำเนินการไม่สำเร็จ', false); }
+    } catch(e) { toast('ดำเนินการไม่สำเร็จ',false); }
 }
 
 async function deleteWish(id) {
     if (!confirm('ลบข้อความนี้ถาวร?')) return;
     try {
-        await sbDelete('wishes', `?id=eq.${id}`);
-        document.getElementById('row_' + id)?.remove();
+        await sbDelete('wishes',`?id=eq.${id}`);
+        document.getElementById('row_'+id)?.remove();
         toast('ลบเรียบร้อย');
-    } catch (e) { toast('ลบไม่สำเร็จ', false); }
+    } catch(e) { toast('ลบไม่สำเร็จ',false); }
 }
 
-// ============================
-//  Helpers
-// ============================
-function toast(msg, ok = true) {
+// ===== HELPERS =====
+function toast(msg, ok=true) {
     const t = document.getElementById('toast');
-    t.innerText = (ok ? '✅ ' : '❌ ') + msg;
+    t.innerText = (ok?'✅ ':'❌ ')+msg;
     t.style.background = ok ? '#27ae60' : '#e74c3c';
     t.style.display = 'block';
-    setTimeout(() => t.style.display = 'none', 3000);
+    setTimeout(()=>t.style.display='none', 3000);
 }
+function esc(str) { return String(str??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function fmtDate(dt) { return dt ? new Date(dt).toLocaleDateString('th-TH',{day:'numeric',month:'short'}) : ''; }
 
-function esc(str) {
-    return String(str ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-function fmtDate(dt) {
-    return dt ? new Date(dt).toLocaleDateString('th-TH', { day:'numeric', month:'short' }) : '';
-}
-
-// ============================
-//  Init — เช็ค session
-// ============================
+// ===== INIT =====
 const savedToken = sessionStorage.getItem('sb_token');
-if (savedToken) {
-    authToken = savedToken;
-    showDashboard();
-}
+if (savedToken) { authToken = savedToken; showDashboard(); }
 </script>
 </body>
 </html>
