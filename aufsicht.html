@@ -454,7 +454,7 @@ function renderWishes() {
     const col = colorFor(w.name);
     const isNew = new Date(w.created_at) > (Date.now() - 86400000);
     const hasImg = w.avatar && w.avatar.startsWith('http');
-    return `<div class="w-card${isNew?' pending':''}" id="wc_${w.id}">`
+    return `<div class="w-card${isNew?' pending':''}" id="wc_${w.id}">
       ${hasImg ? `<img class="w-card-img" src="${escHtml(w.avatar)}" alt="" loading="lazy">` : ''}
       <div class="w-card-body">
         <div class="w-card-top">
