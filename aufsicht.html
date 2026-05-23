@@ -246,6 +246,23 @@ body.in #dashPage{display:block}
 
         <!-- TAB: รูปการ์ด -->
         <div id="tabCards">
+
+          <!-- Banner -->
+          <div style="background:var(--gray3);border-radius:10px;padding:16px;margin-bottom:20px;border:var(--border)">
+            <div style="font-size:13px;font-weight:600;margin-bottom:10px;color:var(--gray2)">🖼 Banner หน้า Wall</div>
+            <p style="font-size:12px;color:var(--gray1);margin-bottom:10px">รูปที่จะแสดงด้านบนหน้า Wall (แนะนำขนาด 1920×400px)</p>
+            <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+              <input type="file" id="bannerInput" accept="image/*" style="display:none" onchange="uploadBanner(this)">
+              <button class="btn btn-primary btn-sm" onclick="document.getElementById('bannerInput').click()">
+                ↑ อัปโหลด Banner
+              </button>
+              <button class="btn btn-ghost btn-sm" onclick="deleteBanner()" id="btnDelBanner" style="display:none">ลบ Banner</button>
+            </div>
+            <div id="bannerPreview" style="margin-top:12px;display:none">
+              <img id="bannerImg" src="" style="width:100%;max-height:120px;object-fit:cover;border-radius:8px;border:var(--border)">
+            </div>
+          </div>
+
           <p style="font-size:13px;color:var(--gray1);margin-bottom:12px">รูปเหล่านี้จะให้ผู้ใช้เลือกเป็นพื้นหลังการ์ดคำอวยพร</p>
 
           <!-- Upload Zone -->
@@ -459,6 +476,34 @@ async function deleteCardImage(id, fileName) {
   } catch(e) { toast('ลบไม่สำเร็จ: ' + e.message, false); }
 }
 
+/* ── Banner ── */
+async function uploadBanner(input) {
+  if (!input.files[0]) return;
+  const file = input.files[0];
+  const ext  = file.name.split('.').pop().toLowerCase();
+  const fileName = `banner_${uid()}.${ext}`;
+  toast('กำลังอัปโหลด banner...');
+  try {
+    const url = await uploadFile('banners', fileName, file);
+    await sbAdmin.patch('settings', '?setting_key=eq.banner_image', { setting_value: url });
+    document.getElementById('bannerImg').src = url;
+    document.getElementById('bannerPreview').style.display = 'block';
+    document.getElementById('btnDelBanner').style.display = 'inline-flex';
+    toast('✓ อัปโหลด banner เรียบร้อย');
+  } catch(e) { toast('อัปโหลดไม่สำเร็จ: ' + e.message, false); }
+  input.value = '';
+}
+
+async function deleteBanner() {
+  if (!confirm('ลบ banner?')) return;
+  try {
+    await sbAdmin.patch('settings', '?setting_key=eq.banner_image', { setting_value: '' });
+    document.getElementById('bannerPreview').style.display = 'none';
+    document.getElementById('btnDelBanner').style.display = 'none';
+    toast('✓ ลบ banner แล้ว');
+  } catch(e) { toast('ลบไม่สำเร็จ', false); }
+}
+
 /* ── Wishes ── */
 async function loadWishes() {
   try {
@@ -572,6 +617,12 @@ async function loadSettings() {
   try {
     const rows = await sbAdmin.get('settings','?select=setting_key,setting_value');
     rows.forEach(r => { const el=document.getElementById(r.setting_key); if(el) el.value=r.setting_value; });
+    const bannerRow = rows.find(r => r.setting_key === 'banner_image');
+    if (bannerRow && bannerRow.setting_value) {
+      document.getElementById('bannerImg').src = bannerRow.setting_value;
+      document.getElementById('bannerPreview').style.display = 'block';
+      document.getElementById('btnDelBanner').style.display = 'inline-flex';
+    }
   } catch(e) {}
 }
 async function saveSettings() {
