@@ -315,6 +315,7 @@ body.in #dashPage{display:block}
 <script>
 let allWishes = [], wPage = 0;
 const W_PER = 12;
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
 
 /* ── Auth ── */
 async function doLogin() {
