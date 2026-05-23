@@ -1,516 +1,526 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard — ระบบอวยพร</title>
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600&family=Mali:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root { --primary:#FF8200; --dark:#2c3e50; --light:#ecf0f1; --success:#27ae60; --danger:#e74c3c; --warning:#f1c40f; --info:#3498db; }
-        * { box-sizing:border-box; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Anniversary</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Sarabun:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --o:#FF8200;--od:#CC6800;--ol:#FFF3E0;
+  --g:#3DAA6B;--gl:#E8F5E9;
+  --r:#E53935;--rl:#FFEBEE;
+  --gray1:#74787B;--gray2:#222221;--gray3:#f7f5f2;
+  --disp:'Cinzel',serif;--thai:'Sarabun',sans-serif;
+  --border:0.5px solid rgba(0,0,0,.1);
+}
+body{font-family:var(--thai);background:#EDE8E1;color:var(--gray2);min-height:100vh}
 
-        /* LOGIN */
-        #loginPage { display:flex; align-items:center; justify-content:center; min-height:100vh; background:linear-gradient(135deg,var(--dark),#34495e); font-family:'Sarabun',sans-serif; }
-        .login-card { background:white; border-radius:16px; padding:50px 40px; width:100%; max-width:400px; text-align:center; box-shadow:0 25px 50px rgba(0,0,0,0.3); }
-        .login-brand { font-family:'Mali',cursive; color:var(--primary); font-size:1.8rem; margin-bottom:8px; }
-        .login-sub { color:#888; font-size:0.9rem; margin-bottom:35px; }
-        .login-card label { display:block; text-align:left; font-weight:600; color:#555; margin-bottom:6px; }
-        .login-card input { width:100%; padding:12px 15px; border:1px solid #ddd; border-radius:8px; font-family:'Sarabun',sans-serif; font-size:1rem; margin-bottom:20px; transition:0.3s; }
-        .login-card input:focus { border-color:var(--primary); outline:none; }
-        .btn-login { width:100%; padding:14px; background:var(--primary); color:white; border:none; border-radius:8px; font-size:1rem; font-weight:600; cursor:pointer; font-family:'Sarabun',sans-serif; transition:0.3s; }
-        .btn-login:hover { background:#e67e22; }
-        .btn-login:disabled { opacity:0.6; cursor:not-allowed; }
-        .login-error { background:#fdecea; color:#c0392b; padding:12px; border-radius:8px; margin-bottom:20px; font-size:0.9rem; display:none; }
+/* LOGIN */
+#loginPage{display:flex;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(135deg,#2c3e50,#34495e)}
+.login-card{background:#fff;border-radius:16px;padding:48px 40px;width:100%;max-width:400px;box-shadow:0 25px 50px rgba(0,0,0,.3);text-align:center}
+.login-brand{font-family:var(--disp);font-size:16px;letter-spacing:.12em;color:var(--o);margin-bottom:6px}
+.login-sub{font-size:13px;color:var(--gray1);margin-bottom:32px}
+.login-card label{display:block;text-align:left;font-size:12px;font-weight:500;color:var(--gray1);margin-bottom:6px}
+.login-card input{width:100%;padding:10px 14px;border:var(--border);border-radius:10px;font-family:var(--thai);font-size:14px;margin-bottom:16px;background:#fafaf9;outline:none;transition:border-color .2s}
+.login-card input:focus{border-color:var(--o);background:#fff}
+.btn-login{width:100%;padding:13px;font-family:var(--disp);font-size:12px;letter-spacing:.1em;background:var(--o);color:#fff;border:none;border-radius:10px;cursor:pointer;transition:all .25s}
+.btn-login:hover{background:var(--od)}
+.btn-login:disabled{opacity:.5;cursor:not-allowed}
+.login-err{background:var(--rl);color:var(--r);padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:16px;display:none;text-align:left}
 
-        /* DASHBOARD */
-        #dashboardPage { display:none; }
-        body.logged-in #loginPage { display:none; }
-        body.logged-in #dashboardPage { display:flex; height:100vh; overflow:hidden; font-family:'Sarabun',sans-serif; background:var(--light); }
+/* DASHBOARD */
+#dashPage{display:none}
+body.in #loginPage{display:none}
+body.in #dashPage{display:block}
 
-        /* Sidebar */
-        .sidebar { width:260px; background:var(--dark); color:white; display:flex; flex-direction:column; padding:20px 0; box-shadow:2px 0 5px rgba(0,0,0,0.1); flex-shrink:0; }
-        .brand { font-family:'Mali',cursive; color:var(--primary); text-align:center; font-size:1.5rem; margin-bottom:30px; padding:0 20px; }
-        .menu-item { padding:15px 25px; cursor:pointer; transition:0.3s; color:#bdc3c7; border-left:5px solid transparent; display:flex; align-items:center; justify-content:space-between; }
-        .menu-item:hover { background:rgba(255,255,255,0.05); color:white; }
-        .menu-item.active { background:rgba(255,130,0,0.1); color:white; border-left-color:var(--primary); font-weight:600; }
-        .menu-item i { width:25px; }
-        .badge { background:var(--danger); color:white; padding:2px 8px; border-radius:12px; font-size:0.75rem; }
-        .logout-btn { margin-top:auto; padding:15px 25px; color:#e74c3c; cursor:pointer; display:flex; align-items:center; gap:10px; border-left:5px solid transparent; }
-        .logout-btn:hover { background:rgba(231,76,60,0.1); }
+/* HEADER */
+.adm-header{background:#fff;border-bottom:var(--border);padding:0 24px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.h-brand{font-family:var(--disp);font-size:14px;letter-spacing:.08em}
+.h-links{display:flex;gap:8px;align-items:center}
+.h-link{font-size:12px;padding:5px 12px;border-radius:100px;border:var(--border);text-decoration:none;color:var(--gray1);background:#fff;transition:all .2s;cursor:pointer}
+.h-link:hover{background:var(--gray3)}
+.h-link.primary{background:var(--o);color:#fff;border-color:var(--o)}
+.h-link.primary:hover{background:var(--od)}
+.h-link.danger{background:var(--r);color:#fff;border-color:var(--r)}
 
-        /* Content */
-        .content { flex:1; padding:40px; overflow-y:auto; }
-        .tab-content { display:none; animation:fadeIn 0.3s ease; }
-        .tab-content.active { display:block; }
-        @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+/* LAYOUT */
+.adm-main{max-width:900px;margin:0 auto;padding:24px 16px;display:flex;flex-direction:column;gap:20px}
 
-        /* Card */
-        .card { background:white; border-radius:12px; padding:30px; box-shadow:0 5px 15px rgba(0,0,0,0.05); margin-bottom:20px; }
-        .card-header { font-size:1.4rem; font-weight:600; margin-bottom:25px; padding-bottom:15px; border-bottom:2px solid var(--light); color:var(--dark); display:flex; justify-content:space-between; align-items:center; }
+/* CARD */
+.acard{background:#fff;border-radius:12px;border:var(--border);overflow:hidden}
+.acard-head{padding:14px 20px;border-bottom:var(--border);display:flex;align-items:center;justify-content:space-between;gap:10px}
+.acard-title{font-size:14px;font-weight:600;display:flex;align-items:center;gap:8px}
+.acard-title .icon{font-size:16px}
+.acard-body{padding:20px}
 
-        /* Form */
-        .form-group { margin-bottom:25px; }
-        label { display:block; margin-bottom:10px; font-weight:600; color:#555; }
-        .input-group { display:flex; align-items:center; margin-bottom:10px; }
-        .flag-icon { font-size:1.5rem; margin-right:15px; width:30px; text-align:center; }
-        input[type="text"], textarea { width:100%; padding:12px 15px; border:1px solid #ddd; border-radius:8px; font-family:'Sarabun',sans-serif; font-size:1rem; transition:0.3s; }
-        input[type="text"]:focus { border-color:var(--primary); outline:none; }
+/* STATUS */
+.status-row{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:8px;border:var(--border);font-size:13px;margin-bottom:16px;background:var(--gray3)}
+.status-row.ok{background:var(--gl);border-color:#a5d6a7;color:#1b5e20}
+.status-row.err{background:var(--rl);border-color:#ef9a9a;color:var(--r)}
+.status-row.loading{background:#fff8e1;border-color:#ffe082;color:#7c6000}
+.spin{width:14px;height:14px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:spin .6s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
 
-        /* Upload */
-        .img-preview-container { position:relative; display:inline-block; margin-top:15px; }
-        .preview-img { max-width:300px; border-radius:10px; box-shadow:0 4px 10px rgba(0,0,0,0.1); border:2px solid #fff; }
-        .btn-delete-bg { position:absolute; top:-10px; right:-10px; background:var(--danger); color:white; border:none; width:35px; height:35px; border-radius:50%; cursor:pointer; box-shadow:0 2px 5px rgba(0,0,0,0.2); display:flex; align-items:center; justify-content:center; }
-        .btn-delete-bg:hover { transform:scale(1.1); }
-        .btn-upload { background:var(--light); border:2px dashed #bdc3c7; color:#7f8c8d; padding:20px; width:100%; text-align:center; border-radius:10px; cursor:pointer; transition:0.3s; }
-        .btn-upload:hover { border-color:var(--primary); color:var(--primary); background:#fffbf5; }
+/* FORM */
+.form-row{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.form-row label{font-size:12px;font-weight:500;color:var(--gray1)}
+.form-row input,.form-row textarea{font-family:var(--thai);font-size:13px;padding:8px 12px;border:var(--border);border-radius:8px;background:#fafaf9;color:var(--gray2);outline:none;width:100%;transition:border-color .2s}
+.form-row input:focus,.form-row textarea:focus{border-color:var(--o);background:#fff}
+.form-row .hint{font-size:11px;color:var(--gray1)}
 
-        /* Buttons */
-        .btn { padding:8px 16px; border:none; border-radius:6px; cursor:pointer; font-size:0.9rem; transition:0.2s; display:inline-flex; align-items:center; gap:5px; font-family:'Sarabun',sans-serif; }
-        .btn-primary { background:var(--primary); color:white; padding:12px 30px; font-size:1rem; }
-        .btn-primary:hover { background:#e67e22; }
-        .btn-approve { background:rgba(39,174,96,0.1); color:var(--success); }
-        .btn-approve:hover { background:var(--success); color:white; }
-        .btn-reject { background:rgba(231,76,60,0.1); color:var(--danger); }
-        .btn-reject:hover { background:var(--danger); color:white; }
-        .btn-edit { background:rgba(52,152,219,0.1); color:var(--info); }
-        .btn-edit:hover { background:var(--info); color:white; }
-        .btn-save { background:var(--success); color:white; display:none; margin-right:5px; }
-        .editing .btn-save { display:inline-flex; }
-        .editing .btn-edit { display:none; }
+/* BUTTONS */
+.btn{font-family:var(--thai);font-size:13px;font-weight:500;padding:8px 16px;border-radius:8px;border:var(--border);cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
+.btn-primary{background:var(--o);color:#fff;border-color:var(--o)}
+.btn-primary:hover{background:var(--od)}
+.btn-ghost{background:transparent;color:var(--gray1)}
+.btn-ghost:hover{background:var(--gray3)}
+.btn-danger{background:var(--r);color:#fff;border-color:var(--r)}
+.btn-danger:hover{background:#c62828}
+.btn-sm{font-size:12px;padding:5px 10px;border-radius:6px}
+.btn-approve{background:var(--gl);color:#1b5e20;border-color:#a5d6a7}
+.btn-approve:hover{background:#3DAA6B;color:#fff}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap}
 
-        /* Table */
-        table { width:100%; border-collapse:collapse; margin-top:10px; }
-        th, td { padding:15px; text-align:left; border-bottom:1px solid #eee; vertical-align:middle; }
-        th { background:#f8f9fa; color:#666; font-weight:600; }
-        .user-info { display:flex; align-items:center; gap:10px; }
-        .user-avatar-small { width:40px; height:40px; border-radius:50%; object-fit:cover; }
-        .msg-display { font-style:italic; color:#555; }
-        .msg-edit-input { display:none; width:100%; padding:8px; border:1px solid var(--info); border-radius:5px; color:var(--dark); font-family:'Sarabun',sans-serif; }
-        .editing .msg-display { display:none; }
-        .editing .msg-edit-input { display:block; }
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.stat-box{background:var(--gray3);border-radius:8px;padding:14px;text-align:center}
+.stat-num{font-size:24px;font-weight:600;color:var(--o)}
+.stat-label{font-size:11px;color:var(--gray1);margin-top:2px}
 
-        /* Avatars */
-        .avatar-grid-admin { display:flex; flex-wrap:wrap; gap:15px; margin-top:20px; }
-        .avatar-item { position:relative; }
-        .avatar-item img { width:80px; height:80px; border-radius:10px; border:2px solid #ddd; object-fit:cover; }
-        .btn-del-avatar { position:absolute; top:-8px; right:-8px; background:var(--danger); color:white; border:none; width:24px; height:24px; border-radius:50%; cursor:pointer; font-size:0.7rem; display:flex; align-items:center; justify-content:center; }
+/* SETTINGS GRID */
+.settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 
-        /* Predefined */
-        .wish-item { display:flex; justify-content:space-between; align-items:center; padding:12px 15px; border:1px solid #eee; border-radius:8px; margin-bottom:10px; gap:10px; }
-        .wish-item span { flex:1; }
+/* WISH GRID */
+.w-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+.w-card{border:var(--border);border-radius:8px;padding:12px;background:var(--gray3);display:flex;flex-direction:column;gap:8px}
+.w-card.pending{border-color:#ffe082;background:#fff8e1}
+.w-card-top{display:flex;align-items:center;gap:8px}
+.w-av{width:28px;height:28px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff}
+.w-name{font-size:13px;font-weight:600;flex:1}
+.w-dept{font-size:11px;color:var(--gray1)}
+.w-time{font-size:10px;color:var(--gray1)}
+.w-msg{font-size:12px;color:var(--gray2);line-height:1.6;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.w-actions{display:flex;gap:6px;flex-wrap:wrap}
 
-        /* Toast */
-        #toast { position:fixed; bottom:30px; right:30px; color:white; padding:15px 25px; border-radius:10px; display:none; z-index:9999; font-size:0.95rem; box-shadow:0 5px 15px rgba(0,0,0,0.2); font-family:'Sarabun',sans-serif; }
-    </style>
+/* PAGER */
+.g-pager{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:14px}
+.g-pager button{font-family:var(--thai);font-size:12px;padding:4px 10px;border-radius:6px;border:var(--border);background:#fff;cursor:pointer;color:var(--gray2)}
+.g-pager button.active{background:var(--o);color:#fff;border-color:var(--o)}
+.g-pager button:disabled{opacity:.35;cursor:not-allowed}
+.g-pager .info{font-size:12px;color:var(--gray1)}
+
+/* AVATAR GRID */
+.av-grid{display:flex;flex-wrap:wrap;gap:12px;margin-top:12px}
+.av-item{position:relative}
+.av-item img{width:64px;height:64px;border-radius:10px;border:var(--border);object-fit:cover}
+.av-del{position:absolute;top:-6px;right:-6px;background:var(--r);color:#fff;border:none;width:20px;height:20px;border-radius:50%;cursor:pointer;font-size:11px;display:flex;align-items:center;justify-content:center}
+
+/* PREDEFINED */
+.pw-item{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border:var(--border);border-radius:8px;margin-bottom:8px;gap:10px;background:var(--gray3)}
+.pw-item span{flex:1;font-size:13px}
+
+/* TOAST */
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(8px);background:rgba(34,34,33,.88);color:#fff;font-size:13px;padding:8px 18px;border-radius:100px;z-index:300;opacity:0;transition:all .25s;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* CONFIRM MODAL */
+.modal-wrap{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-wrap.show{display:flex}
+.modal{background:#fff;border-radius:12px;padding:24px;max-width:360px;width:100%;text-align:center}
+.modal h3{font-size:16px;font-weight:600;margin-bottom:8px}
+.modal p{font-size:13px;color:var(--gray1);line-height:1.6;margin-bottom:18px}
+
+/* NAV TABS */
+.nav-tabs{display:flex;gap:4px;background:var(--gray3);padding:4px;border-radius:10px;margin-bottom:20px}
+.nav-tab{flex:1;font-family:var(--thai);font-size:12px;padding:7px;border:none;border-radius:7px;background:transparent;cursor:pointer;color:var(--gray1);transition:all .2s;text-align:center}
+.nav-tab.active{background:#fff;color:var(--gray2);font-weight:600;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+
+@media(max-width:500px){.stats-row{grid-template-columns:1fr 1fr}.w-grid{grid-template-columns:1fr}.settings-grid{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
 
 <!-- LOGIN -->
 <div id="loginPage">
-    <div class="login-card">
-        <div class="login-brand">🎉 Admin Panel</div>
-        <p class="login-sub">ระบบจัดการคำอวยพร</p>
-        <div class="login-error" id="loginError"></div>
-        <label>Email</label>
-        <input type="email" id="loginEmail" placeholder="admin@example.com">
-        <label>Password</label>
-        <input type="password" id="loginPassword" placeholder="••••••••" onkeydown="if(event.key==='Enter') doLogin()">
-        <button class="btn-login" id="loginBtn" onclick="doLogin()">เข้าสู่ระบบ →</button>
-    </div>
+  <div class="login-card">
+    <div class="login-brand">ANNIVERSARY</div>
+    <p class="login-sub">Admin Dashboard</p>
+    <div class="login-err" id="loginErr"></div>
+    <label>Email</label>
+    <input type="email" id="lEmail" placeholder="admin@example.com">
+    <label>Password</label>
+    <input type="password" id="lPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="btn-login" id="btnLogin" onclick="doLogin()">SIGN IN →</button>
+  </div>
 </div>
 
 <!-- DASHBOARD -->
-<div id="dashboardPage">
-    <div class="sidebar">
-        <div class="brand"><i class="fas fa-tree"></i> Admin Panel</div>
-        <div class="menu-item active" onclick="openTab('settings',this)">
-            <div><i class="fas fa-cog"></i> ตั้งค่าทั่วไป</div>
+<div id="dashPage">
+  <div class="adm-header">
+    <div class="h-brand">ADMIN — ANNIVERSARY</div>
+    <div class="h-links">
+      <a href="anniversary-wall.html" class="h-link">🖼 Wall</a>
+      <a href="anniversary-greeting.html" class="h-link primary">✦ ส่งคำอวยพร</a>
+      <button class="h-link danger" onclick="doLogout()">ออก</button>
+    </div>
+  </div>
+
+  <div class="adm-main">
+
+    <!-- STATS -->
+    <div class="acard">
+      <div class="acard-head">
+        <div class="acard-title"><span class="icon">📊</span> สถิติ</div>
+        <button class="btn btn-sm btn-ghost" onclick="loadAll()">↻ รีเฟรช</button>
+      </div>
+      <div class="acard-body">
+        <div class="stats-row">
+          <div class="stat-box"><div class="stat-num" id="stTotal">—</div><div class="stat-label">คำอวยพรทั้งหมด</div></div>
+          <div class="stat-box"><div class="stat-num" id="stPending">—</div><div class="stat-label">รออนุมัติ</div></div>
+          <div class="stat-box"><div class="stat-num" id="stNew">—</div><div class="stat-label">ใหม่ (24 ชม.)</div></div>
         </div>
-        <div class="menu-item" onclick="openTab('avatars',this)">
-            <div><i class="fas fa-users"></i> จัดการรูปผู้ใช้</div>
-        </div>
-        <div class="menu-item" onclick="openTab('predefined',this)">
-            <div><i class="fas fa-list"></i> คำอวยพรสำเร็จรูป</div>
-        </div>
-        <div class="menu-item" onclick="openTab('approval',this)">
-            <div><i class="fas fa-comment-dots"></i> อนุมัติข้อความ</div>
-            <span class="badge" id="pendingCount" style="display:none">0</span>
-        </div>
-        <div class="menu-item" onclick="openTab('approved',this)">
-            <div><i class="fas fa-check-circle"></i> อนุมัติแล้ว</div>
-        </div>
-        <div class="logout-btn" onclick="doLogout()">
-            <i class="fas fa-sign-out-alt"></i> ออกจากระบบ
-        </div>
+      </div>
     </div>
 
-    <div class="content">
-
-        <!-- Settings -->
-        <div id="settings" class="tab-content active">
-            <div class="card">
-                <div class="card-header">ตั้งค่าหน้าแรก (General Settings)</div>
-                <div class="form-group">
-                    <label>ข้อความหัวข้อ (Main Title)</label>
-                    <div class="input-group"><span class="flag-icon">🇹🇭</span><input type="text" id="header_th" placeholder="โหลด..."></div>
-                    <div class="input-group"><span class="flag-icon">🇬🇧</span><input type="text" id="header_en" placeholder="Loading..."></div>
-                </div>
-                <div class="form-group">
-                    <label>ข้อความรอง (Subtitle)</label>
-                    <div class="input-group"><span class="flag-icon">🇹🇭</span><input type="text" id="subtitle_th" placeholder="โหลด..."></div>
-                    <div class="input-group"><span class="flag-icon">🇬🇧</span><input type="text" id="subtitle_en" placeholder="Loading..."></div>
-                </div>
-                <div class="form-group">
-                    <label>ภาพพื้นหลัง (Background Image)</label>
-                    <p style="font-size:0.9rem;color:#888">รองรับ JPG, PNG, WEBP (ไม่เกิน 5MB) — URL ของรูปที่อยู่บนอินเทอร์เน็ต</p>
-                    <input type="text" id="bg_image" placeholder="https://example.com/image.jpg">
-                    <div class="img-preview-container" id="bgContainer" style="display:none;margin-top:15px;">
-                        <img src="" class="preview-img" id="bgPreview">
-                        <button class="btn-delete-bg" onclick="deleteBg()" title="ลบรูปพื้นหลัง"><i class="fas fa-trash"></i></button>
-                    </div>
-                    <button class="btn" style="background:var(--light);margin-top:10px;" onclick="previewBg()"><i class="fas fa-eye"></i> Preview</button>
-                </div>
-                <button class="btn btn-primary" onclick="saveSettings()"><i class="fas fa-save"></i> บันทึกการเปลี่ยนแปลง</button>
-            </div>
+    <!-- MANAGE WISHES -->
+    <div class="acard">
+      <div class="acard-head">
+        <div class="acard-title"><span class="icon">💬</span> จัดการคำอวยพร</div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <select id="wFilter" onchange="renderWishes()" style="font-family:var(--thai);font-size:12px;padding:4px 8px;border-radius:6px;border:var(--border)">
+            <option value="all">ทั้งหมด</option>
+            <option value="pending">รออนุมัติ</option>
+            <option value="approved">อนุมัติแล้ว</option>
+          </select>
+          <button class="btn btn-sm btn-danger" onclick="confirmDeleteAll()">ลบทั้งหมด</button>
         </div>
-
-        <!-- Avatars -->
-        <div id="avatars" class="tab-content">
-            <div class="card">
-                <div class="card-header">
-                    <span>จัดการรูปผู้ใช้ (User Avatars)</span>
-                </div>
-                <p style="color:#888;font-size:0.9rem">ใส่ URL รูปภาพที่ต้องการเพิ่ม (รูปจากอินเทอร์เน็ต)</p>
-                <div style="display:flex;gap:10px;margin-bottom:20px;">
-                    <input type="text" id="newAvatarUrl" placeholder="https://example.com/avatar.png" style="flex:1;">
-                    <button class="btn btn-primary" onclick="addAvatar()"><i class="fas fa-plus"></i> เพิ่ม</button>
-                </div>
-                <div class="avatar-grid-admin" id="avatarGridAdmin">กำลังโหลด...</div>
-            </div>
-        </div>
-
-        <!-- Predefined -->
-        <div id="predefined" class="tab-content">
-            <div class="card">
-                <div class="card-header">
-                    <span>คำอวยพรสำเร็จรูป</span>
-                    <button class="btn btn-primary" onclick="toggleAddForm()"><i class="fas fa-plus"></i> เพิ่ม</button>
-                </div>
-                <div id="addWishForm" style="display:none;margin-bottom:20px;">
-                    <textarea id="newWishText" rows="3" placeholder="พิมพ์คำอวยพรใหม่..." style="width:100%;margin-bottom:10px;padding:10px;border:1px solid #ddd;border-radius:8px;font-family:'Sarabun',sans-serif;"></textarea>
-                    <button class="btn btn-primary" onclick="addPredefined()"><i class="fas fa-save"></i> บันทึก</button>
-                    <button class="btn" onclick="toggleAddForm()" style="background:#eee;margin-left:5px">ยกเลิก</button>
-                </div>
-                <div id="predefinedList">กำลังโหลด...</div>
-            </div>
-        </div>
-
-        <!-- Approval -->
-        <div id="approval" class="tab-content">
-            <div class="card">
-                <div class="card-header">อนุมัติข้อความ (Moderation Queue)</div>
-                <p style="color:#888;font-size:0.9rem">ข้อความที่ผู้ใช้พิมพ์เองจะต้องได้รับการตรวจสอบก่อนแสดงผล</p>
-                <table>
-                    <thead><tr><th style="width:25%">ผู้ส่ง</th><th style="width:45%">ข้อความ</th><th style="width:30%">จัดการ</th></tr></thead>
-                    <tbody id="pendingTable"><tr><td colspan="3" style="text-align:center;padding:30px;color:#aaa">กำลังโหลด...</td></tr></tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- Approved -->
-        <div id="approved" class="tab-content">
-            <div class="card">
-                <div class="card-header">ข้อความที่อนุมัติแล้ว</div>
-                <table>
-                    <thead><tr><th style="width:25%">ผู้ส่ง</th><th style="width:45%">ข้อความ</th><th style="width:30%">จัดการ</th></tr></thead>
-                    <tbody id="approvedTable"><tr><td colspan="3" style="text-align:center;padding:30px;color:#aaa">กำลังโหลด...</td></tr></tbody>
-                </table>
-            </div>
-        </div>
-
+      </div>
+      <div class="acard-body">
+        <div id="wList"><div style="text-align:center;color:var(--gray1);font-size:13px;padding:30px">กำลังโหลด...</div></div>
+        <div class="g-pager" id="wPager"></div>
+      </div>
     </div>
+
+    <!-- SETTINGS -->
+    <div class="acard">
+      <div class="acard-head">
+        <div class="acard-title"><span class="icon">⚙</span> ตั้งค่าเว็บไซต์</div>
+        <button class="btn btn-sm btn-primary" onclick="saveSettings()">บันทึก</button>
+      </div>
+      <div class="acard-body">
+        <div class="status-row" id="cfgStatus" style="display:none"></div>
+        <div class="settings-grid">
+          <div class="form-row"><label>Header (TH)</label><input type="text" id="header_th"></div>
+          <div class="form-row"><label>Header (EN)</label><input type="text" id="header_en"></div>
+          <div class="form-row"><label>Subtitle (TH)</label><input type="text" id="subtitle_th"></div>
+          <div class="form-row"><label>Subtitle (EN)</label><input type="text" id="subtitle_en"></div>
+        </div>
+        <div class="form-row"><label>รูปพื้นหลัง (URL)</label><input type="text" id="bg_image" placeholder="https://..."></div>
+      </div>
+    </div>
+
+    <!-- AVATARS + PREDEFINED -->
+    <div class="acard">
+      <div class="acard-head"><div class="acard-title"><span class="icon">🎨</span> Avatar & คำอวยพรสำเร็จรูป</div></div>
+      <div class="acard-body">
+        <div class="nav-tabs">
+          <button class="nav-tab active" onclick="switchTab('avTab',this)">รูปโปรไฟล์</button>
+          <button class="nav-tab" onclick="switchTab('pwTab',this)">คำอวยพรสำเร็จรูป</button>
+        </div>
+
+        <!-- AVATARS -->
+        <div id="avTab">
+          <div style="display:flex;gap:10px;margin-bottom:12px">
+            <input type="text" id="newAvUrl" placeholder="URL รูปภาพ..." style="flex:1;padding:8px 12px;border:var(--border);border-radius:8px;font-family:var(--thai);font-size:13px;background:#fafaf9;outline:none">
+            <button class="btn btn-primary" onclick="addAvatar()"><span>+ เพิ่ม</span></button>
+          </div>
+          <div class="av-grid" id="avGrid">กำลังโหลด...</div>
+        </div>
+
+        <!-- PREDEFINED -->
+        <div id="pwTab" style="display:none">
+          <div style="margin-bottom:12px">
+            <textarea id="newPwText" rows="2" placeholder="พิมพ์คำอวยพรใหม่..." style="width:100%;padding:8px 12px;border:var(--border);border-radius:8px;font-family:var(--thai);font-size:13px;background:#fafaf9;outline:none;resize:none;margin-bottom:8px"></textarea>
+            <button class="btn btn-primary btn-sm" onclick="addPredefined()">+ เพิ่มคำอวยพร</button>
+          </div>
+          <div id="pwList">กำลังโหลด...</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
 </div>
 
-<div id="toast"></div>
+<!-- CONFIRM MODAL -->
+<div class="modal-wrap" id="modalWrap">
+  <div class="modal">
+    <h3 id="modalTitle">ยืนยัน</h3>
+    <p id="modalMsg"></p>
+    <div class="btn-row" style="justify-content:center">
+      <button class="btn btn-ghost" onclick="closeModal()">ยกเลิก</button>
+      <button class="btn btn-danger" id="modalConfirm">ยืนยัน</button>
+    </div>
+  </div>
+</div>
 
+<div class="toast" id="toast"></div>
+
+<script src="supabase.js"></script>
 <script>
-const SUPABASE_URL = 'https://jrnlyarpshxegtggtdnj.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_z9gBERtLSWsFzSh2w4hX8A_yLcPkMsJ';
-let authToken = null;
+/* ── State ── */
+let allWishes = [], wPage = 0;
+const W_PER = 12;
 
-// ===== AUTH =====
+/* ── Auth ── */
 async function doLogin() {
-    const email = document.getElementById('loginEmail').value.trim();
-    const password = document.getElementById('loginPassword').value;
-    const btn = document.getElementById('loginBtn');
-    document.getElementById('loginError').style.display = 'none';
-    if (!email || !password) { showLoginErr('กรุณากรอก Email และ Password'); return; }
-    btn.disabled = true; btn.innerText = 'กำลังเข้าสู่ระบบ...';
-    try {
-        const res = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`, {
-            method:'POST',
-            headers:{ 'apikey':SUPABASE_KEY, 'Content-Type':'application/json' },
-            body: JSON.stringify({ email, password })
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error_description || 'Login failed');
-        authToken = data.access_token;
-        sessionStorage.setItem('sb_token', authToken);
-        showDashboard();
-    } catch(e) {
-        showLoginErr('Email หรือ Password ไม่ถูกต้อง');
-    } finally { btn.disabled = false; btn.innerText = 'เข้าสู่ระบบ →'; }
+  const email = document.getElementById('lEmail').value.trim();
+  const pass  = document.getElementById('lPass').value;
+  const err   = document.getElementById('loginErr');
+  const btn   = document.getElementById('btnLogin');
+  err.style.display = 'none';
+  if (!email || !pass) { showLoginErr('กรุณากรอก Email และ Password'); return; }
+  btn.disabled = true; btn.textContent = 'กำลังเข้าสู่ระบบ...';
+  try {
+    await sbAuth.login(email, pass);
+    showDash();
+  } catch(e) {
+    showLoginErr('Email หรือ Password ไม่ถูกต้อง');
+  } finally { btn.disabled = false; btn.textContent = 'SIGN IN →'; }
 }
+
+function showLoginErr(msg) { const e=document.getElementById('loginErr'); e.textContent='❌ '+msg; e.style.display='block'; }
 
 async function doLogout() {
-    if (!confirm('ออกจากระบบ?')) return;
-    await fetch(`${SUPABASE_URL}/auth/v1/logout`,{ method:'POST', headers:{'apikey':SUPABASE_KEY,'Authorization':`Bearer ${authToken}`} }).catch(()=>{});
-    authToken = null; sessionStorage.removeItem('sb_token');
-    document.body.classList.remove('logged-in');
+  if (!confirm('ออกจากระบบ?')) return;
+  await sbAuth.logout();
+  document.body.classList.remove('in');
 }
 
-function showLoginErr(msg) { const e = document.getElementById('loginError'); e.innerText='❌ '+msg; e.style.display='block'; }
+function showDash() { document.body.classList.add('in'); loadAll(); }
 
-function showDashboard() {
-    document.body.classList.add('logged-in');
-    loadSettings(); loadPending();
-}
-
-// ===== API HELPERS =====
-const headers = () => ({ 'apikey':SUPABASE_KEY, 'Authorization':`Bearer ${authToken}`, 'Content-Type':'application/json' });
-
-async function sbGet(table, params='') {
-    const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}${params}`, { headers:headers() });
-    if (!r.ok) throw new Error('GET failed');
-    return r.json();
-}
-async function sbPost(table, data) {
-    const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, { method:'POST', headers:{...headers(),'Prefer':'return=minimal'}, body:JSON.stringify(data) });
-    if (!r.ok) throw new Error('POST failed');
-}
-async function sbPatch(table, params, data) {
-    const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}${params}`, { method:'PATCH', headers:{...headers(),'Prefer':'return=minimal'}, body:JSON.stringify(data) });
-    if (!r.ok) throw new Error('PATCH failed');
-}
-async function sbDelete(table, params) {
-    const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}${params}`, { method:'DELETE', headers:headers() });
-    if (!r.ok) throw new Error('DELETE failed');
+/* ── Load All ── */
+async function loadAll() {
+  await Promise.all([loadWishes(), loadSettings(), loadAvatars(), loadPredefined()]);
 }
 
-// ===== TAB =====
-function openTab(id, el) {
-    document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
-    document.querySelectorAll('.menu-item').forEach(m=>m.classList.remove('active'));
-    document.getElementById(id).classList.add('active'); el.classList.add('active');
-    if (id==='approval')  loadPending();
-    if (id==='approved')  loadApproved();
-    if (id==='avatars')   loadAvatars();
-    if (id==='predefined') loadPredefined();
+/* ── Wishes ── */
+async function loadWishes() {
+  try {
+    allWishes = await sbAdmin.get('wishes', '?order=created_at.desc');
+    updateStats();
+    renderWishes();
+  } catch(e) { toast('โหลดคำอวยพรไม่สำเร็จ: '+e.message, false); }
 }
 
-// ===== SETTINGS =====
+function updateStats() {
+  const cutoff = Date.now() - 86400000;
+  document.getElementById('stTotal').textContent   = allWishes.length;
+  document.getElementById('stPending').textContent = allWishes.filter(w=>w.status==='pending').length;
+  document.getElementById('stNew').textContent     = allWishes.filter(w=>new Date(w.created_at)>cutoff).length;
+}
+
+function renderWishes() {
+  const f = document.getElementById('wFilter').value;
+  let list = f==='all' ? [...allWishes] : allWishes.filter(w=>w.status===f);
+  const total = Math.ceil(list.length/W_PER);
+  if (wPage >= total) wPage = Math.max(0, total-1);
+  const page = list.slice(wPage*W_PER, (wPage+1)*W_PER);
+
+  const el = document.getElementById('wList');
+  if (!list.length) { el.innerHTML='<div style="text-align:center;color:var(--gray1);font-size:13px;padding:30px">ไม่มีข้อมูล</div>'; document.getElementById('wPager').innerHTML=''; return; }
+
+  el.innerHTML = '<div class="w-grid">' + page.map(w => {
+    const col = colorFor(w.name);
+    const isPending = w.status === 'pending';
+    return `<div class="w-card${isPending?' pending':''}" id="wc_${w.id}">
+      <div class="w-card-top">
+        <div class="w-av" style="background:${col}">${initials(w.name)}</div>
+        <div>
+          <div class="w-name">${escHtml(w.name)}</div>
+          <div class="w-dept">${escHtml(w.dept||'')}</div>
+        </div>
+        <div class="w-time" style="margin-left:auto">${new Date(w.created_at).toLocaleDateString('th-TH')}</div>
+      </div>
+      <div class="w-msg">${escHtml(w.message)}</div>
+      <div class="w-actions">
+        ${isPending
+          ? `<button class="btn btn-sm btn-approve" onclick="updateStatus(${w.id},'approved')">✓ อนุมัติ</button>`
+          : `<button class="btn btn-sm btn-ghost" onclick="updateStatus(${w.id},'pending')">↩ ถอน</button>`
+        }
+        <button class="btn btn-sm btn-danger" onclick="confirmDeleteOne(${w.id},'${escHtml(w.name)}')">ลบ</button>
+      </div>
+    </div>`;
+  }).join('') + '</div>';
+
+  // Pager
+  const pg = document.getElementById('wPager');
+  if (total <= 1) { pg.innerHTML=''; return; }
+  pg.innerHTML =
+    `<button ${wPage===0?'disabled':''} onclick="wGoPage(${wPage-1})">&#8592;</button>`+
+    `<span class="info">${wPage+1} / ${total}</span>`+
+    `<button ${wPage>=total-1?'disabled':''} onclick="wGoPage(${wPage+1})">&#8594;</button>`;
+}
+
+function wGoPage(p) { wPage=p; renderWishes(); }
+
+async function updateStatus(id, status) {
+  try {
+    await sbAdmin.patch('wishes', `?id=eq.${id}`, { status });
+    const w = allWishes.find(x=>x.id===id);
+    if (w) w.status = status;
+    updateStats(); renderWishes();
+    toast(status==='approved' ? '✓ อนุมัติแล้ว' : '↩ ถอนการอนุมัติแล้ว');
+  } catch(e) { toast('ไม่สำเร็จ: '+e.message, false); }
+}
+
+function confirmDeleteOne(id, name) {
+  document.getElementById('modalTitle').textContent = 'ยืนยันการลบ';
+  document.getElementById('modalMsg').textContent = `ลบคำอวยพรของ "${name}" ถาวร?`;
+  document.getElementById('modalConfirm').onclick = () => deleteOne(id);
+  document.getElementById('modalWrap').classList.add('show');
+}
+async function deleteOne(id) {
+  closeModal();
+  try {
+    await sbAdmin.delete('wishes', `?id=eq.${id}`);
+    allWishes = allWishes.filter(w=>w.id!==id);
+    updateStats(); renderWishes(); toast('✓ ลบแล้ว');
+  } catch(e) { toast('ลบไม่สำเร็จ',false); }
+}
+
+function confirmDeleteAll() {
+  const f = document.getElementById('wFilter').value;
+  const targets = f==='all' ? allWishes : allWishes.filter(w=>w.status===f);
+  document.getElementById('modalTitle').textContent = 'ลบทั้งหมด?';
+  document.getElementById('modalMsg').textContent = `ลบคำอวยพร ${targets.length} รายการ (${f==='all'?'ทั้งหมด':f}) ถาวร?`;
+  document.getElementById('modalConfirm').onclick = () => deleteAll(f);
+  document.getElementById('modalWrap').classList.add('show');
+}
+async function deleteAll(f) {
+  closeModal();
+  try {
+    const params = f==='all' ? '?id=gt.0' : `?status=eq.${f}`;
+    await sbAdmin.delete('wishes', params);
+    if (f==='all') allWishes=[];
+    else allWishes = allWishes.filter(w=>w.status!==f);
+    updateStats(); renderWishes(); toast('✓ ลบทั้งหมดแล้ว');
+  } catch(e) { toast('ลบไม่สำเร็จ',false); }
+}
+
+/* ── Settings ── */
 async function loadSettings() {
-    try {
-        const rows = await sbGet('settings','?select=setting_key,setting_value');
-        rows.forEach(r => { const el=document.getElementById(r.setting_key); if(el) el.value=r.setting_value; });
-        // preview bg
-        const bgVal = document.getElementById('bg_image')?.value;
-        if (bgVal) { document.getElementById('bgPreview').src=bgVal; document.getElementById('bgContainer').style.display='inline-block'; }
-    } catch(e) { toast('โหลด settings ไม่สำเร็จ',false); }
+  try {
+    const rows = await sbAdmin.get('settings','?select=setting_key,setting_value');
+    rows.forEach(r => { const el=document.getElementById(r.setting_key); if(el) el.value=r.setting_value; });
+  } catch(e) {}
 }
 
 async function saveSettings() {
-    try {
-        for (const key of ['header_th','header_en','subtitle_th','subtitle_en','bg_image']) {
-            const val = document.getElementById(key)?.value?.trim() ?? '';
-            await sbPatch('settings',`?setting_key=eq.${key}`,{ setting_value:val });
-        }
-        toast('บันทึกเรียบร้อย ✅');
-    } catch(e) { toast('บันทึกไม่สำเร็จ',false); }
+  const keys = ['header_th','header_en','subtitle_th','subtitle_en','bg_image'];
+  setStatus('cfgStatus','loading','กำลังบันทึก...');
+  try {
+    for (const k of keys) {
+      const val = document.getElementById(k)?.value?.trim() ?? '';
+      await sbAdmin.patch('settings', `?setting_key=eq.${k}`, { setting_value: val });
+    }
+    setStatus('cfgStatus','ok','✓ บันทึกเรียบร้อย');
+  } catch(e) { setStatus('cfgStatus','err','❌ '+e.message); }
 }
 
-function previewBg() {
-    const url = document.getElementById('bg_image').value.trim();
-    if (!url) return;
-    document.getElementById('bgPreview').src = url;
-    document.getElementById('bgContainer').style.display = 'inline-block';
-}
-
-function deleteBg() {
-    if (!confirm('ลบรูปพื้นหลัง?')) return;
-    document.getElementById('bg_image').value = '';
-    document.getElementById('bgContainer').style.display = 'none';
-    toast('ลบรูปพื้นหลังแล้ว (กดบันทึกเพื่อยืนยัน)');
-}
-
-// ===== AVATARS =====
+/* ── Avatars ── */
 async function loadAvatars() {
-    try {
-        const avatars = await sbGet('avatars','?select=id,image_path&order=id.asc');
-        const grid = document.getElementById('avatarGridAdmin');
-        if (!avatars.length) { grid.innerHTML='<p style="color:#aaa">ยังไม่มีรูป</p>'; return; }
-        grid.innerHTML = avatars.map(a=>`
-            <div class="avatar-item" id="av_${a.id}">
-                <img src="${esc(a.image_path)}" onerror="this.src='https://cdn-icons-png.flaticon.com/512/4140/4140037.png'" title="ID:${a.id}">
-                <button class="btn-del-avatar" onclick="deleteAvatar(${a.id})"><i class="fas fa-times"></i></button>
-            </div>`).join('');
-    } catch(e) { toast('โหลด avatars ไม่สำเร็จ',false); }
+  try {
+    const avs = await sbAdmin.get('avatars','?select=id,image_path&order=id.asc');
+    const grid = document.getElementById('avGrid');
+    if (!avs.length) { grid.innerHTML='<p style="color:var(--gray1);font-size:13px">ยังไม่มีรูป</p>'; return; }
+    grid.innerHTML = avs.map(a=>`
+      <div class="av-item" id="av_${a.id}">
+        <img src="${escHtml(a.image_path)}" onerror="this.src='https://cdn-icons-png.flaticon.com/512/4140/4140037.png'">
+        <button class="av-del" onclick="deleteAvatar(${a.id})">✕</button>
+      </div>`).join('');
+  } catch(e) {}
 }
 
 async function addAvatar() {
-    const url = document.getElementById('newAvatarUrl').value.trim();
-    if (!url) { toast('กรุณากรอก URL รูป',false); return; }
-    try {
-        await sbPost('avatars',{ image_path:url });
-        document.getElementById('newAvatarUrl').value = '';
-        loadAvatars();
-        toast('เพิ่มรูปเรียบร้อย ✅');
-    } catch(e) { toast('เพิ่มรูปไม่สำเร็จ',false); }
+  const url = document.getElementById('newAvUrl').value.trim();
+  if (!url) { toast('กรุณาใส่ URL รูป', false); return; }
+  try {
+    await sbAdmin.post('avatars', { image_path: url });
+    document.getElementById('newAvUrl').value = '';
+    loadAvatars(); toast('✓ เพิ่มรูปเรียบร้อย');
+  } catch(e) { toast('เพิ่มไม่สำเร็จ', false); }
 }
 
 async function deleteAvatar(id) {
-    if (!confirm('ลบรูปนี้?')) return;
-    try {
-        await sbDelete('avatars',`?id=eq.${id}`);
-        document.getElementById('av_'+id)?.remove();
-        toast('ลบรูปเรียบร้อย');
-    } catch(e) { toast('ลบรูปไม่สำเร็จ',false); }
+  if (!confirm('ลบรูปนี้?')) return;
+  try {
+    await sbAdmin.delete('avatars', `?id=eq.${id}`);
+    document.getElementById('av_'+id)?.remove();
+    toast('✓ ลบรูปแล้ว');
+  } catch(e) { toast('ลบไม่สำเร็จ', false); }
 }
 
-// ===== PREDEFINED =====
+/* ── Predefined ── */
 async function loadPredefined() {
-    try {
-        const rows = await sbGet('predefined_wishes','?select=id,message_text&order=id.asc');
-        const el = document.getElementById('predefinedList');
-        if (!rows.length) { el.innerHTML='<p style="color:#aaa">ยังไม่มีคำอวยพรสำเร็จรูป</p>'; return; }
-        el.innerHTML = rows.map(r=>`
-            <div class="wish-item" id="pw_${r.id}">
-                <span>${esc(r.message_text)}</span>
-                <button class="btn btn-reject" onclick="deletePredefined(${r.id})"><i class="fas fa-trash"></i></button>
-            </div>`).join('');
-    } catch(e) { toast('โหลดคำอวยพรไม่สำเร็จ',false); }
-}
-
-function toggleAddForm() {
-    const f = document.getElementById('addWishForm');
-    f.style.display = f.style.display==='none' ? 'block' : 'none';
+  try {
+    const rows = await sbAdmin.get('predefined_wishes','?select=id,message_text&order=id.asc');
+    const el = document.getElementById('pwList');
+    if (!rows.length) { el.innerHTML='<p style="color:var(--gray1);font-size:13px">ยังไม่มีคำอวยพรสำเร็จรูป</p>'; return; }
+    el.innerHTML = rows.map(r=>`
+      <div class="pw-item" id="pw_${r.id}">
+        <span>${escHtml(r.message_text)}</span>
+        <button class="btn btn-sm btn-danger" onclick="deletePredefined(${r.id})">ลบ</button>
+      </div>`).join('');
+  } catch(e) {}
 }
 
 async function addPredefined() {
-    const text = document.getElementById('newWishText').value.trim();
-    if (!text) { toast('กรุณากรอกข้อความ',false); return; }
-    try {
-        await sbPost('predefined_wishes',{ message_text:text });
-        document.getElementById('newWishText').value = '';
-        toggleAddForm(); loadPredefined();
-        toast('เพิ่มคำอวยพรเรียบร้อย ✅');
-    } catch(e) { toast('เพิ่มไม่สำเร็จ',false); }
+  const text = document.getElementById('newPwText').value.trim();
+  if (!text) { toast('กรุณากรอกข้อความ', false); return; }
+  try {
+    await sbAdmin.post('predefined_wishes', { message_text: text });
+    document.getElementById('newPwText').value = '';
+    loadPredefined(); toast('✓ เพิ่มคำอวยพรเรียบร้อย');
+  } catch(e) { toast('เพิ่มไม่สำเร็จ', false); }
 }
 
 async function deletePredefined(id) {
-    if (!confirm('ลบคำอวยพรนี้?')) return;
-    try {
-        await sbDelete('predefined_wishes',`?id=eq.${id}`);
-        document.getElementById('pw_'+id)?.remove();
-        toast('ลบเรียบร้อย');
-    } catch(e) { toast('ลบไม่สำเร็จ',false); }
+  if (!confirm('ลบคำอวยพรนี้?')) return;
+  try {
+    await sbAdmin.delete('predefined_wishes', `?id=eq.${id}`);
+    document.getElementById('pw_'+id)?.remove();
+    toast('✓ ลบแล้ว');
+  } catch(e) { toast('ลบไม่สำเร็จ', false); }
 }
 
-// ===== WISHES TABLE =====
-async function loadPending() {
-    try {
-        const data = await sbGet('wishes','?status=eq.pending&order=created_at.desc');
-        renderTable('pendingTable', data, true);
-        const cnt = document.getElementById('pendingCount');
-        if (data.length>0) { cnt.innerText=data.length; cnt.style.display='inline'; }
-        else cnt.style.display='none';
-    } catch(e) { toast('โหลดข้อมูลไม่สำเร็จ',false); }
+/* ── Tab ── */
+function switchTab(id, el) {
+  document.getElementById('avTab').style.display = 'none';
+  document.getElementById('pwTab').style.display = 'none';
+  document.getElementById(id).style.display = 'block';
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
 }
 
-async function loadApproved() {
-    try {
-        const data = await sbGet('wishes','?status=eq.approved&order=created_at.desc');
-        renderTable('approvedTable', data, false);
-    } catch(e) { toast('โหลดข้อมูลไม่สำเร็จ',false); }
+/* ── Helpers ── */
+function setStatus(id, type, msg) {
+  const el = document.getElementById(id);
+  el.className = 'status-row ' + type;
+  el.style.display = 'flex';
+  el.innerHTML = (type==='loading'?'<div class="spin"></div>':'') + '<span>'+msg+'</span>';
+  if (type==='ok') setTimeout(()=>el.style.display='none', 2500);
 }
-
-function renderTable(tableId, data, isPending) {
-    const tbody = document.getElementById(tableId);
-    if (!data.length) { tbody.innerHTML=`<tr><td colspan="3" style="text-align:center;padding:30px;color:#aaa">ไม่มีข้อมูล 🎉</td></tr>`; return; }
-    tbody.innerHTML = data.map(w=>`
-        <tr id="row_${w.id}" class="wish-row">
-            <td>
-                <div class="user-info">
-                    <img src="${esc(w.avatar)}" class="user-avatar-small" onerror="this.src='https://cdn-icons-png.flaticon.com/512/4140/4140037.png'">
-                    <div><strong>${esc(w.name)}</strong><br><small style="color:#888">${esc(w.dept)} • ${fmtDate(w.created_at)}</small></div>
-                </div>
-            </td>
-            <td class="msg-cell">
-                <span class="msg-display">"${esc(w.message)}"</span>
-                <input type="text" class="msg-edit-input" value="${esc(w.message)}">
-            </td>
-            <td>
-                <button class="btn btn-save" onclick="saveEdit(${w.id})"><i class="fas fa-save"></i> บันทึก</button>
-                <button class="btn btn-edit" onclick="toggleEdit(${w.id})" title="แก้ไขข้อความ"><i class="fas fa-pen"></i></button>
-                ${isPending
-                    ? `<button class="btn btn-approve" onclick="updateStatus(${w.id},'approved')" title="อนุมัติ"><i class="fas fa-check"></i></button>`
-                    : `<button class="btn btn-reject" onclick="updateStatus(${w.id},'pending')" title="ถอนการอนุมัติ"><i class="fas fa-undo"></i></button>`
-                }
-                <button class="btn btn-reject" onclick="deleteWish(${w.id})" title="ลบ"><i class="fas fa-times"></i></button>
-            </td>
-        </tr>`).join('');
-}
-
-// ===== Edit / Approve / Delete =====
-function toggleEdit(id) { document.getElementById('row_'+id).classList.add('editing'); }
-
-async function saveEdit(id) {
-    const row = document.getElementById('row_'+id);
-    const msg = row.querySelector('.msg-edit-input').value.trim();
-    try {
-        await sbPatch('wishes',`?id=eq.${id}`,{ message:msg });
-        row.querySelector('.msg-display').innerText = `"${msg}"`;
-        row.classList.remove('editing');
-        toast('แก้ไขข้อความเรียบร้อย ✅');
-    } catch(e) { toast('แก้ไขไม่สำเร็จ',false); }
-}
-
-async function updateStatus(id, status) {
-    const label = status==='approved' ? 'อนุมัติ' : 'ถอนการอนุมัติ';
-    if (!confirm(`${label}ข้อความนี้?`)) return;
-    try {
-        await sbPatch('wishes',`?id=eq.${id}`,{ status });
-        const row = document.getElementById('row_'+id);
-        row.style.background = status==='approved' ? '#d4edda' : '#fff3cd';
-        setTimeout(()=>{ row.remove(); loadPending(); }, 500);
-        toast(`${label}เรียบร้อย ✅`);
-    } catch(e) { toast('ดำเนินการไม่สำเร็จ',false); }
-}
-
-async function deleteWish(id) {
-    if (!confirm('ลบข้อความนี้ถาวร?')) return;
-    try {
-        await sbDelete('wishes',`?id=eq.${id}`);
-        document.getElementById('row_'+id)?.remove();
-        toast('ลบเรียบร้อย');
-    } catch(e) { toast('ลบไม่สำเร็จ',false); }
-}
-
-// ===== HELPERS =====
 function toast(msg, ok=true) {
-    const t = document.getElementById('toast');
-    t.innerText = (ok?'✅ ':'❌ ')+msg;
-    t.style.background = ok ? '#27ae60' : '#e74c3c';
-    t.style.display = 'block';
-    setTimeout(()=>t.style.display='none', 3000);
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'),2800);
 }
-function esc(str) { return String(str??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-function fmtDate(dt) { return dt ? new Date(dt).toLocaleDateString('th-TH',{day:'numeric',month:'short'}) : ''; }
+function closeModal() { document.getElementById('modalWrap').classList.remove('show'); }
 
-// ===== INIT =====
-const savedToken = sessionStorage.getItem('sb_token');
-if (savedToken) { authToken = savedToken; showDashboard(); }
+/* ── Init ── */
+if (sbAuth.restore()) showDash();
 </script>
 </body>
 </html>

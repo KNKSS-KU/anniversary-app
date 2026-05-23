@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ส่งคำอวยพร</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Sarabun:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,300;1,300&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --o:#FF8200;--od:#CC6800;--ol:#FFF3E0;
+  --gray1:#74787B;--gray2:#222221;--gray3:#f7f5f2;
+  --serif:'Cormorant Garamond',serif;
+  --disp:'Cinzel',serif;--thai:'Sarabun',sans-serif;
+  --border:0.5px solid rgba(0,0,0,.1);
+}
+html,body{min-height:100%;background:#EDE8E1;font-family:var(--thai);color:var(--gray2)}
+body::before{content:'✦';position:fixed;font-size:320px;color:rgba(255,130,0,.04);top:-60px;right:-60px;font-family:serif;pointer-events:none;z-index:0;line-height:1}
+
+/* HEADER */
+.g-header{background:rgba(255,255,255,.95);backdrop-filter:blur(10px);border-bottom:var(--border);padding:0 20px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.h-brand{font-family:var(--disp);font-size:14px;letter-spacing:.08em}
+.h-back{font-size:12px;color:var(--gray1);text-decoration:none;display:flex;align-items:center;gap:4px;padding:5px 10px;border-radius:100px;border:var(--border);transition:all .2s}
+.h-back:hover{background:var(--gray3)}
+
+/* MAIN */
+.g-main{max-width:560px;margin:0 auto;padding:32px 16px 60px;position:relative;z-index:1}
+
+/* HERO */
+.g-hero{text-align:center;margin-bottom:28px}
+.g-hero-icon{font-size:32px;margin-bottom:10px;opacity:.7}
+.g-hero-title{font-family:var(--disp);font-size:22px;letter-spacing:.06em;color:var(--gray2);margin-bottom:6px}
+.g-hero-sub{font-family:var(--serif);font-style:italic;font-size:16px;color:var(--gray1)}
+
+/* CARD PREVIEW */
+.card-preview{background:#fff;border-radius:16px;border:var(--border);padding:24px;margin-bottom:24px;display:flex;flex-direction:column;gap:12px;min-height:120px;transition:all .3s;box-shadow:0 4px 20px rgba(0,0,0,.04)}
+.preview-msg{font-family:var(--serif);font-size:18px;line-height:1.75;color:var(--gray2);flex:1}
+.preview-msg.placeholder{color:rgba(116,120,123,.4);font-style:italic}
+.preview-footer{display:flex;align-items:center;gap:10px}
+.preview-av{width:32px;height:32px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;background:var(--o);transition:background .3s}
+.preview-name{font-size:13px;font-weight:500}
+.preview-dept{font-size:11px;color:var(--gray1)}
+.preview-time{font-size:11px;color:var(--gray1);margin-left:auto}
+
+/* FORM CARD */
+.form-card{background:#fff;border-radius:16px;border:var(--border);overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.04)}
+.form-section{padding:20px}
+.form-section+.form-section{border-top:var(--border)}
+.form-section label{font-size:12px;font-weight:500;color:var(--gray1);margin-bottom:6px;display:block}
+input[type=text],input[type=email],textarea{font-family:var(--thai);font-size:14px;width:100%;padding:10px 14px;border:var(--border);border-radius:10px;background:#fafaf9;color:var(--gray2);outline:none;transition:border-color .2s,background .2s;resize:none}
+input:focus,textarea:focus{border-color:var(--o);background:#fff}
+textarea{line-height:1.65;min-height:120px}
+
+/* PRESETS */
+.preset-title{font-size:12px;font-weight:500;color:var(--gray1);margin-bottom:8px}
+.preset-list{display:flex;flex-direction:column;gap:6px}
+.preset-item{font-family:var(--serif);font-size:14px;line-height:1.55;padding:10px 14px;border-radius:10px;border:var(--border);background:#fafaf9;cursor:pointer;color:var(--gray2);transition:all .2s;text-align:left;width:100%}
+.preset-item:hover{border-color:var(--o);background:var(--ol)}
+.preset-item.selected{border-color:var(--o);background:var(--ol);color:var(--od)}
+
+/* CHAR COUNT */
+.char-row{display:flex;justify-content:flex-end;margin-top:6px}
+.char-count{font-size:11px;color:var(--gray1)}
+.char-count.warn{color:#e53935}
+
+/* SUBMIT */
+.submit-section{padding:16px 20px;background:var(--gray3);border-top:var(--border)}
+.btn-submit{width:100%;font-family:var(--disp);font-size:13px;letter-spacing:.1em;padding:14px;border:none;border-radius:12px;background:var(--o);color:#fff;cursor:pointer;transition:all .25s;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-submit:hover:not(:disabled){background:var(--od);transform:translateY(-1px);box-shadow:0 4px 16px rgba(255,130,0,.3)}
+.btn-submit:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.spin{width:16px;height:16px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;display:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* STATUS */
+.status-box{margin-top:12px;padding:10px 14px;border-radius:10px;font-size:13px;display:none;align-items:center;gap:8px}
+.status-box.ok{background:#e8f5e9;color:#1b5e20;border:0.5px solid #a5d6a7;display:flex}
+.status-box.err{background:#ffebee;color:#b71c1c;border:0.5px solid #ef9a9a;display:flex}
+
+/* SUCCESS OVERLAY */
+.success-wrap{position:fixed;inset:0;background:#EDE8E1;z-index:200;display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center;padding:20px}
+.success-wrap.show{display:flex}
+.success-icon{font-size:56px;animation:popIn .4s ease}
+.success-title{font-family:var(--disp);font-size:24px;letter-spacing:.06em}
+.success-sub{font-family:var(--serif);font-style:italic;font-size:16px;color:var(--gray1)}
+.success-card{background:#fff;border-radius:16px;border:0.5px solid rgba(0,0,0,.08);padding:20px 24px;max-width:400px;width:100%;text-align:left;box-shadow:0 4px 20px rgba(0,0,0,.06)}
+.success-card .msg{font-family:var(--serif);font-size:16px;line-height:1.75;color:var(--gray2)}
+.success-card .from{font-size:13px;color:var(--gray1);margin-top:10px}
+.success-btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.btn-wall{font-family:var(--thai);font-size:13px;padding:10px 20px;border-radius:100px;background:var(--o);color:#fff;border:none;cursor:pointer;text-decoration:none;transition:all .2s}
+.btn-wall:hover{background:var(--od)}
+.btn-again{font-family:var(--thai);font-size:13px;padding:10px 20px;border-radius:100px;background:transparent;color:var(--gray1);border:0.5px solid rgba(0,0,0,.1);cursor:pointer;transition:all .2s}
+.btn-again:hover{background:var(--gray3)}
+@keyframes popIn{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
+</style>
+</head>
+<body>
+
+<div class="g-header">
+  <div class="h-brand">ANNIVERSARY</div>
+  <a class="h-back" href="anniversary-wall.html">← ดู Wall</a>
+</div>
+
+<div class="g-main">
+  <div class="g-hero">
+    <div class="g-hero-icon">✦</div>
+    <div class="g-hero-title" id="heroTitle">ส่งคำอวยพร</div>
+    <div class="g-hero-sub" id="heroSub">ร่วมอวยพรในโอกาสพิเศษนี้</div>
+  </div>
+
+  <!-- CARD PREVIEW -->
+  <div class="card-preview" id="cardPreview">
+    <div class="preview-msg placeholder" id="previewMsg">ข้อความของคุณจะแสดงที่นี่...</div>
+    <div class="preview-footer">
+      <div class="preview-av" id="previewAv">?</div>
+      <div>
+        <div class="preview-name" id="previewName">ชื่อของคุณ</div>
+        <div class="preview-dept" id="previewDept"></div>
+      </div>
+      <div class="preview-time" id="previewTime"></div>
+    </div>
+  </div>
+
+  <!-- FORM -->
+  <div class="form-card">
+    <div class="form-section" style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div>
+        <label for="fName">ชื่อ <span style="color:var(--o)">*</span></label>
+        <input type="text" id="fName" placeholder="ชื่อที่ต้องการแสดง" maxlength="60" oninput="updatePreview()">
+      </div>
+      <div>
+        <label for="fDept">แผนก</label>
+        <input type="text" id="fDept" placeholder="แผนกของคุณ" maxlength="60" oninput="updatePreview()">
+      </div>
+    </div>
+
+    <div class="form-section">
+      <label for="fMsg">ข้อความอวยพร <span style="color:var(--o)">*</span></label>
+      <textarea id="fMsg" placeholder="เขียนคำอวยพรจากใจ..." maxlength="400" oninput="updatePreview()"></textarea>
+      <div class="char-row"><span class="char-count" id="charCount">0 / 400</span></div>
+    </div>
+
+    <div class="form-section" id="presetSection" style="display:none">
+      <div class="preset-title">หรือเลือกข้อความสำเร็จรูป</div>
+      <div class="preset-list" id="presetList"></div>
+    </div>
+
+    <div class="submit-section">
+      <button class="btn-submit" id="btnSubmit" onclick="submitGreeting()" disabled>
+        <span class="spin" id="submitSpin"></span>
+        <span id="btnLabel">SEND GREETING ✦</span>
+      </button>
+      <div class="status-box" id="statusBox"></div>
+    </div>
+  </div>
+</div>
+
+<!-- SUCCESS -->
+<div class="success-wrap" id="successWrap">
+  <div class="success-icon">✦</div>
+  <div class="success-title">ส่งสำเร็จแล้ว!</div>
+  <div class="success-sub">รอทีมงานตรวจสอบก่อนแสดงบน Wall</div>
+  <div class="success-card">
+    <div class="msg" id="successMsg"></div>
+    <div class="from" id="successFrom"></div>
+  </div>
+  <div class="success-btns">
+    <a class="btn-wall" href="anniversary-wall.html">🖼 ดูบน Wall</a>
+    <button class="btn-again" onclick="resetForm()">✎ ส่งอีกครั้ง</button>
+  </div>
+</div>
+
+<script src="supabase.js"></script>
+<script>
+async function init() {
+  try {
+    const rows = await sb.get('settings', '?select=setting_key,setting_value');
+    const s = {};
+    rows.forEach(r => s[r.setting_key] = r.setting_value);
+    if (s.header_th) document.getElementById('heroTitle').textContent = 'ส่งคำอวยพร — ' + (s.header_th.match(/\d+/)?.[0] || '') + ' ปี';
+    if (s.subtitle_th) document.getElementById('heroSub').textContent = s.subtitle_th;
+
+    const presets = await sb.get('predefined_wishes', '?select=message_text&order=id.asc');
+    if (presets.length) {
+      document.getElementById('presetSection').style.display = 'block';
+      presets.forEach(p => {
+        const btn = document.createElement('button');
+        btn.className = 'preset-item';
+        btn.textContent = p.message_text;
+        btn.onclick = () => {
+          document.querySelectorAll('.preset-item').forEach(b => b.classList.remove('selected'));
+          btn.classList.add('selected');
+          document.getElementById('fMsg').value = p.message_text;
+          updatePreview();
+        };
+        document.getElementById('presetList').appendChild(btn);
+      });
+    }
+  } catch(e) { console.warn('init error:', e); }
+  updatePreview();
+}
+
+function updatePreview() {
+  const name = document.getElementById('fName').value.trim();
+  const dept = document.getElementById('fDept').value.trim();
+  const msg  = document.getElementById('fMsg').value.trim();
+  const len  = document.getElementById('fMsg').value.length;
+
+  const pm = document.getElementById('previewMsg');
+  if (msg) { pm.textContent = msg; pm.classList.remove('placeholder'); }
+  else { pm.textContent = 'ข้อความของคุณจะแสดงที่นี่...'; pm.classList.add('placeholder'); }
+
+  const av = document.getElementById('previewAv');
+  if (name) { av.textContent = initials(name); av.style.background = colorFor(name); }
+  else { av.textContent = '?'; av.style.background = '#ccc'; }
+
+  document.getElementById('previewName').textContent = name || 'ชื่อของคุณ';
+  document.getElementById('previewDept').textContent = dept;
+  document.getElementById('previewTime').textContent = new Date().toLocaleTimeString('th-TH', { hour:'2-digit', minute:'2-digit' });
+
+  const cc = document.getElementById('charCount');
+  cc.textContent = `${len} / 400`;
+  cc.classList.toggle('warn', len > 350);
+
+  document.getElementById('btnSubmit').disabled = !(name && msg);
+}
+
+async function submitGreeting() {
+  const name = document.getElementById('fName').value.trim();
+  const dept = document.getElementById('fDept').value.trim();
+  const msg  = document.getElementById('fMsg').value.trim();
+  if (!name || !msg) return;
+
+  document.getElementById('btnSubmit').disabled = true;
+  document.getElementById('submitSpin').style.display = 'block';
+  document.getElementById('btnLabel').textContent = 'กำลังส่ง...';
+  document.getElementById('statusBox').className = 'status-box';
+
+  try {
+    await sb.post('wishes', {
+      name, dept, message: msg,
+      avatar: 'https://cdn-icons-png.flaticon.com/512/4140/4140037.png',
+      top_pos: Math.floor(Math.random() * 65) + 10,
+      left_pos: Math.floor(Math.random() * 78) + 5,
+      status: 'pending'
+    });
+    document.getElementById('successMsg').textContent = msg;
+    document.getElementById('successFrom').textContent = '— ' + name + (dept ? ` (${dept})` : '');
+    document.getElementById('successWrap').classList.add('show');
+  } catch(e) {
+    const sb2 = document.getElementById('statusBox');
+    sb2.className = 'status-box err';
+    sb2.innerHTML = '❌ ส่งไม่สำเร็จ: ' + e.message;
+    document.getElementById('btnSubmit').disabled = false;
+    document.getElementById('submitSpin').style.display = 'none';
+    document.getElementById('btnLabel').textContent = 'SEND GREETING ✦';
+  }
+}
+
+function resetForm() {
+  document.getElementById('successWrap').classList.remove('show');
+  document.getElementById('fName').value = '';
+  document.getElementById('fDept').value = '';
+  document.getElementById('fMsg').value = '';
+  document.querySelectorAll('.preset-item').forEach(b => b.classList.remove('selected'));
+  document.getElementById('btnSubmit').disabled = true;
+  document.getElementById('submitSpin').style.display = 'none';
+  document.getElementById('btnLabel').textContent = 'SEND GREETING ✦';
+  document.getElementById('statusBox').className = 'status-box';
+  updatePreview();
+}
+
+init();
+</script>
+</body>
+</html>

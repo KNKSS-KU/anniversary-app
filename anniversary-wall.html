@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anniversary Wall</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Sarabun:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,300;1,300&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --o:#FF8200;--ol:#FF9E3D;--od:#CC6800;
+  --gray1:#74787B;--gray2:#222221;
+  --serif:'Cormorant Garamond',serif;
+  --disp:'Cinzel',serif;--thai:'Sarabun',sans-serif;
+  --border:0.5px solid rgba(0,0,0,.08);
+}
+html,body{height:100%;overflow:hidden}
+body{background:#EDE8E1;font-family:var(--thai);color:var(--gray2)}
+
+/* HEADER */
+.wall-header{
+  position:fixed;top:0;left:0;right:0;z-index:50;
+  background:rgba(255,255,255,.96);backdrop-filter:blur(10px);
+  border-bottom:var(--border);padding:0 20px;height:52px;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+}
+.h-left{display:flex;align-items:center;gap:10px}
+.h-brand{font-family:var(--disp);font-size:15px;letter-spacing:.08em}
+.h-year{font-family:var(--serif);font-style:italic;font-size:13px;color:var(--o);margin-left:2px}
+.h-count{font-size:12px;color:var(--gray1);border:var(--border);border-radius:100px;padding:2px 10px;background:#fff}
+.filter-btn{font-family:var(--thai);font-size:12px;padding:4px 12px;border-radius:100px;border:var(--border);background:transparent;color:var(--gray1);cursor:pointer;transition:all .2s}
+.filter-btn.active{background:var(--o);color:#fff;border-color:var(--o)}
+.h-right{display:flex;align-items:center;gap:8px}
+.btn-greet{font-family:var(--thai);font-size:12px;font-weight:500;padding:6px 14px;border-radius:100px;background:var(--o);color:#fff;border:none;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .2s;text-decoration:none}
+.btn-greet:hover{background:var(--od);transform:translateY(-1px)}
+.btn-admin{font-size:11px;padding:5px 10px;border-radius:100px;border:var(--border);background:transparent;color:var(--gray1);cursor:pointer;text-decoration:none;transition:all .2s}
+.btn-admin:hover{background:#f5f3ef}
+
+/* STATUS BAR */
+.nc-bar{position:fixed;top:52px;left:0;right:0;z-index:40;font-size:12px;padding:5px 20px;display:none;align-items:center;gap:8px;background:#fff8e1;border-bottom:0.5px solid #ffe082;color:#7c6000}
+.nc-bar.err{background:#fff0f0;border-color:#ffcdd2;color:#b71c1c}
+.nc-bar.ok{background:#f0faf5;border-color:#a5d6a7;color:#1b5e20}
+.nc-bar.show{display:flex}
+.nc-spinner{width:12px;height:12px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:spin .6s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* STAGE */
+.stage{position:fixed;top:52px;left:0;right:0;bottom:48px;overflow:hidden;padding:20px 20px 0}
+.page{position:absolute;top:20px;left:20px;right:20px;display:grid;grid-template-columns:repeat(3,1fr);gap:14px;transition:opacity .35s,transform .35s;will-change:transform,opacity}
+.page.out-left{opacity:0;transform:translateX(-40px)}
+.page.out-right{opacity:0;transform:translateX(40px)}
+.page.hidden{display:none}
+
+/* CARD */
+.card{background:#fff;border-radius:12px;border:var(--border);padding:16px;cursor:pointer;transition:box-shadow .2s,transform .2s;display:flex;flex-direction:column;gap:8px;min-height:130px;opacity:0;animation:cardIn .4s forwards}
+.card:hover{box-shadow:0 6px 20px rgba(0,0,0,.08);transform:translateY(-2px)}
+@keyframes cardIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.card-msg{font-family:var(--serif);font-size:14px;line-height:1.65;color:var(--gray2);flex:1;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.card-footer{display:flex;align-items:center;gap:8px;margin-top:4px}
+.card-av{width:26px;height:26px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:#fff;letter-spacing:.02em}
+.card-name{font-size:12px;font-weight:500;color:var(--gray2);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-time{font-size:10px;color:var(--gray1)}
+.card-new{display:inline-flex;align-items:center;font-size:9px;background:#fff3e0;color:var(--o);border-radius:100px;padding:1px 6px;font-weight:600;letter-spacing:.04em;margin-left:auto}
+
+/* EMPTY */
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:calc(100vh - 52px - 48px);gap:12px;text-align:center}
+.empty-icon{font-size:40px;opacity:.25}
+.empty-title{font-family:var(--disp);font-size:18px;color:var(--gray1);letter-spacing:.05em}
+.empty-sub{font-size:13px;color:var(--gray1);line-height:1.6}
+
+/* PAGINATION */
+.pager{position:fixed;bottom:0;left:0;right:0;height:48px;background:rgba(255,255,255,.96);backdrop-filter:blur(10px);border-top:var(--border);display:flex;align-items:center;justify-content:center;gap:10px}
+.pager-btn{width:30px;height:30px;border-radius:50%;border:var(--border);background:transparent;cursor:pointer;font-size:16px;color:var(--gray2);display:flex;align-items:center;justify-content:center;transition:all .2s}
+.pager-btn:hover:not(:disabled){background:var(--o);color:#fff;border-color:var(--o)}
+.pager-btn:disabled{opacity:.3;cursor:not-allowed}
+.dots{display:flex;gap:5px;align-items:center}
+.dot{width:6px;height:6px;border-radius:50%;background:rgba(0,0,0,.15);cursor:pointer;transition:all .25s;border:none;padding:0}
+.dot.active{width:18px;border-radius:3px;background:var(--o)}
+
+/* POPUP */
+.pop-backdrop{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;padding:20px}
+.pop-backdrop.show{display:flex}
+.pop-card{background:#fff;border-radius:16px;max-width:480px;width:100%;padding:28px;position:relative;animation:popIn .25s ease}
+@keyframes popIn{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:scale(1)}}
+.pop-close{position:absolute;top:14px;right:14px;width:28px;height:28px;border-radius:50%;border:none;background:#f5f3ef;cursor:pointer;font-size:16px;color:var(--gray1);display:flex;align-items:center;justify-content:center}
+.pop-av{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600;color:#fff;margin-bottom:12px}
+.pop-name{font-size:16px;font-weight:600}
+.pop-dept{font-size:12px;color:var(--gray1);margin-top:2px}
+.pop-time{font-size:12px;color:var(--gray1);margin-top:2px}
+.pop-msg{font-family:var(--serif);font-size:16px;line-height:1.8;color:var(--gray2);margin-top:16px;padding-top:16px;border-top:var(--border)}
+
+/* TOAST */
+.toast{position:fixed;bottom:60px;left:50%;transform:translateX(-50%) translateY(12px);background:rgba(34,34,33,.88);color:#fff;font-size:13px;padding:8px 18px;border-radius:100px;z-index:300;opacity:0;transition:all .25s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+@media(max-width:680px){.page{grid-template-columns:repeat(2,1fr)}.h-brand{font-size:13px}}
+@media(max-width:420px){.page{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="wall-header">
+  <div class="h-left">
+    <div class="h-brand">ANNIVERSARY<span class="h-year" id="hYear"></span></div>
+    <div class="h-count"><span id="liveCount">0</span> คำอวยพร</div>
+    <button class="filter-btn active" onclick="setFilter('all')">ทั้งหมด</button>
+    <button class="filter-btn" onclick="setFilter('new')">ใหม่</button>
+  </div>
+  <div class="h-right">
+    <a class="btn-admin" href="aufsicht.html">⚙ Admin</a>
+    <a class="btn-greet" href="anniversary-greeting.html">✦ ส่งคำอวยพร</a>
+  </div>
+</div>
+
+<div class="nc-bar" id="ncBar">
+  <div class="nc-spinner" id="ncSpin"></div>
+  <span id="ncMsg">กำลังโหลด...</span>
+</div>
+
+<div class="stage" id="stage"></div>
+
+<div class="pager">
+  <button class="pager-btn" id="btnPrev" onclick="navigate(-1)">&#8592;</button>
+  <div class="dots" id="dots"></div>
+  <button class="pager-btn" id="btnNext" onclick="navigate(1)">&#8594;</button>
+</div>
+
+<div class="pop-backdrop" id="pop" onclick="closePop(event)">
+  <div class="pop-card">
+    <button class="pop-close" onclick="closePop()">✕</button>
+    <div class="pop-av" id="popAv"></div>
+    <div class="pop-name" id="popName"></div>
+    <div class="pop-dept" id="popDept"></div>
+    <div class="pop-time" id="popTime"></div>
+    <div class="pop-msg" id="popMsg"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="supabase.js"></script>
+<script>
+let allData = [], filtered = [], curFilter = 'all', curPage = 0;
+const PER_PAGE = 9;
+let settings = {};
+
+function setBar(state, msg) {
+  const bar = document.getElementById('ncBar');
+  document.getElementById('ncMsg').textContent = msg;
+  document.getElementById('ncSpin').style.display = state === 'loading' ? 'block' : 'none';
+  bar.className = 'nc-bar show ' + (state === 'loading' ? '' : state);
+  if (state === 'ok') setTimeout(() => bar.classList.remove('show'), 2500);
+}
+
+async function loadData() {
+  setBar('loading', 'กำลังโหลดข้อมูล...');
+  try {
+    const [wishes, sets] = await Promise.all([
+      sb.get('wishes', '?status=eq.approved&order=created_at.desc'),
+      sb.get('settings', '?select=setting_key,setting_value')
+    ]);
+    sets.forEach(r => settings[r.setting_key] = r.setting_value);
+    const year = settings.header_th?.match(/\d+/)?.[0] || '30';
+    document.getElementById('hYear').textContent = ` — ${year} ปี`;
+    allData = wishes;
+    applyFilter(curFilter);
+    setBar('ok', `✓ โหลดสำเร็จ — ${wishes.length} คำอวยพร`);
+  } catch(e) {
+    setBar('err', '❌ โหลดไม่สำเร็จ: ' + e.message);
+    renderEmpty('โหลดข้อมูลไม่ได้', 'กรุณาลองใหม่อีกครั้ง');
+  }
+}
+
+function applyFilter(f) {
+  curFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', (f==='all'&&b.textContent==='ทั้งหมด')||(f==='new'&&b.textContent==='ใหม่')));
+  filtered = f === 'new' ? allData.filter(d => isNewEntry(d.created_at)) : [...allData];
+  document.getElementById('liveCount').textContent = filtered.length;
+  curPage = 0;
+  buildPages();
+  showPage(0, 0);
+}
+function setFilter(f) { applyFilter(f); }
+
+function buildPages() {
+  const stage = document.getElementById('stage');
+  stage.innerHTML = '';
+  if (!filtered.length) { renderEmpty('ยังไม่มีคำอวยพร', 'เป็นคนแรกที่ส่งคำอวยพรได้เลย!'); return; }
+  const total = Math.ceil(filtered.length / PER_PAGE);
+  for (let p = 0; p < total; p++) {
+    const div = document.createElement('div');
+    div.className = 'page hidden';
+    div.id = 'page-' + p;
+    filtered.slice(p * PER_PAGE, (p+1) * PER_PAGE).forEach((d, i) => {
+      const col = colorFor(d.name);
+      const ni = isNewEntry(d.created_at) ? '<span class="card-new">NEW</span>' : '';
+      div.innerHTML += `
+        <div class="card" style="animation-delay:${i*40}ms" onclick='openPop(${JSON.stringify(d).replace(/'/g,"&#39;")})'>
+          <div class="card-msg">${escHtml(d.message)}</div>
+          <div class="card-footer">
+            <div class="card-av" style="background:${col}">${initials(d.name)}</div>
+            <div class="card-name">${escHtml(d.name)}</div>
+            <div class="card-time">${timeAgo(d.created_at)}</div>
+            ${ni}
+          </div>
+        </div>`;
+    });
+    stage.appendChild(div);
+  }
+  buildDots(total);
+}
+
+function renderEmpty(title, sub) {
+  document.getElementById('stage').innerHTML = `<div class="empty"><div class="empty-icon">✦</div><div class="empty-title">${title}</div><div class="empty-sub">${sub}</div></div>`;
+  buildDots(0);
+}
+
+function showPage(idx, dir) {
+  const pages = document.querySelectorAll('.page');
+  if (!pages.length) return;
+  const prev = document.getElementById('page-' + curPage);
+  if (prev && prev !== pages[idx]) {
+    prev.classList.remove('hidden');
+    prev.classList.add(dir > 0 ? 'out-left' : 'out-right');
+    setTimeout(() => { prev.classList.add('hidden'); prev.classList.remove('out-left','out-right'); }, 350);
+  }
+  curPage = idx;
+  const cur = document.getElementById('page-' + curPage);
+  if (cur) cur.classList.remove('hidden','out-left','out-right');
+  updateDots();
+  document.getElementById('btnPrev').disabled = curPage === 0;
+  document.getElementById('btnNext').disabled = curPage >= document.querySelectorAll('.page').length - 1;
+}
+
+function navigate(dir) {
+  const total = document.querySelectorAll('.page').length;
+  const np = Math.max(0, Math.min(total-1, curPage+dir));
+  if (np !== curPage) showPage(np, dir);
+}
+
+function buildDots(total) {
+  const c = document.getElementById('dots');
+  c.innerHTML = '';
+  for (let i = 0; i < Math.min(total, 10); i++) {
+    const b = document.createElement('button');
+    b.className = 'dot' + (i===0 ? ' active' : '');
+    b.setAttribute('data-i', i);
+    b.onclick = () => showPage(i, i > curPage ? 1 : -1);
+    c.appendChild(b);
+  }
+}
+function updateDots() {
+  document.querySelectorAll('.dot[data-i]').forEach(b => b.classList.toggle('active', +b.getAttribute('data-i') === curPage));
+}
+
+function openPop(d) {
+  document.getElementById('popAv').style.background = colorFor(d.name);
+  document.getElementById('popAv').textContent = initials(d.name);
+  document.getElementById('popName').textContent = d.name;
+  document.getElementById('popDept').textContent = d.dept || '';
+  document.getElementById('popTime').textContent = new Date(d.created_at).toLocaleString('th-TH');
+  document.getElementById('popMsg').textContent = d.message;
+  document.getElementById('pop').classList.add('show');
+}
+function closePop(e) {
+  if (e && e.target !== document.getElementById('pop')) return;
+  document.getElementById('pop').classList.remove('show');
+}
+
+function showToast(t) {
+  const el = document.getElementById('toast');
+  el.textContent = t; el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2800);
+}
+
+// Auto-refresh ทุก 30 วินาที
+setInterval(async () => {
+  try {
+    const prev = allData.length;
+    const data = await sb.get('wishes', '?status=eq.approved&order=created_at.desc');
+    if (data.length !== prev) {
+      allData = data;
+      applyFilter(curFilter);
+      if (data.length > prev) showToast('✦ มีคำอวยพรใหม่เข้ามา!');
+    }
+  } catch(_) {}
+}, 30000);
+
+loadData();
+</script>
+</body>
+</html>
