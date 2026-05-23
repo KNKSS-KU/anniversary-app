@@ -376,7 +376,11 @@ async function handleFiles(files) {
   const prog    = document.getElementById('uploadProgress');
   const fill    = document.getElementById('progressFill');
   const msg     = document.getElementById('uploadMsg');
-  const fileArr = Array.from(files).filter(f => f.type.startsWith('image/'));
+  const allowed = ['jpg','jpeg','png','webp','gif'];
+  const fileArr = Array.from(files).filter(f => {
+    const ext = f.name.split('.').pop().toLowerCase();
+    return f.type.startsWith('image/') || allowed.includes(ext);
+  });
   if (!fileArr.length) { toast('กรุณาเลือกไฟล์รูปภาพเท่านั้น', false); return; }
 
   // เช็คขนาดไฟล์ก่อน
