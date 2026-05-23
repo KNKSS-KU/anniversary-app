@@ -100,6 +100,17 @@ body{background:#EDE8E1;font-family:var(--thai);color:var(--gray2)}
 .toast{position:fixed;bottom:60px;left:50%;transform:translateX(-50%) translateY(12px);background:rgba(34,34,33,.88);color:#fff;font-size:13px;padding:8px 18px;border-radius:100px;z-index:300;opacity:0;transition:all .25s;pointer-events:none;white-space:nowrap}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
+/* LIGHTBOX */
+.lightbox{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.92);display:none;align-items:center;justify-content:center;cursor:zoom-out}
+.lightbox.show{display:flex}
+.lightbox img{max-width:95vw;max-height:92vh;object-fit:contain;border-radius:4px;animation:popIn .2s ease}
+.lightbox-close{position:absolute;top:16px;right:20px;color:#fff;font-size:28px;cursor:pointer;opacity:.7;transition:opacity .2s;background:none;border:none;line-height:1}
+.lightbox-close:hover{opacity:1}
+.lb-info{position:absolute;bottom:0;left:0;right:0;padding:16px 24px;background:linear-gradient(transparent,rgba(0,0,0,.7));color:#fff;display:flex;align-items:center;gap:12px}
+.lb-av{width:36px;height:36px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:#fff}
+.lb-name{font-size:14px;font-weight:600}
+.lb-msg{font-size:13px;opacity:.8;margin-top:2px}
+
 @media(max-width:680px){.page{grid-template-columns:repeat(2,1fr)}.h-brand{font-size:13px}}
 @media(max-width:420px){.page{grid-template-columns:1fr}}
 </style>
@@ -146,6 +157,18 @@ body{background:#EDE8E1;font-family:var(--thai);color:var(--gray2)}
         <div class="pop-time" id="popTime"></div>
       </div>
       <div class="pop-msg" id="popMsg"></div>
+    </div>
+  </div>
+</div>
+
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <img id="lbImg" src="" alt="">
+  <div class="lb-info">
+    <div class="lb-av" id="lbAv"></div>
+    <div>
+      <div class="lb-name" id="lbName"></div>
+      <div class="lb-msg" id="lbMsg"></div>
     </div>
   </div>
 </div>
@@ -212,7 +235,7 @@ function buildPages() {
       div.innerHTML += `
         <div class="card" style="animation-delay:${i*40}ms" onclick='openPop(${JSON.stringify(d).replace(/'/g,"&#39;")})'>
           ${hasImg
-            ? `<img class="card-img" src="${escHtml(d.avatar)}" alt="" loading="lazy">`
+            ? `<img class="card-img" src="${escHtml(d.avatar)}" alt="" loading="lazy" onclick='event.stopPropagation();openLightbox(${JSON.stringify(d).replace(/'/g,"&#39;")})'>`
             : `<div class="card-img-placeholder">✦</div>`
           }
           <div class="card-bottom">
@@ -272,6 +295,22 @@ function buildDots(total) {
 }
 function updateDots() {
   document.querySelectorAll('.dot[data-i]').forEach(b => b.classList.toggle('active', +b.getAttribute('data-i') === curPage));
+}
+
+function openLightbox(d) {
+  const lb = document.getElementById('lightbox');
+  document.getElementById('lbImg').src = d.avatar;
+  document.getElementById('lbAv').textContent = initials(d.name);
+  document.getElementById('lbAv').style.background = colorFor(d.name);
+  document.getElementById('lbName').textContent = d.name + (d.dept ? ` (${d.dept})` : '');
+  document.getElementById('lbMsg').textContent = d.message;
+  lb.classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('show');
+  document.body.style.overflow = '';
 }
 
 function openPop(d) {
