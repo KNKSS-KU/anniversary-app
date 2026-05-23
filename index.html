@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>30 ปี แห่งความภาคภูมิใจ</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Mali:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        .modal-content.submit-form {
+            transform: rotate(0deg); max-width: 480px; padding: 30px;
+        }
+        .submit-form h2 { color: var(--brand-grey-2); margin-top: 0; }
+        .form-row { margin-bottom: 15px; text-align: left; }
+        .form-row label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 0.9rem; color: var(--brand-grey-1); }
+        .form-row input, .form-row textarea, .form-row select {
+            width: 100%; padding: 10px 12px; border: 1px solid #ddd;
+            border-radius: 8px; font-family: 'Mali', cursive; font-size: 0.95rem; box-sizing: border-box;
+        }
+        .form-row input:focus, .form-row textarea:focus { border-color: var(--brand-orange); outline: none; }
+        .form-row textarea { resize: vertical; min-height: 80px; }
+        .avatar-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
+        .avatar-option {
+            width: 55px; height: 55px; border-radius: 50%;
+            border: 3px solid transparent; cursor: pointer; object-fit: cover; transition: 0.2s;
+        }
+        .avatar-option:hover { transform: scale(1.1); }
+        .avatar-option.selected { border-color: var(--brand-orange); }
+        .error-msg { color: #e74c3c; background: #fdecea; padding: 10px; border-radius: 8px; font-size: 0.9rem; display: none; margin-bottom: 10px; }
+        #submitBtn { width: 100%; margin-top: 10px; font-size: 1.1rem; padding: 12px; }
+        #submitBtn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+        .divider-or { text-align: center; color: #bbb; margin: 10px 0; font-size: 0.85rem; }
+        .loading-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 9999; display: flex; align-items: center; justify-content: center; display: none; }
+        .loading-spinner { background: white; padding: 20px 40px; border-radius: 12px; font-size: 1.1rem; }
+    </style>
+</head>
+<body>
+
+    <div class="lang-switcher">
+        <span id="btn-th" class="lang-option active" onclick="changeLanguage('th')">TH</span>
+        <span class="divider">|</span>
+        <span id="btn-en" class="lang-option" onclick="changeLanguage('en')">EN</span>
+    </div>
+
+    <header class="glass-header">
+        <h1 id="headerTitle">30 ปี แห่งความภาคภูมิใจ</h1>
+        <p id="headerSubtitle">คลิกที่รูปเพื่ออ่านคำอวยพรจากเพื่อนพนักงาน</p>
+        <button onclick="openSubmitModal()">+ เขียนคำอวยพร</button>
+    </header>
+
+    <div class="wishing-area" id="wishArea"></div>
+
+    <!-- Modal: อ่านคำอวยพร -->
+    <div id="wishModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div class="modal-body">
+                <img id="modalImg" src="" alt="">
+                <h2 id="modalName"></h2>
+                <p id="modalDept" class="dept"></p>
+                <hr>
+                <h3 id="modalMsg" class="wishing-text"></h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: เขียนคำอวยพร -->
+    <div id="submitModal" class="modal">
+        <div class="modal-content submit-form">
+            <span class="close" onclick="closeSubmitModal()">&times;</span>
+            <h2>✍️ เขียนคำอวยพร</h2>
+            <div class="form-row">
+                <label>ชื่อ *</label>
+                <input type="text" id="wishName" placeholder="ชื่อของคุณ" maxlength="100">
+            </div>
+            <div class="form-row">
+                <label>แผนก *</label>
+                <input type="text" id="wishDept" placeholder="แผนกของคุณ" maxlength="100">
+            </div>
+            <div class="form-row">
+                <label>เลือกรูปโปรไฟล์</label>
+                <div class="avatar-grid" id="avatarGrid"><small style="color:#aaa">กำลังโหลด...</small></div>
+            </div>
+            <div class="form-row">
+                <label>คำอวยพรสำเร็จรูป</label>
+                <select id="predefinedSelect" onchange="usePredefined()">
+                    <option value="">— เลือกคำอวยพร —</option>
+                </select>
+            </div>
+            <div class="divider-or">— หรือพิมพ์เอง —</div>
+            <div class="form-row">
+                <label>คำอวยพร *</label>
+                <textarea id="wishMessage" placeholder="เขียนคำอวยพรของคุณที่นี่..." maxlength="500"></textarea>
+            </div>
+            <div class="error-msg" id="submitError"></div>
+            <button id="submitBtn" onclick="submitWish()">ส่งคำอวยพร 🎉</button>
+        </div>
+    </div>
+
+    <script src="supabase.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
