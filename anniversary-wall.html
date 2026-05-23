@@ -52,15 +52,18 @@ body{background:#EDE8E1;font-family:var(--thai);color:var(--gray2)}
 .page.hidden{display:none}
 
 /* CARD */
-.card{background:#fff;border-radius:12px;border:var(--border);padding:16px;cursor:pointer;transition:box-shadow .2s,transform .2s;display:flex;flex-direction:column;gap:8px;min-height:130px;opacity:0;animation:cardIn .4s forwards}
-.card:hover{box-shadow:0 6px 20px rgba(0,0,0,.08);transform:translateY(-2px)}
+.card{background:#fff;border-radius:12px;border:var(--border);overflow:hidden;cursor:pointer;transition:box-shadow .2s,transform .2s;display:flex;flex-direction:column;min-height:200px;opacity:0;animation:cardIn .4s forwards;position:relative}
+.card:hover{box-shadow:0 6px 20px rgba(0,0,0,.15);transform:translateY(-3px)}
 @keyframes cardIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-.card-msg{font-family:var(--serif);font-size:14px;line-height:1.65;color:var(--gray2);flex:1;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-.card-footer{display:flex;align-items:center;gap:8px;margin-top:4px}
-.card-av{width:26px;height:26px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:#fff;letter-spacing:.02em}
-.card-name{font-size:12px;font-weight:500;color:var(--gray2);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-img{width:100%;flex:1;object-fit:cover;display:block;min-height:150px;background:#f0ede8}
+.card-img-placeholder{width:100%;flex:1;min-height:150px;background:linear-gradient(135deg,#f0ede8,#e5e0d8);display:flex;align-items:center;justify-content:center;font-size:28px;opacity:.3}
+.card-bottom{padding:10px 12px;background:#fff;border-top:var(--border)}
+.card-msg{font-family:var(--serif);font-size:13px;line-height:1.5;color:var(--gray2);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:6px}
+.card-footer{display:flex;align-items:center;gap:6px}
+.card-av{width:22px;height:22px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;color:#fff}
+.card-name{font-size:11px;font-weight:500;color:var(--gray2);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .card-time{font-size:10px;color:var(--gray1)}
-.card-new{display:inline-flex;align-items:center;font-size:9px;background:#fff3e0;color:var(--o);border-radius:100px;padding:1px 6px;font-weight:600;letter-spacing:.04em;margin-left:auto}
+.card-new{display:inline-flex;align-items:center;font-size:9px;background:#fff3e0;color:var(--o);border-radius:100px;padding:1px 6px;font-weight:600;letter-spacing:.04em}
 
 /* EMPTY */
 .empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:calc(100vh - 52px - 48px);gap:12px;text-align:center}
@@ -80,14 +83,18 @@ body{background:#EDE8E1;font-family:var(--thai);color:var(--gray2)}
 /* POPUP */
 .pop-backdrop{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;padding:20px}
 .pop-backdrop.show{display:flex}
-.pop-card{background:#fff;border-radius:16px;max-width:480px;width:100%;padding:28px;position:relative;animation:popIn .25s ease}
+.pop-card{background:#fff;border-radius:16px;max-width:480px;width:100%;overflow:hidden;position:relative;animation:popIn .25s ease}
 @keyframes popIn{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:scale(1)}}
-.pop-close{position:absolute;top:14px;right:14px;width:28px;height:28px;border-radius:50%;border:none;background:#f5f3ef;cursor:pointer;font-size:16px;color:var(--gray1);display:flex;align-items:center;justify-content:center}
-.pop-av{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600;color:#fff;margin-bottom:12px}
-.pop-name{font-size:16px;font-weight:600}
-.pop-dept{font-size:12px;color:var(--gray1);margin-top:2px}
-.pop-time{font-size:12px;color:var(--gray1);margin-top:2px}
-.pop-msg{font-family:var(--serif);font-size:16px;line-height:1.8;color:var(--gray2);margin-top:16px;padding-top:16px;border-top:var(--border)}
+.pop-close{position:absolute;top:12px;right:12px;width:30px;height:30px;border-radius:50%;border:none;background:rgba(0,0,0,.4);cursor:pointer;font-size:16px;color:#fff;display:flex;align-items:center;justify-content:center;z-index:10}
+.pop-img{width:100%;height:240px;object-fit:cover;display:block;background:#f0ede8}
+.pop-img.hidden{display:none}
+.pop-body{padding:20px 24px 24px}
+.pop-info{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.pop-av{width:40px;height:40px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;color:#fff}
+.pop-name{font-size:15px;font-weight:600}
+.pop-dept{font-size:12px;color:var(--gray1)}
+.pop-time{font-size:11px;color:var(--gray1);margin-left:auto;white-space:nowrap}
+.pop-msg{font-family:var(--serif);font-size:18px;line-height:1.8;color:var(--gray2);padding-top:14px;border-top:var(--border)}
 
 /* TOAST */
 .toast{position:fixed;bottom:60px;left:50%;transform:translateX(-50%) translateY(12px);background:rgba(34,34,33,.88);color:#fff;font-size:13px;padding:8px 18px;border-radius:100px;z-index:300;opacity:0;transition:all .25s;pointer-events:none;white-space:nowrap}
@@ -128,11 +135,18 @@ body{background:#EDE8E1;font-family:var(--thai);color:var(--gray2)}
 <div class="pop-backdrop" id="pop" onclick="closePop(event)">
   <div class="pop-card">
     <button class="pop-close" onclick="closePop()">✕</button>
-    <div class="pop-av" id="popAv"></div>
-    <div class="pop-name" id="popName"></div>
-    <div class="pop-dept" id="popDept"></div>
-    <div class="pop-time" id="popTime"></div>
-    <div class="pop-msg" id="popMsg"></div>
+    <img class="pop-img hidden" id="popImg" src="" alt="">
+    <div class="pop-body">
+      <div class="pop-info">
+        <div class="pop-av" id="popAv"></div>
+        <div>
+          <div class="pop-name" id="popName"></div>
+          <div class="pop-dept" id="popDept"></div>
+        </div>
+        <div class="pop-time" id="popTime"></div>
+      </div>
+      <div class="pop-msg" id="popMsg"></div>
+    </div>
   </div>
 </div>
 
@@ -194,14 +208,21 @@ function buildPages() {
     filtered.slice(p * PER_PAGE, (p+1) * PER_PAGE).forEach((d, i) => {
       const col = colorFor(d.name);
       const ni = isNewEntry(d.created_at) ? '<span class="card-new">NEW</span>' : '';
+      const hasImg = d.avatar && d.avatar.startsWith('http');
       div.innerHTML += `
         <div class="card" style="animation-delay:${i*40}ms" onclick='openPop(${JSON.stringify(d).replace(/'/g,"&#39;")})'>
-          <div class="card-msg">${escHtml(d.message)}</div>
-          <div class="card-footer">
-            <div class="card-av" style="background:${col}">${initials(d.name)}</div>
-            <div class="card-name">${escHtml(d.name)}</div>
-            <div class="card-time">${timeAgo(d.created_at)}</div>
-            ${ni}
+          ${hasImg
+            ? `<img class="card-img" src="${escHtml(d.avatar)}" alt="" loading="lazy">`
+            : `<div class="card-img-placeholder">✦</div>`
+          }
+          <div class="card-bottom">
+            <div class="card-msg">${escHtml(d.message)}</div>
+            <div class="card-footer">
+              <div class="card-av" style="background:${col}">${initials(d.name)}</div>
+              <div class="card-name">${escHtml(d.name)}</div>
+              <div class="card-time">${timeAgo(d.created_at)}</div>
+              ${ni}
+            </div>
           </div>
         </div>`;
     });
@@ -260,6 +281,13 @@ function openPop(d) {
   document.getElementById('popDept').textContent = d.dept || '';
   document.getElementById('popTime').textContent = new Date(d.created_at).toLocaleString('th-TH');
   document.getElementById('popMsg').textContent = d.message;
+  const img = document.getElementById('popImg');
+  if (d.avatar && d.avatar.startsWith('http')) {
+    img.src = d.avatar;
+    img.classList.remove('hidden');
+  } else {
+    img.classList.add('hidden');
+  }
   document.getElementById('pop').classList.add('show');
 }
 function closePop(e) {
