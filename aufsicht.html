@@ -97,7 +97,8 @@ body.in #dashPage{display:block}
   border-radius:10px;overflow:hidden;border:var(--border);
   position:relative;background:#f5f3ef;
 }
-.card-img-item img{width:100%;height:auto;object-fit:contain;display:block}
+.card-img-item img{width:100%;height:auto;display:block}
+.card-img-name{position:absolute;bottom:0;left:0;right:0;padding:4px 8px;background:rgba(0,0,0,.45);color:#fff;font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .card-img-del{
   position:absolute;top:6px;right:6px;
   background:rgba(0,0,0,.55);color:#fff;border:none;
@@ -315,11 +316,8 @@ body.in #dashPage{display:block}
 
           <div class="settings-grid">
             <div class="form-row"><label>Header (TH)</label><input type="text" id="header_th"></div>
-            <div class="form-row"><label>Header (EN)</label><input type="text" id="header_en"></div>
             <div class="form-row"><label>Subtitle (TH)</label><input type="text" id="subtitle_th"></div>
-            <div class="form-row"><label>Subtitle (EN)</label><input type="text" id="subtitle_en"></div>
           </div>
-          <div class="form-row"><label>รูปพื้นหลังเว็บ (URL)</label><input type="text" id="bg_image" placeholder="https://..."></div>
 
           <!-- Toggle: เปิด/ปิด พิมพ์ข้อความเอง -->
           <div style="background:var(--gray3);border-radius:10px;padding:16px;margin-top:16px;border:var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px">
@@ -709,7 +707,7 @@ function updateToggleUI(checked) {
 }
 
 async function saveSettings() {
-  const keys = ['header_th','header_en','subtitle_th','subtitle_en','bg_image'];
+  const keys = ['header_th','subtitle_th'];
   setStatus('cfgStatus','loading','กำลังบันทึก...');
   try {
     for (const k of keys) {
