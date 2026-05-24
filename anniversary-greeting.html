@@ -26,21 +26,31 @@ body::before{content:'✦';position:fixed;font-size:320px;color:rgba(255,130,0,.
 /* MAIN */
 .g-main{
   display:grid;
-  grid-template-columns:1fr 1fr;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1fr);
   gap:0;
   height:calc(100vh - 52px);
   overflow:hidden;
   position:relative;z-index:1;
+  max-width:100vw;
 }
 .g-left{
-  padding:24px 20px;
+  padding:20px 16px;
   overflow-y:auto;
   border-right:var(--border);
-  display:flex;flex-direction:column;gap:16px;
+  display:flex;flex-direction:column;gap:12px;
+  min-width:0;
+}
+.g-mid{
+  padding:20px 16px;
+  overflow-y:auto;
+  border-right:var(--border);
+  display:flex;flex-direction:column;gap:12px;
+  min-width:0;
 }
 .g-right{
   overflow-y:auto;
   display:flex;flex-direction:column;
+  min-width:0;
 }
 
 /* HERO */
@@ -91,7 +101,8 @@ textarea{line-height:1.65;min-height:70px}
 .card-picker-grid{
   display:grid;
   grid-template-columns:repeat(3,1fr);
-  gap:10px;margin-top:10px;
+  gap:8px;margin-top:8px;
+  min-width:0;
 }
 .card-pick-item{
   border-radius:10px;overflow:hidden;
@@ -158,6 +169,7 @@ textarea{line-height:1.65;min-height:70px}
 @media(max-width:768px){
   .g-main{grid-template-columns:1fr;height:auto;overflow:visible}
   .g-left{border-right:none;border-bottom:var(--border);padding:20px 16px}
+  .g-mid{border-right:none;border-bottom:var(--border);padding:20px 16px}
   .g-right{overflow:visible}
   .form-card{border-radius:0!important}
   html,body{overflow:auto}
