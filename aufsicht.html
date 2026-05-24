@@ -95,9 +95,9 @@ body.in #dashPage{display:block}
 }
 .card-img-item{
   border-radius:10px;overflow:hidden;border:var(--border);
-  position:relative;aspect-ratio:4/3;background:#f5f3ef;
+  position:relative;background:#f5f3ef;
 }
-.card-img-item img{width:100%;height:100%;object-fit:cover;display:block}
+.card-img-item img{width:100%;height:auto;object-fit:contain;display:block}
 .card-img-del{
   position:absolute;top:6px;right:6px;
   background:rgba(0,0,0,.55);color:#fff;border:none;
@@ -320,7 +320,21 @@ body.in #dashPage{display:block}
             <div class="form-row"><label>Subtitle (EN)</label><input type="text" id="subtitle_en"></div>
           </div>
           <div class="form-row"><label>รูปพื้นหลังเว็บ (URL)</label><input type="text" id="bg_image" placeholder="https://..."></div>
-          <button class="btn btn-primary" onclick="saveSettings()" style="margin-top:8px">บันทึกการตั้งค่า</button>
+
+          <!-- Toggle: เปิด/ปิด พิมพ์ข้อความเอง -->
+          <div style="background:var(--gray3);border-radius:10px;padding:16px;margin-top:16px;border:var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px">
+            <div>
+              <div style="font-size:13px;font-weight:600;margin-bottom:4px">✏️ อนุญาตให้ผู้ใช้พิมพ์ข้อความเอง</div>
+              <div style="font-size:12px;color:var(--gray1)">ถ้าปิด ผู้ใช้จะเลือกได้เฉพาะคำอวยพรสำเร็จรูปเท่านั้น</div>
+            </div>
+            <label style="position:relative;display:inline-block;width:48px;height:26px;flex-shrink:0">
+              <input type="checkbox" id="allow_custom_message" style="opacity:0;width:0;height:0" onchange="saveToggle('allow_custom_message',this.checked)">
+              <span id="toggleSpan" style="position:absolute;cursor:pointer;inset:0;background:#ccc;border-radius:26px;transition:.3s"></span>
+              <span id="toggleKnob" style="position:absolute;content:'';height:20px;width:20px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.3s"></span>
+            </label>
+          </div>
+
+          <button class="btn btn-primary" onclick="saveSettings()" style="margin-top:16px">บันทึกการตั้งค่า</button>
         </div>
 
       </div>
@@ -672,8 +686,28 @@ async function loadSettings() {
       document.getElementById('logoPreview').style.display = 'block';
       document.getElementById('btnDelLogo').style.display = 'inline-flex';
     }
+    const customRow = rows.find(r => r.setting_key === 'allow_custom_message');
+    const isOn = customRow ? customRow.setting_value === '1' : true;
+    const cb = document.getElementById('allow_custom_message');
+    if (cb) { cb.checked = isOn; updateToggleUI(isOn); }
   } catch(e) {}
 }
+async function saveToggle(key, value) {
+  try {
+    await sbAdmin.patch('settings', `?setting_key=eq.${key}`, { setting_value: value ? '1' : '0' });
+    updateToggleUI(value);
+    toast(value ? '✓ เปิดการพิมพ์เองแล้ว' : '✓ ปิดการพิมพ์เองแล้ว');
+  } catch(e) { toast('บันทึกไม่สำเร็จ', false); }
+}
+
+function updateToggleUI(checked) {
+  const span  = document.getElementById('toggleSpan');
+  const knob  = document.getElementById('toggleKnob');
+  if (!span || !knob) return;
+  span.style.background = checked ? '#FF8200' : '#ccc';
+  knob.style.transform  = checked ? 'translateX(22px)' : 'translateX(0)';
+}
+
 async function saveSettings() {
   const keys = ['header_th','header_en','subtitle_th','subtitle_en','bg_image'];
   setStatus('cfgStatus','loading','กำลังบันทึก...');
