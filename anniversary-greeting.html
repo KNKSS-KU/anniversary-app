@@ -332,7 +332,7 @@ function updatePreview() {
 
   document.getElementById('previewName').textContent = name || 'ชื่อของคุณ';
   document.getElementById('previewDept').textContent = dept;
-  document.getElementById('previewTime').textContent = new Date().toLocaleTimeString('th-TH', { hour:'2-digit', minute:'2-digit' });
+  document.getElementById('previewTime').textContent = new Date().toLocaleDateString('th-TH', { day:'numeric', month:'short', year:'2-digit' });
 
   const cc = document.getElementById('charCount');
   cc.textContent = `${len} / 400`;
