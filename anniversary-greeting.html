@@ -138,13 +138,12 @@ textarea{line-height:1.65;min-height:70px}
 
 /* SUBMIT */
 .submit-section{padding:16px 20px;background:var(--gray3);border-top:var(--border)}
-.btn-submit{width:100%;font-family:var(--disp);font-size:13px;letter-spacing:.1em;padding:14px;border:none;border-radius:12px;background:var(--o);color:#fff;cursor:pointer;transition:all .25s;display:flex;align-items:center;justify-content:center;gap:8px}
+.submit-row{display:flex;gap:10px;align-items:stretch}
+.btn-back{font-family:var(--disp);font-size:12px;letter-spacing:.06em;padding:14px 16px;border:var(--border);border-radius:12px;background:transparent;color:var(--gray1);cursor:pointer;transition:all .25s;display:flex;align-items:center;justify-content:center;text-decoration:none;white-space:nowrap;flex-shrink:0}
+.btn-back:hover{background:var(--gray3)}
+.btn-submit{flex:1;font-family:var(--disp);font-size:13px;letter-spacing:.1em;padding:14px;border:none;border-radius:12px;background:var(--o);color:#fff;cursor:pointer;transition:all .25s;display:flex;align-items:center;justify-content:center;gap:8px}
 .btn-submit:hover:not(:disabled){background:var(--od);transform:translateY(-1px);box-shadow:0 4px 16px rgba(255,130,0,.3)}
 .btn-submit:disabled{opacity:.45;cursor:not-allowed;transform:none}
-.btn-back{font-family:var(--disp);font-size:13px;letter-spacing:.1em;padding:14px;border:var(--border);border-radius:12px;background:transparent;color:var(--gray1);cursor:pointer;transition:all .25s;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;white-space:nowrap}
-.btn-back:hover{background:var(--gray3)}
-.submit-row{display:flex;gap:10px}
-.submit-row .btn-submit{flex:1}
 .spin{width:16px;height:16px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;display:none}
 @keyframes spin{to{transform:rotate(360deg)}}
 .status-box{margin-top:12px;padding:10px 14px;border-radius:10px;font-size:13px;display:none;align-items:center;gap:8px}
@@ -219,9 +218,12 @@ textarea{line-height:1.65;min-height:70px}
     <!-- ปุ่ม submit สำหรับ landscape -->
     <div class="btn-submit-wrap">
       <div class="submit-section" style="background:transparent;border:none;padding:0">
-        <button class="btn-submit" id="btnSubmitLeft" onclick="submitGreeting()" disabled>
-          <span id="btnLabelLeft">SEND GREETING ✦</span>
-        </button>
+        <div class="submit-row">
+          <a class="btn-back" href="anniversary-wall.html">← Wall</a>
+          <button class="btn-submit" id="btnSubmitLeft" onclick="submitGreeting()" disabled>
+            <span id="btnLabelLeft">SEND GREETING ✦</span>
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -261,10 +263,13 @@ textarea{line-height:1.65;min-height:70px}
     </div>
     <!-- SUBMIT -->
     <div class="submit-section">
-      <button class="btn-submit" id="btnSubmit" onclick="submitGreeting()" disabled>
-        <span class="spin" id="submitSpin"></span>
-        <span id="btnLabel">SEND GREETING ✦</span>
-      </button>
+      <div class="submit-row">
+        <a class="btn-back" href="anniversary-wall.html">← Wall</a>
+        <button class="btn-submit" id="btnSubmit" onclick="submitGreeting()" disabled>
+          <span class="spin" id="submitSpin"></span>
+          <span id="btnLabel">SEND GREETING ✦</span>
+        </button>
+      </div>
       <div class="status-box" id="statusBox"></div>
     </div>
   </div>
@@ -295,7 +300,6 @@ let selectedCardUrl = '';
 /* ── Init ── */
 async function init() {
   try {
-    // โหลด settings
     const rows = await sb.get('settings', '?select=setting_key,setting_value');
     const s = {};
     rows.forEach(r => s[r.setting_key] = r.setting_value);
@@ -306,20 +310,12 @@ async function init() {
       document.getElementById('hLogo').style.display = 'block';
       document.getElementById('hBrand').style.display = 'none';
     }
-  } catch(e) {}
-
-  // เช็คว่าเปิดพิมพ์เองไหม
-  try {
-    const rows = await sb.get('settings', '?select=setting_key,setting_value');
-    const s = {};
-    rows.forEach(r => s[r.setting_key] = r.setting_value);
     const allowCustom = s.allow_custom_message !== '0';
     if (!allowCustom) {
       document.getElementById('customMsgSection').style.display = 'none';
     }
   } catch(e) {}
 
-  // โหลดรูปการ์ด + คำอวยพรสำเร็จรูป พร้อมกัน
   await Promise.all([loadCardImages(), loadPresets()]);
   updatePreview();
 }
@@ -341,7 +337,6 @@ async function loadCardImages() {
       div.onclick = () => selectCard(div, c.image_path);
       grid.appendChild(div);
     });
-    // เลือกอันแรกอัตโนมัติ
     grid.querySelector('.card-pick-item')?.click();
   } catch(e) {
     grid.innerHTML = '<div class="card-pick-empty">โหลดรูปไม่สำเร็จ</div>';
@@ -441,7 +436,6 @@ async function submitGreeting() {
       status: 'approved'
     });
 
-    // Success screen
     document.getElementById('successMsg').textContent = msg;
     document.getElementById('successFrom').textContent = '— ' + name + (dept ? ` (${dept})` : '');
     const si = document.getElementById('successImg');
