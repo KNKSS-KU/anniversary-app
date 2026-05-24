@@ -93,8 +93,8 @@ body::before{content:'✦';position:fixed;font-size:320px;color:rgba(255,130,0,.
 .form-section{padding:14px 16px}
 .form-section+.form-section{border-top:var(--border)}
 .form-section label{font-size:12px;font-weight:500;color:var(--gray1);margin-bottom:6px;display:block}
-input[type=text],textarea{font-family:var(--thai);font-size:14px;width:100%;padding:10px 14px;border:var(--border);border-radius:10px;background:#fafaf9;color:var(--gray2);outline:none;transition:border-color .2s,background .2s;resize:none}
-input:focus,textarea:focus{border-color:var(--o);background:#fff}
+input[type=text],textarea{font-family:var(--thai);font-size:14px;width:100%;padding:10px 14px;border:var(--border);border-radius:10px;background:#fff;color:var(--gray2);outline:none;transition:border-color .2s;resize:none}
+input:focus,textarea:focus{border-color:var(--o)}
 textarea{line-height:1.65;min-height:70px}
 
 /* CARD IMAGE PICKER */
@@ -141,6 +141,10 @@ textarea{line-height:1.65;min-height:70px}
 .btn-submit{width:100%;font-family:var(--disp);font-size:13px;letter-spacing:.1em;padding:14px;border:none;border-radius:12px;background:var(--o);color:#fff;cursor:pointer;transition:all .25s;display:flex;align-items:center;justify-content:center;gap:8px}
 .btn-submit:hover:not(:disabled){background:var(--od);transform:translateY(-1px);box-shadow:0 4px 16px rgba(255,130,0,.3)}
 .btn-submit:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.btn-back{font-family:var(--disp);font-size:13px;letter-spacing:.1em;padding:14px;border:var(--border);border-radius:12px;background:transparent;color:var(--gray1);cursor:pointer;transition:all .25s;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;white-space:nowrap}
+.btn-back:hover{background:var(--gray3)}
+.submit-row{display:flex;gap:10px}
+.submit-row .btn-submit{flex:1}
 .spin{width:16px;height:16px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;display:none}
 @keyframes spin{to{transform:rotate(360deg)}}
 .status-box{margin-top:12px;padding:10px 14px;border-radius:10px;font-size:13px;display:none;align-items:center;gap:8px}
@@ -187,7 +191,6 @@ textarea{line-height:1.65;min-height:70px}
     <img id="hLogo" src="" alt="logo" style="height:36px;width:auto;object-fit:contain;display:none">
     <div class="h-brand" id="hBrand">ANNIVERSARY</div>
   </div>
-  <a class="h-back" href="anniversary-wall.html">← ดู Wall</a>
 </div>
 
 <div class="g-main">
@@ -217,7 +220,7 @@ textarea{line-height:1.65;min-height:70px}
     <div class="btn-submit-wrap">
       <div class="submit-section" style="background:transparent;border:none;padding:0">
         <button class="btn-submit" id="btnSubmitLeft" onclick="submitGreeting()" disabled>
-          <span id="btnLabelLeft">Submit</span>
+          <span id="btnLabelLeft">SEND GREETING ✦</span>
         </button>
       </div>
     </div>
@@ -226,15 +229,15 @@ textarea{line-height:1.65;min-height:70px}
   <!-- MID: ชื่อ + เลือกรูปการ์ด -->
   <div class="g-mid">
     <div>
-      <label style="font-size:12px;font-weight:500;color:var(--gray1);margin-bottom:6px;display:block">ผู้อวยพร <span style="color:var(--o)">*</span></label>
-      <input type="text" id="fName" placeholder="Congratolatory Message Sender" maxlength="60" oninput="updatePreview()">
+      <label style="font-size:12px;font-weight:500;color:var(--gray1);margin-bottom:6px;display:block">ชื่อ <span style="color:var(--o)">*</span></label>
+      <input type="text" id="fName" placeholder="ชื่อที่แสดงบนการ์ด" maxlength="60" oninput="updatePreview()">
     </div>
     <div>
-      <label style="font-size:12px;font-weight:500;color:var(--gray1);margin-bottom:6px;display:block">รายละเอียด</label>
-      <input type="text" id="fDept" placeholder="Position/Batch/Department" maxlength="60" oninput="updatePreview()">
+      <label style="font-size:12px;font-weight:500;color:var(--gray1);margin-bottom:6px;display:block">แผนก</label>
+      <input type="text" id="fDept" placeholder="แผนกของคุณ" maxlength="60" oninput="updatePreview()">
     </div>
     <div>
-      <label style="font-size:12px;font-weight:500;color:var(--gray1);margin-bottom:6px;display:block">กรุณาเลือกบัตรอวยพร <span style="color:var(--o)">*</span></label>
+      <label style="font-size:12px;font-weight:500;color:var(--gray1);margin-bottom:6px;display:block">เลือกรูปการ์ด <span style="color:var(--o)">*</span></label>
       <div class="card-picker-grid" id="cardPickerGrid">
         <div class="card-pick-loading">กำลังโหลดรูป...</div>
       </div>
@@ -246,13 +249,13 @@ textarea{line-height:1.65;min-height:70px}
     <div style="padding:20px 16px;display:flex;flex-direction:column;gap:12px;flex:1">
       <!-- คำอวยพรสำเร็จรูป -->
       <div id="presetSection" style="display:none">
-        <label style="font-size:12px;font-weight:500;color:var(--gray1);margin-bottom:6px;display:block">เลือกคำอวยพร:Please select Congratulatory message</label>
+        <label style="font-size:12px;font-weight:500;color:var(--gray1);margin-bottom:6px;display:block">เลือกคำอวยพรสำเร็จรูป</label>
         <div class="preset-list" id="presetList"></div>
       </div>
       <!-- พิมพ์เอง -->
       <div id="customMsgSection">
-        <label style="font-size:12px;font-weight:500;color:var(--gray1);margin-bottom:6px;display:block">ข้อความอวยพรที่ต้องการ <span style="color:var(--o)">*</span></label>
-        <textarea id="fMsg" placeholder="เขียนคำอวยพร..." maxlength="400" oninput="updatePreview()" style="min-height:80px"></textarea>
+        <label style="font-size:12px;font-weight:500;color:var(--gray1);margin-bottom:6px;display:block">ข้อความอวยพร <span style="color:var(--o)">*</span></label>
+        <textarea id="fMsg" placeholder="เขียนคำอวยพรจากใจ..." maxlength="400" oninput="updatePreview()" style="min-height:80px"></textarea>
         <div class="char-row"><span class="char-count" id="charCount">0 / 400</span></div>
       </div>
     </div>
@@ -260,7 +263,7 @@ textarea{line-height:1.65;min-height:70px}
     <div class="submit-section">
       <button class="btn-submit" id="btnSubmit" onclick="submitGreeting()" disabled>
         <span class="spin" id="submitSpin"></span>
-        <span id="btnLabel">Submit ✦</span>
+        <span id="btnLabel">SEND GREETING ✦</span>
       </button>
       <div class="status-box" id="statusBox"></div>
     </div>
