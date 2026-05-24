@@ -314,7 +314,6 @@ function renderPage() {
       <div class="card-bottom">
         <div class="card-msg">${escHtml(d.message)}</div>
         <div class="card-footer">
-          <div class="card-av" style="background:${col}">${initials(d.name)}</div>
           <div class="card-name">${escHtml(d.name)}</div>
           <div class="card-time">${new Date(d.created_at).toLocaleDateString('th-TH',{day:'numeric',month:'short',year:'2-digit'})}</div>
           ${ni}
