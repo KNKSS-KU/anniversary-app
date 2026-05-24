@@ -25,21 +25,35 @@ body{background:#EDE8E1;font-family:var(--thai);color:var(--gray2)}
   display:flex;align-items:center;justify-content:space-between;gap:12px;
 }
 .h-left{display:flex;align-items:center;gap:10px}
+.h-logo{height:36px;width:auto;object-fit:contain;display:none}
 .h-brand{font-family:var(--disp);font-size:15px;letter-spacing:.08em}
 .h-year{font-family:var(--serif);font-style:italic;font-size:13px;color:var(--o);margin-left:2px}
 .h-count{font-size:12px;color:var(--gray1);border:var(--border);border-radius:100px;padding:2px 10px;background:#fff}
 .filter-btn{font-family:var(--thai);font-size:12px;padding:4px 12px;border-radius:100px;border:var(--border);background:transparent;color:var(--gray1);cursor:pointer;transition:all .2s}
 .filter-btn.active{background:var(--o);color:#fff;border-color:var(--o)}
 .h-right{display:flex;align-items:center;gap:8px}
-.btn-greet{font-family:var(--thai);font-size:12px;font-weight:500;padding:6px 14px;border-radius:100px;background:var(--o);color:#fff;border:none;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .2s;text-decoration:none}
-.btn-greet:hover{background:var(--od);transform:translateY(-1px)}
 .btn-admin{font-size:11px;padding:5px 10px;border-radius:100px;border:var(--border);background:transparent;color:var(--gray1);cursor:pointer;text-decoration:none;transition:all .2s}
 .btn-admin:hover{background:#f5f3ef}
 
 /* BANNER */
-.wall-banner{width:100%;height:260px;object-fit:cover;display:block;position:fixed;top:52px;left:0;right:0;z-index:30}
+.banner-wrap{position:fixed;top:52px;left:0;right:0;z-index:30}
+.wall-banner{width:100%;height:220px;object-fit:cover;display:block}
 .wall-banner.hidden{display:none}
-@media(max-width:768px){.wall-banner{height:200px}}
+.banner-cta{
+  width:100%;padding:12px 20px;
+  background:rgba(255,255,255,.96);backdrop-filter:blur(10px);
+  border-bottom:var(--border);
+  display:flex;align-items:center;justify-content:center;
+}
+.btn-greet{
+  font-family:var(--disp);font-size:13px;letter-spacing:.08em;
+  padding:10px 32px;border-radius:100px;
+  background:var(--o);color:#fff;border:none;cursor:pointer;
+  text-decoration:none;transition:all .25s;
+  box-shadow:0 4px 16px rgba(255,130,0,.35);
+  display:inline-flex;align-items:center;gap:8px;
+}
+.btn-greet:hover{background:var(--od);transform:translateY(-2px);box-shadow:0 6px 20px rgba(255,130,0,.5)}
 
 /* STATUS BAR */
 .nc-bar{position:fixed;top:52px;left:0;right:0;z-index:40;font-size:12px;padding:5px 20px;display:none;align-items:center;gap:8px;background:#fff8e1;border-bottom:0.5px solid #ffe082;color:#7c6000}
@@ -51,8 +65,8 @@ body{background:#EDE8E1;font-family:var(--thai);color:var(--gray2)}
 
 /* STAGE */
 .stage{position:fixed;top:52px;left:0;right:0;bottom:48px;overflow:hidden;overflow-y:auto;padding:20px 20px 0}
-.stage.has-banner{top:372px}
-@media(max-width:768px){.stage.has-banner{top:312px}}
+.stage.has-banner{top:324px}
+
 .page{position:absolute;top:20px;left:20px;right:20px;display:grid;grid-template-columns:repeat(3,1fr);gap:14px;transition:opacity .35s,transform .35s;will-change:transform,opacity}
 .page.out-left{opacity:0;transform:translateX(-40px)}
 .page.out-right{opacity:0;transform:translateX(40px)}
@@ -118,6 +132,12 @@ body{background:#EDE8E1;font-family:var(--thai);color:var(--gray2)}
 .lb-name{font-size:14px;font-weight:600}
 .lb-msg{font-size:13px;opacity:.8;margin-top:2px}
 
+/* RESPONSIVE */
+@media(max-width:768px){
+  .wall-banner{height:160px}
+  .stage.has-banner{top:264px}
+  .btn-greet{font-size:12px;padding:10px 24px}
+}
 @media(max-width:680px){.page{grid-template-columns:repeat(2,1fr)}.h-brand{font-size:13px}}
 @media(max-width:420px){.page{grid-template-columns:1fr}}
 </style>
@@ -126,18 +146,26 @@ body{background:#EDE8E1;font-family:var(--thai);color:var(--gray2)}
 
 <div class="wall-header">
   <div class="h-left">
-    <div class="h-brand">ANNIVERSARY<span class="h-year" id="hYear"></span></div>
+    <img class="h-logo" id="hLogo" src="" alt="logo">
+    <div class="h-brand" id="hBrand">ANNIVERSARY<span class="h-year" id="hYear"></span></div>
     <div class="h-count"><span id="liveCount">0</span> คำอวยพร</div>
     <button class="filter-btn active" onclick="setFilter('all')">ทั้งหมด</button>
     <button class="filter-btn" onclick="setFilter('new')">ใหม่</button>
   </div>
   <div class="h-right">
     <a class="btn-admin" href="aufsicht.html">⚙ Admin</a>
-    <a class="btn-greet" href="anniversary-greeting.html">✦ ส่งคำอวยพร</a>
+    <!-- ปุ่มส่งคำอวยพร fallback (กรณีไม่มี banner) -->
+    <a class="btn-greet" id="headerGreetBtn" href="anniversary-greeting.html" style="display:none">✦ ส่งคำอวยพร</a>
   </div>
 </div>
 
-<img class="wall-banner hidden" id="wallBanner" src="" alt="banner">
+<!-- BANNER + ปุ่มส่งคำอวยพร -->
+<div class="banner-wrap hidden" id="bannerWrap">
+  <img class="wall-banner" id="wallBanner" src="" alt="banner">
+  <div class="banner-cta">
+    <a class="btn-greet" href="anniversary-greeting.html">✦ ส่งคำอวยพร</a>
+  </div>
+</div>
 
 <div class="nc-bar" id="ncBar">
   <div class="nc-spinner" id="ncSpin"></div>
@@ -208,12 +236,23 @@ async function loadData() {
     sets.forEach(r => settings[r.setting_key] = r.setting_value);
     const year = settings.header_th?.match(/\d+/)?.[0] || '30';
     document.getElementById('hYear').textContent = ` — ${year} ปี`;
-    if (settings.banner_image) {
-      const banner = document.getElementById('wallBanner');
-      banner.src = settings.banner_image;
-      banner.classList.remove('hidden');
-      document.querySelector('.stage').classList.add('has-banner');
+    if (settings.logo_image) {
+      const logo = document.getElementById('hLogo');
+      logo.src = settings.logo_image;
+      logo.style.display = 'block';
+      document.getElementById('hBrand').style.display = 'none';
     }
+
+    if (settings.banner_image) {
+      // มี banner — แสดง banner พร้อมปุ่มซ้อนอยู่
+      document.getElementById('wallBanner').src = settings.banner_image;
+      document.getElementById('bannerWrap').classList.remove('hidden');
+      document.querySelector('.stage').classList.add('has-banner');
+    } else {
+      // ไม่มี banner — แสดงปุ่มใน header แทน
+      document.getElementById('headerGreetBtn').style.display = 'flex';
+    }
+
     allData = wishes;
     applyFilter(curFilter);
     setBar('ok', `✓ โหลดสำเร็จ — ${wishes.length} คำอวยพร`);
@@ -313,16 +352,14 @@ function updateDots() {
 }
 
 function openLightbox(d) {
-  const lb = document.getElementById('lightbox');
   document.getElementById('lbImg').src = d.avatar;
   document.getElementById('lbAv').textContent = initials(d.name);
   document.getElementById('lbAv').style.background = colorFor(d.name);
   document.getElementById('lbName').textContent = d.name + (d.dept ? ` (${d.dept})` : '');
   document.getElementById('lbMsg').textContent = d.message;
-  lb.classList.add('show');
+  document.getElementById('lightbox').classList.add('show');
   document.body.style.overflow = 'hidden';
 }
-
 function closeLightbox() {
   document.getElementById('lightbox').classList.remove('show');
   document.body.style.overflow = '';
@@ -336,12 +373,8 @@ function openPop(d) {
   document.getElementById('popTime').textContent = new Date(d.created_at).toLocaleString('th-TH');
   document.getElementById('popMsg').textContent = d.message;
   const img = document.getElementById('popImg');
-  if (d.avatar && d.avatar.startsWith('http')) {
-    img.src = d.avatar;
-    img.classList.remove('hidden');
-  } else {
-    img.classList.add('hidden');
-  }
+  if (d.avatar && d.avatar.startsWith('http')) { img.src = d.avatar; img.classList.remove('hidden'); }
+  else img.classList.add('hidden');
   document.getElementById('pop').classList.add('show');
 }
 function closePop(e) {
@@ -355,7 +388,6 @@ function showToast(t) {
   setTimeout(() => el.classList.remove('show'), 2800);
 }
 
-// Auto-refresh ทุก 30 วินาที
 setInterval(async () => {
   try {
     const prev = allData.length;
