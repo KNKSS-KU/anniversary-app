@@ -166,18 +166,17 @@ textarea{line-height:1.65;min-height:70px}
 @keyframes popIn{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
 
 /* RESPONSIVE */
-@media(max-width:1024px){
-  .g-main{grid-template-columns:1fr 1fr;height:auto;overflow:visible}
-  .g-left{border-right:var(--border);border-bottom:none}
-  .g-mid{grid-column:1;border-right:none;border-bottom:var(--border)}
-  .g-right{grid-column:2;grid-row:1/3;border-left:var(--border)}
-  html,body{overflow:auto;height:auto}
-}
-@media(max-width:768px){
+@media(max-width:768px),(orientation:portrait){
   .g-main{grid-template-columns:1fr;height:auto;overflow:visible}
   .g-left,.g-mid{border-right:none;border-bottom:var(--border);padding:20px 16px}
-  .g-right{grid-column:1;grid-row:auto;border-left:none;overflow:visible}
+  .g-left .btn-submit-wrap{display:none}
+  .g-right{overflow:visible}
+  .g-right .submit-section{display:block}
   html,body{overflow:auto;height:auto}
+}
+@media(orientation:landscape) and (min-width:769px){
+  .g-right .submit-section{display:none}
+  .g-left .btn-submit-wrap{display:block}
 }
 </style>
 </head>
@@ -209,6 +208,14 @@ textarea{line-height:1.65;min-height:70px}
           </div>
           <div class="preview-time" id="previewTime"></div>
         </div>
+      </div>
+    </div>
+    <!-- ปุ่ม submit สำหรับ landscape -->
+    <div class="btn-submit-wrap">
+      <div class="submit-section" style="background:transparent;border:none;padding:0">
+        <button class="btn-submit" id="btnSubmitLeft" onclick="submitGreeting()" disabled>
+          <span id="btnLabelLeft">SEND GREETING ✦</span>
+        </button>
       </div>
     </div>
   </div>
@@ -395,7 +402,10 @@ function updatePreview() {
 function checkSubmit() {
   const name = document.getElementById('fName').value.trim();
   const msg  = document.getElementById('fMsg').value.trim();
-  document.getElementById('btnSubmit').disabled = !(name && msg && selectedCardUrl);
+  const ok = !!(name && msg && selectedCardUrl);
+  document.getElementById('btnSubmit').disabled = !ok;
+  const bl = document.getElementById('btnSubmitLeft');
+  if (bl) bl.disabled = !ok;
 }
 
 /* ── Submit ── */
