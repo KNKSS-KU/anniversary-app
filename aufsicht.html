@@ -298,6 +298,21 @@ body.in #dashPage{display:block}
         <!-- TAB: Settings -->
         <div id="tabSettings" style="display:none">
           <div class="status-row" id="cfgStatus" style="display:none"></div>
+
+          <!-- Logo -->
+          <div style="background:var(--gray3);border-radius:10px;padding:16px;margin-bottom:20px;border:var(--border)">
+            <div style="font-size:13px;font-weight:600;margin-bottom:10px;">🏢 โลโก้องค์กร (แสดงใน Header)</div>
+            <p style="font-size:12px;color:var(--gray1);margin-bottom:10px">แนะนำรูปแนวนอน พื้นหลังโปร่งใส (PNG) ความสูงไม่เกิน 80px</p>
+            <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+              <input type="file" id="logoInput" accept="image/*" style="display:none" onchange="uploadLogo(this)">
+              <button class="btn btn-primary btn-sm" onclick="document.getElementById('logoInput').click()">↑ อัปโหลดโลโก้</button>
+              <button class="btn btn-ghost btn-sm" onclick="deleteLogo()" id="btnDelLogo" style="display:none">ลบโลโก้</button>
+            </div>
+            <div id="logoPreview" style="margin-top:12px;display:none">
+              <img id="logoImg" src="" style="height:48px;object-fit:contain;border-radius:6px;border:var(--border);background:#fff;padding:6px">
+            </div>
+          </div>
+
           <div class="settings-grid">
             <div class="form-row"><label>Header (TH)</label><input type="text" id="header_th"></div>
             <div class="form-row"><label>Header (EN)</label><input type="text" id="header_en"></div>
@@ -476,6 +491,34 @@ async function deleteCardImage(id, fileName) {
   } catch(e) { toast('ลบไม่สำเร็จ: ' + e.message, false); }
 }
 
+/* ── Logo ── */
+async function uploadLogo(input) {
+  if (!input.files[0]) return;
+  const file = input.files[0];
+  const ext  = file.name.split('.').pop().toLowerCase();
+  const fileName = `logo_${uid()}.${ext}`;
+  toast('กำลังอัปโหลดโลโก้...');
+  try {
+    const url = await uploadFile('logos', fileName, file);
+    await sbAdmin.patch('settings', '?setting_key=eq.logo_image', { setting_value: url });
+    document.getElementById('logoImg').src = url;
+    document.getElementById('logoPreview').style.display = 'block';
+    document.getElementById('btnDelLogo').style.display = 'inline-flex';
+    toast('✓ อัปโหลดโลโก้เรียบร้อย');
+  } catch(e) { toast('อัปโหลดไม่สำเร็จ: ' + e.message, false); }
+  input.value = '';
+}
+
+async function deleteLogo() {
+  if (!confirm('ลบโลโก้?')) return;
+  try {
+    await sbAdmin.patch('settings', '?setting_key=eq.logo_image', { setting_value: '' });
+    document.getElementById('logoPreview').style.display = 'none';
+    document.getElementById('btnDelLogo').style.display = 'none';
+    toast('✓ ลบโลโก้แล้ว');
+  } catch(e) { toast('ลบไม่สำเร็จ', false); }
+}
+
 /* ── Banner ── */
 async function uploadBanner(input) {
   if (!input.files[0]) return;
@@ -622,6 +665,12 @@ async function loadSettings() {
       document.getElementById('bannerImg').src = bannerRow.setting_value;
       document.getElementById('bannerPreview').style.display = 'block';
       document.getElementById('btnDelBanner').style.display = 'inline-flex';
+    }
+    const logoRow = rows.find(r => r.setting_key === 'logo_image');
+    if (logoRow && logoRow.setting_value) {
+      document.getElementById('logoImg').src = logoRow.setting_value;
+      document.getElementById('logoPreview').style.display = 'block';
+      document.getElementById('btnDelLogo').style.display = 'inline-flex';
     }
   } catch(e) {}
 }
