@@ -183,7 +183,10 @@ textarea{line-height:1.65;min-height:70px}
 <body>
 
 <div class="g-header">
-  <div class="h-brand">ANNIVERSARY</div>
+  <div style="display:flex;align-items:center;gap:10px">
+    <img id="hLogo" src="" alt="logo" style="height:36px;width:auto;object-fit:contain;display:none">
+    <div class="h-brand" id="hBrand">ANNIVERSARY</div>
+  </div>
   <a class="h-back" href="anniversary-wall.html">← ดู Wall</a>
 </div>
 
@@ -295,6 +298,11 @@ async function init() {
     rows.forEach(r => s[r.setting_key] = r.setting_value);
     if (s.header_th) document.getElementById('heroTitle').textContent = 'ส่งคำอวยพร — ' + (s.header_th.match(/\d+/)?.[0] || '') + ' ปี';
     if (s.subtitle_th) document.getElementById('heroSub').textContent = s.subtitle_th;
+    if (s.logo_image) {
+      document.getElementById('hLogo').src = s.logo_image;
+      document.getElementById('hLogo').style.display = 'block';
+      document.getElementById('hBrand').style.display = 'none';
+    }
   } catch(e) {}
 
   // เช็คว่าเปิดพิมพ์เองไหม
