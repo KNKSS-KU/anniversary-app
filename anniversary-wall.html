@@ -37,8 +37,9 @@ body{background:#EDE8E1;font-family:var(--thai);color:var(--gray2)}
 .btn-admin:hover{background:#f5f3ef}
 
 /* BANNER */
-.wall-banner{width:100%;max-height:300px;object-fit:cover;display:block;margin-top:52px}
+.wall-banner{width:100%;height:220px;object-fit:cover;display:block;position:fixed;top:52px;left:0;right:0;z-index:30}
 .wall-banner.hidden{display:none}
+@media(max-width:768px){.wall-banner{height:180px}}
 
 /* STATUS BAR */
 .nc-bar{position:fixed;top:52px;left:0;right:0;z-index:40;font-size:12px;padding:5px 20px;display:none;align-items:center;gap:8px;background:#fff8e1;border-bottom:0.5px solid #ffe082;color:#7c6000}
@@ -50,6 +51,8 @@ body{background:#EDE8E1;font-family:var(--thai);color:var(--gray2)}
 
 /* STAGE */
 .stage{position:fixed;top:52px;left:0;right:0;bottom:48px;overflow:hidden;overflow-y:auto;padding:20px 20px 0}
+.stage.has-banner{top:272px}
+@media(max-width:768px){.stage.has-banner{top:232px}}
 .page{position:absolute;top:20px;left:20px;right:20px;display:grid;grid-template-columns:repeat(3,1fr);gap:14px;transition:opacity .35s,transform .35s;will-change:transform,opacity}
 .page.out-left{opacity:0;transform:translateX(-40px)}
 .page.out-right{opacity:0;transform:translateX(40px)}
@@ -209,11 +212,7 @@ async function loadData() {
       const banner = document.getElementById('wallBanner');
       banner.src = settings.banner_image;
       banner.classList.remove('hidden');
-      // ขยับ stage ลงตามความสูง banner
-      banner.onload = () => {
-        const h = banner.offsetHeight;
-        document.querySelector('.stage').style.top = (52 + h) + 'px';
-      };
+      document.querySelector('.stage').classList.add('has-banner');
     }
     allData = wishes;
     applyFilter(curFilter);
