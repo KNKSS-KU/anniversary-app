@@ -307,7 +307,7 @@ function renderPage() {
     return `<div class="card" style="animation-delay:${i*40}ms" onclick='openPop(${JSON.stringify(d).replace(/'/g,"&#39;")})'>
       <div class="card-img-wrap">
         ${hasImg
-          ? `<img class="card-img" src="${escHtml(d.avatar)}" alt="" loading="lazy" onclick='event.stopPropagation();openLightbox(${JSON.stringify(d).replace(/'/g,"&#39;")})'>`
+          ? `<img class="card-img" src="${escHtml(d.avatar)}" alt="" loading="lazy">`
           : `<div class="card-img-placeholder">✦</div>`
         }
       </div>
