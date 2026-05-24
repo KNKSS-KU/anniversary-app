@@ -247,7 +247,7 @@ textarea{line-height:1.65;min-height:70px}
         <div class="preset-list" id="presetList"></div>
       </div>
       <!-- พิมพ์เอง -->
-      <div>
+      <div id="customMsgSection">
         <label style="font-size:12px;font-weight:500;color:var(--gray1);margin-bottom:6px;display:block">ข้อความอวยพร <span style="color:var(--o)">*</span></label>
         <textarea id="fMsg" placeholder="เขียนคำอวยพรจากใจ..." maxlength="400" oninput="updatePreview()" style="min-height:80px"></textarea>
         <div class="char-row"><span class="char-count" id="charCount">0 / 400</span></div>
@@ -304,7 +304,7 @@ async function init() {
     rows.forEach(r => s[r.setting_key] = r.setting_value);
     const allowCustom = s.allow_custom_message !== '0';
     if (!allowCustom) {
-      document.getElementById('fMsg').closest('.form-section').style.display = 'none';
+      document.getElementById('customMsgSection').style.display = 'none';
     }
   } catch(e) {}
 
