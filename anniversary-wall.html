@@ -363,8 +363,6 @@ function closeLightbox() {
 }
 
 function openPop(d) {
-  document.getElementById('popAv').style.background = colorFor(d.name);
-  document.getElementById('popAv').textContent = initials(d.name);
   document.getElementById('popName').textContent = d.name;
   document.getElementById('popDept').textContent = d.dept || '';
   document.getElementById('popTime').textContent = new Date(d.created_at).toLocaleString('th-TH');
