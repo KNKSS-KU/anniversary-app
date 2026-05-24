@@ -219,9 +219,9 @@ textarea{line-height:1.65;min-height:70px}
     <div class="btn-submit-wrap">
       <div class="submit-section" style="background:transparent;border:none;padding:0">
         <div class="submit-row">
-          <a class="btn-back" href="anniversary-wall.html">Back</a>
+          <a class="btn-back" href="anniversary-wall.html">← Wall</a>
           <button class="btn-submit" id="btnSubmitLeft" onclick="submitGreeting()" disabled>
-            <span id="btnLabelLeft">Submit</span>
+            <span id="btnLabelLeft">SEND GREETING ✦</span>
           </button>
         </div>
       </div>
@@ -231,12 +231,12 @@ textarea{line-height:1.65;min-height:70px}
   <!-- MID: ชื่อ + เลือกรูปการ์ด -->
   <div class="g-mid">
     <div>
-      <label style="font-size:12px;font-weight:500;color:var(--gray1);margin-bottom:6px;display:block">ผู้อวยพร <span style="color:var(--o)">*</span></label>
-      <input type="text" id="fName" placeholder="Congratolatory Message Sender" maxlength="60" oninput="updatePreview()">
+      <label style="font-size:12px;font-weight:500;color:var(--gray1);margin-bottom:6px;display:block">ชื่อ <span style="color:var(--o)">*</span></label>
+      <input type="text" id="fName" placeholder="ชื่อที่แสดงบนการ์ด" maxlength="60" oninput="updatePreview()">
     </div>
     <div>
-      <label style="font-size:12px;font-weight:500;color:var(--gray1);margin-bottom:6px;display:block">รายละเอียด</label>
-      <input type="text" id="fDept" placeholder="Position/Batch/Department" maxlength="60" oninput="updatePreview()">
+      <label style="font-size:12px;font-weight:500;color:var(--gray1);margin-bottom:6px;display:block">แผนก</label>
+      <input type="text" id="fDept" placeholder="แผนกของคุณ" maxlength="60" oninput="updatePreview()">
     </div>
     <div>
       <label style="font-size:12px;font-weight:500;color:var(--gray1);margin-bottom:6px;display:block">เลือกรูปการ์ด <span style="color:var(--o)">*</span></label>
@@ -251,23 +251,23 @@ textarea{line-height:1.65;min-height:70px}
     <div style="padding:20px 16px;display:flex;flex-direction:column;gap:12px;flex:1">
       <!-- คำอวยพรสำเร็จรูป -->
       <div id="presetSection" style="display:none">
-        <label style="font-size:12px;font-weight:500;color:var(--gray1);margin-bottom:6px;display:block">เลือกคำอวยพร:Please select Congratulatory message</label>
+        <label style="font-size:12px;font-weight:500;color:var(--gray1);margin-bottom:6px;display:block">เลือกคำอวยพรสำเร็จรูป</label>
         <div class="preset-list" id="presetList"></div>
       </div>
       <!-- พิมพ์เอง -->
       <div id="customMsgSection">
-        <label style="font-size:12px;font-weight:500;color:var(--gray1);margin-bottom:6px;display:block">เขียนคำอวยพรด้วยตนเอง <span style="color:var(--o)">*</span></label>
-        <textarea id="fMsg" placeholder="เขียนคำอวยพร..." maxlength="400" oninput="updatePreview()" style="min-height:80px"></textarea>
+        <label style="font-size:12px;font-weight:500;color:var(--gray1);margin-bottom:6px;display:block">ข้อความอวยพร <span style="color:var(--o)">*</span></label>
+        <textarea id="fMsg" placeholder="เขียนคำอวยพรจากใจ..." maxlength="400" oninput="updatePreview()" style="min-height:80px"></textarea>
         <div class="char-row"><span class="char-count" id="charCount">0 / 400</span></div>
       </div>
     </div>
     <!-- SUBMIT -->
     <div class="submit-section">
       <div class="submit-row">
-        <a class="btn-back" href="anniversary-wall.html">Back</a>
+        <a class="btn-back" href="anniversary-wall.html">← Wall</a>
         <button class="btn-submit" id="btnSubmit" onclick="submitGreeting()" disabled>
           <span class="spin" id="submitSpin"></span>
-          <span id="btnLabel">Submit</span>
+          <span id="btnLabel">SEND GREETING ✦</span>
         </button>
       </div>
       <div class="status-box" id="statusBox"></div>
@@ -279,7 +279,7 @@ textarea{line-height:1.65;min-height:70px}
 <div class="success-wrap" id="successWrap">
   <div class="success-icon">✦</div>
   <div class="success-title">ส่งสำเร็จแล้ว!</div>
-  <div class="success-sub">คำอวยพรของคุณอยู่หน้าหลักแล้ว! 🎉</div>
+  <div class="success-sub">คำอวยพรของคุณขึ้น Wall แล้ว! 🎉</div>
   <div class="success-card">
     <img class="success-card-img hidden" id="successImg" src="" alt="">
     <div class="success-card-body">
@@ -288,8 +288,8 @@ textarea{line-height:1.65;min-height:70px}
     </div>
   </div>
   <div class="success-btns">
-    <a class="btn-wall" href="anniversary-wall.html">ดูหน้าหลัก</a>
-    <button class="btn-again" onclick="resetForm()">อวยพรอีกครั้ง</button>
+    <a class="btn-wall" href="anniversary-wall.html">🖼 ดูบน Wall</a>
+    <button class="btn-again" onclick="resetForm()">✎ ส่งอีกครั้ง</button>
   </div>
 </div>
 
@@ -303,8 +303,7 @@ async function init() {
     const rows = await sb.get('settings', '?select=setting_key,setting_value');
     const s = {};
     rows.forEach(r => s[r.setting_key] = r.setting_value);
-    if (s.header_th) document.getElementById('heroTitle').textContent = 'ส่งคำอวยพร — ' + (s.header_th.match(/\d+/)?.[0] || '') + ' ปี';
-    if (s.subtitle_th) document.getElementById('heroSub').textContent = s.subtitle_th;
+
     if (s.logo_image) {
       document.getElementById('hLogo').src = s.logo_image;
       document.getElementById('hLogo').style.display = 'block';
@@ -449,7 +448,7 @@ async function submitGreeting() {
     sb2.innerHTML = '❌ ส่งไม่สำเร็จ: ' + e.message;
     document.getElementById('btnSubmit').disabled = false;
     document.getElementById('submitSpin').style.display = 'none';
-    document.getElementById('btnLabel').textContent = 'Submit';
+    document.getElementById('btnLabel').textContent = 'SEND GREETING ✦';
   }
 }
 
@@ -462,7 +461,7 @@ function resetForm() {
   document.querySelectorAll('.preset-item').forEach(b => b.classList.remove('selected'));
   document.getElementById('btnSubmit').disabled = true;
   document.getElementById('submitSpin').style.display = 'none';
-  document.getElementById('btnLabel').textContent = 'Submit';
+  document.getElementById('btnLabel').textContent = 'SEND GREETING ✦';
   document.getElementById('statusBox').className = 'status-box';
   updatePreview();
 }
