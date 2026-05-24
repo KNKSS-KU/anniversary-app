@@ -314,10 +314,7 @@ body.in #dashPage{display:block}
             </div>
           </div>
 
-          <div class="settings-grid">
-            <div class="form-row"><label>Header (TH)</label><input type="text" id="header_th"></div>
-            <div class="form-row"><label>Subtitle (TH)</label><input type="text" id="subtitle_th"></div>
-          </div>
+
 
           <!-- Toggle: เปิด/ปิด พิมพ์ข้อความเอง -->
           <div style="background:var(--gray3);border-radius:10px;padding:16px;margin-top:16px;border:var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px">
@@ -707,13 +704,8 @@ function updateToggleUI(checked) {
 }
 
 async function saveSettings() {
-  const keys = ['header_th','subtitle_th'];
   setStatus('cfgStatus','loading','กำลังบันทึก...');
   try {
-    for (const k of keys) {
-      const val = document.getElementById(k)?.value?.trim() ?? '';
-      await sbAdmin.patch('settings', `?setting_key=eq.${k}`, { setting_value: val });
-    }
     setStatus('cfgStatus','ok','✓ บันทึกเรียบร้อย');
   } catch(e) { setStatus('cfgStatus','err','❌ '+e.message); }
 }
