@@ -3,416 +3,406 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ส่งคำอวยพร</title>
+<title>Anniversary Wall</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Sarabun:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,300;1,300&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --o:#FF8200;--od:#CC6800;--ol:#FFF3E0;
-  --gray1:#74787B;--gray2:#222221;--gray3:#f7f5f2;
+  --o:#FF8200;--ol:#FF9E3D;--od:#CC6800;
+  --gray1:#74787B;--gray2:#222221;
   --serif:'Cormorant Garamond',serif;
   --disp:'Cinzel',serif;--thai:'Sarabun',sans-serif;
-  --border:0.5px solid rgba(0,0,0,.1);
+  --border:0.5px solid rgba(0,0,0,.08);
 }
-html,body{min-height:100%;background:#EDE8E1;font-family:var(--thai);color:var(--gray2)}
-body::before{content:'✦';position:fixed;font-size:320px;color:rgba(255,130,0,.04);top:-60px;right:-60px;font-family:serif;pointer-events:none;z-index:0;line-height:1}
+html,body{height:100%;overflow:hidden}
+body{background:#EDE8E1;font-family:var(--thai);color:var(--gray2)}
 
 /* HEADER */
-.g-header{background:rgba(255,255,255,.95);backdrop-filter:blur(10px);border-bottom:var(--border);padding:0 20px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
-.h-brand{font-family:var(--disp);font-size:14px;letter-spacing:.08em}
-.h-back{font-size:12px;color:var(--gray1);text-decoration:none;display:flex;align-items:center;gap:4px;padding:5px 10px;border-radius:100px;border:var(--border);transition:all .2s}
-.h-back:hover{background:var(--gray3)}
-
-/* MAIN */
-.g-main{max-width:560px;margin:0 auto;padding:32px 16px 60px;position:relative;z-index:1}
-
-/* HERO */
-.g-hero{text-align:center;margin-bottom:28px}
-.g-hero-icon{font-size:32px;margin-bottom:10px;opacity:.7}
-.g-hero-title{font-family:var(--disp);font-size:22px;letter-spacing:.06em;margin-bottom:6px}
-.g-hero-sub{font-family:var(--serif);font-style:italic;font-size:16px;color:var(--gray1)}
-
-/* CARD PREVIEW */
-.card-preview{
-  background:#fff;border-radius:16px;border:var(--border);
-  margin-bottom:24px;overflow:hidden;
-  box-shadow:0 4px 20px rgba(0,0,0,.06);
-  min-height:200px;position:relative;
-  transition:all .4s;
+.wall-header{
+  position:fixed;top:0;left:0;right:0;z-index:50;
+  background:rgba(255,255,255,.96);backdrop-filter:blur(10px);
+  border-bottom:var(--border);padding:0 24px;height:72px;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
 }
-.card-preview.has-img{
-  box-shadow:0 0 0 2px rgba(255,130,0,.4), 0 0 24px rgba(255,130,0,.2), 0 6px 20px rgba(0,0,0,.1);
+.h-left{display:flex;align-items:center;gap:10px}
+.h-logo{height:48px;width:auto;object-fit:contain;display:none}
+.h-brand{font-family:var(--disp);font-size:18px;letter-spacing:.08em}
+.h-year{font-family:var(--serif);font-style:italic;font-size:15px;color:var(--o);margin-left:2px}
+.h-count{font-size:13px;color:var(--gray1);border:var(--border);border-radius:100px;padding:2px 10px;background:#fff}
+.filter-btn{font-family:var(--thai);font-size:13px;padding:6px 14px;border-radius:100px;border:var(--border);background:transparent;color:var(--gray1);cursor:pointer;transition:all .2s}
+.filter-btn.active{background:var(--o);color:#fff;border-color:var(--o)}
+.h-right{display:flex;align-items:center;gap:8px}
+.btn-admin{font-size:11px;padding:5px 10px;border-radius:100px;border:var(--border);background:transparent;color:var(--gray1);cursor:pointer;text-decoration:none;transition:all .2s}
+.btn-admin:hover{background:#f5f3ef}
+
+/* MAIN SCROLL AREA */
+.main{
+  position:fixed;top:72px;left:0;right:0;bottom:48px;
+  overflow-y:auto;overflow-x:hidden;
 }
-.preview-bg{
-  width:100%;height:auto;object-fit:contain;display:block;
-  background:#f7f3ee;
-}
-.preview-bg-placeholder{
-  width:100%;height:160px;background:linear-gradient(135deg,#f7f3ee,#ede8e1);
+.cards-wrap{}
+
+/* BANNER */
+.wall-banner{width:100%;display:block;object-fit:contain;}
+.wall-banner.hidden{display:none}
+
+/* CTA */
+.banner-cta{
+  width:100%;padding:12px 20px;
+  background:rgba(255,255,255,.96);backdrop-filter:blur(10px);
+  border-bottom:var(--border);
   display:flex;align-items:center;justify-content:center;
-  font-size:40px;opacity:.3;
 }
-.preview-body{padding:16px 20px 20px}
-.preview-msg{font-family:var(--serif);font-size:18px;line-height:1.75;color:var(--gray2);margin-bottom:12px}
-.preview-msg.placeholder{color:rgba(116,120,123,.4);font-style:italic}
-.preview-footer{display:flex;align-items:center;gap:10px}
-.preview-av{width:32px;height:32px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;background:var(--o)}
-.preview-info .preview-name{font-size:13px;font-weight:500}
-.preview-info .preview-dept{font-size:11px;color:var(--gray1)}
-.preview-time{font-size:11px;color:var(--gray1);margin-left:auto}
-
-/* FORM CARD */
-.form-card{background:#fff;border-radius:16px;border:var(--border);overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.04)}
-.form-section{padding:20px}
-.form-section+.form-section{border-top:var(--border)}
-.form-section label{font-size:12px;font-weight:500;color:var(--gray1);margin-bottom:6px;display:block}
-input[type=text],textarea{font-family:var(--thai);font-size:14px;width:100%;padding:10px 14px;border:var(--border);border-radius:10px;background:#fafaf9;color:var(--gray2);outline:none;transition:border-color .2s,background .2s;resize:none}
-input:focus,textarea:focus{border-color:var(--o);background:#fff}
-textarea{line-height:1.65;min-height:100px}
-
-/* CARD IMAGE PICKER */
-.card-picker-grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:10px;margin-top:10px;
+.btn-greet{
+  font-family:var(--disp);font-size:13px;letter-spacing:.08em;
+  padding:10px 32px;border-radius:100px;
+  background:var(--o);color:#fff;border:none;cursor:pointer;
+  text-decoration:none;transition:all .25s;
+  box-shadow:0 4px 16px rgba(255,130,0,.35);
+  display:inline-flex;align-items:center;gap:8px;
 }
-.card-pick-item{
-  border-radius:10px;overflow:hidden;
-  border:2.5px solid transparent;
-  cursor:pointer;transition:all .2s;
-  aspect-ratio:4/3;position:relative;
-  background:#f5f3ef;
-}
-.card-pick-item:hover{border-color:rgba(255,130,0,.5);transform:scale(1.02);box-shadow:0 0 12px rgba(255,130,0,.25)}
-.card-pick-item.selected{border-color:var(--o);box-shadow:0 0 0 3px rgba(255,130,0,.2), 0 0 16px rgba(255,130,0,.3)}
-.card-pick-item img{width:100%;height:100%;object-fit:cover;display:block}
-.card-pick-item .check{
-  position:absolute;top:6px;right:6px;
-  width:22px;height:22px;border-radius:50%;
-  background:var(--o);color:#fff;
-  font-size:13px;display:none;
-  align-items:center;justify-content:center;
-}
-.card-pick-item.selected .check{display:flex}
-.card-pick-empty{color:var(--gray1);font-size:13px;padding:20px 0;text-align:center;grid-column:1/-1}
-.card-pick-loading{color:var(--gray1);font-size:13px;padding:20px 0;text-align:center;grid-column:1/-1}
+.btn-greet:hover{background:var(--od);transform:translateY(-2px)}
 
-/* PRESETS */
-.preset-list{display:flex;flex-direction:column;gap:6px;margin-top:8px}
-.preset-item{font-family:var(--serif);font-size:14px;line-height:1.55;padding:10px 14px;border-radius:10px;border:var(--border);background:#fafaf9;cursor:pointer;color:var(--gray2);transition:all .2s;text-align:left;width:100%}
-.preset-item:hover{border-color:var(--o);background:var(--ol)}
-.preset-item.selected{border-color:var(--o);background:var(--ol);color:var(--od)}
-
-/* CHAR COUNT */
-.char-row{display:flex;justify-content:flex-end;margin-top:6px}
-.char-count{font-size:11px;color:var(--gray1)}
-.char-count.warn{color:#e53935}
-
-/* SUBMIT */
-.submit-section{padding:16px 20px;background:var(--gray3);border-top:var(--border)}
-.btn-submit{width:100%;font-family:var(--disp);font-size:13px;letter-spacing:.1em;padding:14px;border:none;border-radius:12px;background:var(--o);color:#fff;cursor:pointer;transition:all .25s;display:flex;align-items:center;justify-content:center;gap:8px}
-.btn-submit:hover:not(:disabled){background:var(--od);transform:translateY(-1px);box-shadow:0 4px 16px rgba(255,130,0,.3)}
-.btn-submit:disabled{opacity:.45;cursor:not-allowed;transform:none}
-.spin{width:16px;height:16px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;display:none}
+/* STATUS BAR */
+.nc-bar{position:fixed;top:72px;left:0;right:0;z-index:40;font-size:12px;padding:5px 20px;display:none;align-items:center;gap:8px;background:#fff8e1;border-bottom:0.5px solid #ffe082;color:#7c6000}
+.nc-bar.err{background:#fff0f0;border-color:#ffcdd2;color:#b71c1c}
+.nc-bar.ok{background:#f0faf5;border-color:#a5d6a7;color:#1b5e20}
+.nc-bar.show{display:flex}
+.nc-spinner{width:12px;height:12px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:spin .6s linear infinite;flex-shrink:0}
 @keyframes spin{to{transform:rotate(360deg)}}
-.status-box{margin-top:12px;padding:10px 14px;border-radius:10px;font-size:13px;display:none;align-items:center;gap:8px}
-.status-box.err{background:#ffebee;color:#b71c1c;border:0.5px solid #ef9a9a;display:flex}
 
-/* SUCCESS */
-.success-wrap{position:fixed;inset:0;background:#EDE8E1;z-index:200;display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center;padding:20px}
-.success-wrap.show{display:flex}
-.success-icon{font-size:56px;animation:popIn .4s ease}
-.success-title{font-family:var(--disp);font-size:24px;letter-spacing:.06em}
-.success-sub{font-family:var(--serif);font-style:italic;font-size:16px;color:var(--gray1)}
-.success-card{background:#fff;border-radius:16px;border:var(--border);overflow:hidden;max-width:380px;width:100%;box-shadow:0 4px 20px rgba(0,0,0,.06)}
-.success-card-img{width:100%;height:140px;object-fit:cover;display:block}
-.success-card-img.hidden{display:none}
-.success-card-body{padding:16px 20px}
-.success-card-msg{font-family:var(--serif);font-size:16px;line-height:1.75}
-.success-card-from{font-size:13px;color:var(--gray1);margin-top:8px}
-.success-btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
-.btn-wall{font-family:var(--thai);font-size:13px;padding:10px 20px;border-radius:100px;background:var(--o);color:#fff;border:none;cursor:pointer;text-decoration:none;transition:all .2s}
-.btn-wall:hover{background:var(--od)}
-.btn-again{font-family:var(--thai);font-size:13px;padding:10px 20px;border-radius:100px;background:transparent;color:var(--gray1);border:var(--border);cursor:pointer;transition:all .2s}
-.btn-again:hover{background:var(--gray3)}
-@keyframes popIn{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
+/* CARDS GRID */
+.cards-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+  padding:12px;
+}
+
+/* CARD */
+.card{border-radius:10px;overflow:hidden;cursor:pointer;transition:box-shadow .2s,transform .2s;opacity:0;animation:cardIn .4s forwards;position:relative}
+.card:hover{box-shadow:0 0 0 2px rgba(255,130,0,.5),0 0 20px rgba(255,130,0,.3),0 8px 24px rgba(0,0,0,.15);transform:translateY(-3px)}
+@keyframes cardIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.card-img-wrap{position:relative;width:100%;padding-top:70%;overflow:hidden}
+.card-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;background:#f0ede8}
+.card-img-placeholder{position:absolute;inset:0;background:linear-gradient(135deg,#f0ede8,#e5e0d8);display:flex;align-items:center;justify-content:center;font-size:28px;opacity:.3}
+.card-bottom{
+  position:absolute;bottom:0;left:0;right:0;
+  padding:8px 10px;
+  background:linear-gradient(transparent, rgba(0,0,0,.65));
+}
+.card-msg{font-family:var(--serif);font-size:11px;line-height:1.4;color:#fff;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:5px}
+.card-footer{display:flex;align-items:center;gap:6px}
+.card-av{width:18px;height:18px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:600;color:#fff;border:1px solid rgba(255,255,255,.5)}
+.card-name{font-size:10px;font-weight:500;color:#fff;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-time{font-size:9px;color:rgba(255,255,255,.8);white-space:nowrap}
+.card-new{font-size:8px;background:var(--o);color:#fff;border-radius:100px;padding:1px 5px;font-weight:600;flex-shrink:0}
+
+/* EMPTY */
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;gap:12px;text-align:center}
+.empty-icon{font-size:40px;opacity:.25}
+.empty-title{font-family:var(--disp);font-size:18px;color:var(--gray1);letter-spacing:.05em}
+.empty-sub{font-size:13px;color:var(--gray1);line-height:1.6}
+
+/* PAGINATION */
+.pager{position:fixed;bottom:0;left:0;right:0;height:48px;background:rgba(255,255,255,.96);backdrop-filter:blur(10px);border-top:var(--border);display:flex;align-items:center;justify-content:center;gap:10px;z-index:50}
+.pager-btn{width:30px;height:30px;border-radius:50%;border:var(--border);background:transparent;cursor:pointer;font-size:16px;color:var(--gray2);display:flex;align-items:center;justify-content:center;transition:all .2s}
+.pager-btn:hover:not(:disabled){background:var(--o);color:#fff;border-color:var(--o)}
+.pager-btn:disabled{opacity:.3;cursor:not-allowed}
+.dots{display:flex;gap:5px;align-items:center}
+.dot{width:6px;height:6px;border-radius:50%;background:rgba(0,0,0,.15);cursor:pointer;transition:all .25s;border:none;padding:0}
+.dot.active{width:18px;border-radius:3px;background:var(--o)}
+
+/* POPUP */
+.pop-backdrop{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;padding:20px}
+.pop-backdrop.show{display:flex}
+.pop-card{background:#fff;border-radius:16px;max-width:640px;width:100%;overflow:hidden;position:relative;animation:popIn .25s ease}
+@keyframes popIn{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:scale(1)}}
+.pop-close{position:absolute;top:12px;right:12px;width:30px;height:30px;border-radius:50%;border:none;background:rgba(0,0,0,.4);cursor:pointer;font-size:16px;color:#fff;display:flex;align-items:center;justify-content:center;z-index:10}
+.pop-img{width:100%;height:300px;object-fit:cover;display:block}
+.pop-img.hidden{display:none}
+.pop-body{padding:20px 24px 24px}
+.pop-info{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.pop-av{width:40px;height:40px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;color:#fff}
+.pop-name{font-size:15px;font-weight:600}
+.pop-dept{font-size:12px;color:var(--gray1)}
+.pop-time{font-size:11px;color:var(--gray1);margin-left:auto;white-space:nowrap}
+.pop-msg{font-family:var(--serif);font-size:18px;line-height:1.8;color:var(--gray2);padding-top:14px;border-top:var(--border)}
+
+/* LIGHTBOX */
+.lightbox{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.92);display:none;align-items:center;justify-content:center;cursor:zoom-out}
+.lightbox.show{display:flex}
+.lightbox img{max-width:95vw;max-height:92vh;object-fit:contain;border-radius:4px}
+.lightbox-close{position:absolute;top:16px;right:20px;color:#fff;font-size:28px;cursor:pointer;opacity:.7;background:none;border:none;line-height:1}
+.lightbox-close:hover{opacity:1}
+.lb-info{position:absolute;bottom:0;left:0;right:0;padding:16px 24px;background:linear-gradient(transparent,rgba(0,0,0,.7));color:#fff;display:flex;align-items:center;gap:12px}
+.lb-av{width:36px;height:36px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:#fff}
+.lb-name{font-size:14px;font-weight:600}
+.lb-msg{font-size:13px;opacity:.8;margin-top:2px}
+
+/* TOAST */
+.toast{position:fixed;bottom:60px;left:50%;transform:translateX(-50%) translateY(12px);background:rgba(34,34,33,.88);color:#fff;font-size:13px;padding:8px 18px;border-radius:100px;z-index:300;opacity:0;transition:all .25s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .cards-grid{grid-template-columns:1fr;gap:10px;padding:12px}
+  .wall-header{height:60px}
+  .main{top:60px}
+}
 </style>
 </head>
 <body>
 
-<div class="g-header">
-  <div class="h-brand">ANNIVERSARY</div>
-  <a class="h-back" href="anniversary-wall.html">← ดู Wall</a>
+<div class="wall-header">
+  <div class="h-left">
+    <img class="h-logo" id="hLogo" src="" alt="logo">
+    <div class="h-brand" id="hBrand">ANNIVERSARY<span class="h-year" id="hYear"></span></div>
+    <div class="h-count"><span id="liveCount">0</span> คำอวยพร</div>
+    <button class="filter-btn active" onclick="setFilter('all')">ทั้งหมด</button>
+    <button class="filter-btn" onclick="setFilter('new')">ใหม่</button>
+  </div>
+  <div class="h-right">
+    <a class="btn-admin" href="aufsicht.html">⚙ Admin</a>
+    <a class="btn-greet" id="headerGreetBtn" href="anniversary-greeting.html" style="display:none">✦ ส่งคำอวยพร</a>
+  </div>
 </div>
 
-<div class="g-main">
-  <div class="g-hero">
-    <div class="g-hero-icon">✦</div>
-    <div class="g-hero-title" id="heroTitle">ส่งคำอวยพร</div>
-    <div class="g-hero-sub" id="heroSub">ร่วมอวยพรในโอกาสพิเศษนี้</div>
+<div class="nc-bar" id="ncBar">
+  <div class="nc-spinner" id="ncSpin"></div>
+  <span id="ncMsg">กำลังโหลด...</span>
+</div>
+
+<!-- MAIN SCROLL -->
+<div class="main" id="mainScroll">
+  <!-- BANNER -->
+  <div id="bannerSection" style="display:none">
+    <img class="wall-banner" id="wallBanner" src="" alt="banner">
+    <div class="banner-cta">
+      <a class="btn-greet" href="anniversary-greeting.html">✦ ส่งคำอวยพร</a>
+    </div>
   </div>
 
-  <!-- CARD PREVIEW -->
-  <div class="card-preview" id="cardPreview">
-    <div class="preview-bg-placeholder" id="previewBgPlaceholder">✦</div>
-    <img class="preview-bg" id="previewBgImg" src="" alt="" style="display:none">
-    <div class="preview-body">
-      <div class="preview-msg placeholder" id="previewMsg">ข้อความของคุณจะแสดงที่นี่...</div>
-      <div class="preview-footer">
-        <div class="preview-av" id="previewAv">?</div>
-        <div class="preview-info">
-          <div class="preview-name" id="previewName">ชื่อของคุณ</div>
-          <div class="preview-dept" id="previewDept"></div>
+  <!-- CARDS -->
+  <div class="cards-wrap">
+    <div class="cards-grid" id="cardsGrid"></div>
+  </div>
+
+  <!-- PAGINATION -->
+  <div style="display:flex;justify-content:center;align-items:center;gap:10px;padding:10px 0 60px">
+    <button class="pager-btn" id="btnPrev" onclick="navigate(-1)">&#8592;</button>
+    <div class="dots" id="dots"></div>
+    <button class="pager-btn" id="btnNext" onclick="navigate(1)">&#8594;</button>
+  </div>
+</div>
+
+<!-- POPUP -->
+<div class="pop-backdrop" id="pop" onclick="closePop(event)">
+  <div class="pop-card">
+    <button class="pop-close" onclick="closePop()">✕</button>
+    <img class="pop-img hidden" id="popImg" src="" alt="">
+    <div class="pop-body">
+      <div class="pop-info">
+        <div class="pop-av" id="popAv"></div>
+        <div>
+          <div class="pop-name" id="popName"></div>
+          <div class="pop-dept" id="popDept"></div>
         </div>
-        <div class="preview-time" id="previewTime"></div>
+        <div class="pop-time" id="popTime"></div>
       </div>
+      <div class="pop-msg" id="popMsg"></div>
     </div>
-  </div>
-
-  <!-- FORM -->
-  <div class="form-card">
-
-    <!-- ชื่อ + แผนก -->
-    <div class="form-section" style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-      <div>
-        <label>ชื่อ <span style="color:var(--o)">*</span></label>
-        <input type="text" id="fName" placeholder="ชื่อที่แสดงบนการ์ด" maxlength="60" oninput="updatePreview()">
-      </div>
-      <div>
-        <label>แผนก</label>
-        <input type="text" id="fDept" placeholder="แผนกของคุณ" maxlength="60" oninput="updatePreview()">
-      </div>
-    </div>
-
-    <!-- เลือกรูปการ์ด -->
-    <div class="form-section">
-      <label>เลือกรูปการ์ด <span style="color:var(--o)">*</span></label>
-      <div class="card-picker-grid" id="cardPickerGrid">
-        <div class="card-pick-loading">กำลังโหลดรูป...</div>
-      </div>
-    </div>
-
-    <!-- คำอวยพรสำเร็จรูป -->
-    <div class="form-section" id="presetSection" style="display:none">
-      <label>เลือกคำอวยพรสำเร็จรูป</label>
-      <div class="preset-list" id="presetList"></div>
-    </div>
-
-    <!-- พิมพ์เอง -->
-    <div class="form-section">
-      <label>ข้อความอวยพร <span style="color:var(--o)">*</span></label>
-      <textarea id="fMsg" placeholder="เขียนคำอวยพรจากใจ..." maxlength="400" oninput="updatePreview()"></textarea>
-      <div class="char-row"><span class="char-count" id="charCount">0 / 400</span></div>
-    </div>
-
-    <!-- SUBMIT -->
-    <div class="submit-section">
-      <button class="btn-submit" id="btnSubmit" onclick="submitGreeting()" disabled>
-        <span class="spin" id="submitSpin"></span>
-        <span id="btnLabel">SEND GREETING ✦</span>
-      </button>
-      <div class="status-box" id="statusBox"></div>
-    </div>
-
   </div>
 </div>
 
-<!-- SUCCESS -->
-<div class="success-wrap" id="successWrap">
-  <div class="success-icon">✦</div>
-  <div class="success-title">ส่งสำเร็จแล้ว!</div>
-  <div class="success-sub">คำอวยพรของคุณขึ้น Wall แล้ว! 🎉</div>
-  <div class="success-card">
-    <img class="success-card-img hidden" id="successImg" src="" alt="">
-    <div class="success-card-body">
-      <div class="success-card-msg" id="successMsg"></div>
-      <div class="success-card-from" id="successFrom"></div>
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <img id="lbImg" src="" alt="">
+  <div class="lb-info">
+    <div class="lb-av" id="lbAv"></div>
+    <div>
+      <div class="lb-name" id="lbName"></div>
+      <div class="lb-msg" id="lbMsg"></div>
     </div>
   </div>
-  <div class="success-btns">
-    <a class="btn-wall" href="anniversary-wall.html">🖼 ดูบน Wall</a>
-    <button class="btn-again" onclick="resetForm()">✎ ส่งอีกครั้ง</button>
-  </div>
 </div>
+
+<div class="toast" id="toast"></div>
 
 <script src="supabase.js"></script>
 <script>
-let selectedCardUrl = '';
+let allData = [], filtered = [], curFilter = 'all', curPage = 0;
+const PER_PAGE = 8;
+let settings = {};
 
-/* ── Init ── */
-async function init() {
-  try {
-    // โหลด settings
-    const rows = await sb.get('settings', '?select=setting_key,setting_value');
-    const s = {};
-    rows.forEach(r => s[r.setting_key] = r.setting_value);
-    if (s.header_th) document.getElementById('heroTitle').textContent = 'ส่งคำอวยพร — ' + (s.header_th.match(/\d+/)?.[0] || '') + ' ปี';
-    if (s.subtitle_th) document.getElementById('heroSub').textContent = s.subtitle_th;
-  } catch(e) {}
-
-  // เช็คว่าเปิดพิมพ์เองไหม
-  try {
-    const rows = await sb.get('settings', '?select=setting_key,setting_value');
-    const s = {};
-    rows.forEach(r => s[r.setting_key] = r.setting_value);
-    const allowCustom = s.allow_custom_message !== '0';
-    if (!allowCustom) {
-      document.getElementById('fMsg').closest('.form-section').style.display = 'none';
-    }
-  } catch(e) {}
-
-  // โหลดรูปการ์ด + คำอวยพรสำเร็จรูป พร้อมกัน
-  await Promise.all([loadCardImages(), loadPresets()]);
-  updatePreview();
+function setBar(state, msg) {
+  const bar = document.getElementById('ncBar');
+  document.getElementById('ncMsg').textContent = msg;
+  document.getElementById('ncSpin').style.display = state === 'loading' ? 'block' : 'none';
+  bar.className = 'nc-bar show ' + (state === 'loading' ? '' : state);
+  if (state === 'ok') setTimeout(() => bar.classList.remove('show'), 2500);
 }
 
-/* ── โหลดรูปการ์ด ── */
-async function loadCardImages() {
-  const grid = document.getElementById('cardPickerGrid');
+async function loadData() {
+  setBar('loading', 'กำลังโหลดข้อมูล...');
   try {
-    const cards = await sb.get('card_images', '?select=id,image_path&order=id.asc');
-    if (!cards.length) {
-      grid.innerHTML = '<div class="card-pick-empty">ยังไม่มีรูปการ์ด<br><small>Admin ยังไม่ได้เพิ่มรูป</small></div>';
-      return;
+    const [wishes, sets] = await Promise.all([
+      sb.get('wishes', '?status=eq.approved&order=created_at.desc'),
+      sb.get('settings', '?select=setting_key,setting_value')
+    ]);
+    sets.forEach(r => settings[r.setting_key] = r.setting_value);
+
+    const year = settings.header_th?.match(/\d+/)?.[0] || '30';
+    document.getElementById('hYear').textContent = ` — ${year} ปี`;
+
+    if (settings.logo_image) {
+      document.getElementById('hLogo').src = settings.logo_image;
+      document.getElementById('hLogo').style.display = 'block';
+      document.getElementById('hBrand').style.display = 'none';
     }
-    grid.innerHTML = '';
-    cards.forEach((c, i) => {
-      const div = document.createElement('div');
-      div.className = 'card-pick-item';
-      div.innerHTML = `<img src="${escHtml(c.image_path)}" alt="การ์ด ${i+1}" loading="lazy"><div class="check">✓</div>`;
-      div.onclick = () => selectCard(div, c.image_path);
-      grid.appendChild(div);
-    });
-    // เลือกอันแรกอัตโนมัติ
-    grid.querySelector('.card-pick-item')?.click();
+
+    if (settings.banner_image) {
+      document.getElementById('wallBanner').src = settings.banner_image;
+      document.getElementById('bannerSection').style.display = 'block';
+    } else {
+      document.getElementById('headerGreetBtn').style.display = 'flex';
+    }
+
+    allData = wishes;
+    applyFilter(curFilter);
+    setBar('ok', `✓ โหลดสำเร็จ — ${wishes.length} คำอวยพร`);
   } catch(e) {
-    grid.innerHTML = '<div class="card-pick-empty">โหลดรูปไม่สำเร็จ</div>';
+    setBar('err', '❌ โหลดไม่สำเร็จ: ' + e.message);
   }
 }
 
-function selectCard(el, url) {
-  document.querySelectorAll('.card-pick-item').forEach(c => c.classList.remove('selected'));
-  el.classList.add('selected');
-  selectedCardUrl = url;
-  const img = document.getElementById('previewBgImg');
-  const ph  = document.getElementById('previewBgPlaceholder');
-  img.src = url;
-  img.style.display = 'block';
-  ph.style.display  = 'none';
-  document.getElementById('cardPreview').classList.add('has-img');
-  checkSubmit();
+function applyFilter(f) {
+  curFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b =>
+    b.classList.toggle('active', (f==='all'&&b.textContent==='ทั้งหมด')||(f==='new'&&b.textContent==='ใหม่'))
+  );
+  filtered = f === 'new' ? allData.filter(d => isNewEntry(d.created_at)) : [...allData];
+  document.getElementById('liveCount').textContent = filtered.length;
+  curPage = 0;
+  renderPage();
 }
+function setFilter(f) { applyFilter(f); }
 
-/* ── โหลดคำอวยพรสำเร็จรูป ── */
-async function loadPresets() {
-  try {
-    const presets = await sb.get('predefined_wishes', '?select=message_text&order=id.asc');
-    if (!presets.length) return;
-    const sec  = document.getElementById('presetSection');
-    const list = document.getElementById('presetList');
-    sec.style.display = 'block';
-    presets.forEach(p => {
-      const btn = document.createElement('button');
-      btn.className = 'preset-item';
-      btn.textContent = p.message_text;
-      btn.onclick = () => {
-        document.querySelectorAll('.preset-item').forEach(b => b.classList.remove('selected'));
-        btn.classList.add('selected');
-        document.getElementById('fMsg').value = p.message_text;
-        updatePreview();
-      };
-      list.appendChild(btn);
-    });
-  } catch(e) {}
-}
+function renderPage() {
+  const grid = document.getElementById('cardsGrid');
+  const total = Math.ceil(filtered.length / PER_PAGE);
+  const page  = filtered.slice(curPage * PER_PAGE, (curPage+1) * PER_PAGE);
 
-/* ── Preview ── */
-function updatePreview() {
-  const name = document.getElementById('fName').value.trim();
-  const dept = document.getElementById('fDept').value.trim();
-  const msg  = document.getElementById('fMsg').value.trim();
-  const len  = document.getElementById('fMsg').value.length;
-
-  const pm = document.getElementById('previewMsg');
-  if (msg) { pm.textContent = msg; pm.classList.remove('placeholder'); }
-  else { pm.textContent = 'ข้อความของคุณจะแสดงที่นี่...'; pm.classList.add('placeholder'); }
-
-  const av = document.getElementById('previewAv');
-  if (name) { av.textContent = initials(name); av.style.background = colorFor(name); }
-  else { av.textContent = '?'; av.style.background = '#ccc'; }
-
-  document.getElementById('previewName').textContent = name || 'ชื่อของคุณ';
-  document.getElementById('previewDept').textContent = dept;
-  document.getElementById('previewTime').textContent = new Date().toLocaleDateString('th-TH', { day:'numeric', month:'short', year:'2-digit' });
-
-  const cc = document.getElementById('charCount');
-  cc.textContent = `${len} / 400`;
-  cc.classList.toggle('warn', len > 350);
-
-  checkSubmit();
-}
-
-function checkSubmit() {
-  const name = document.getElementById('fName').value.trim();
-  const msg  = document.getElementById('fMsg').value.trim();
-  document.getElementById('btnSubmit').disabled = !(name && msg && selectedCardUrl);
-}
-
-/* ── Submit ── */
-async function submitGreeting() {
-  const name = document.getElementById('fName').value.trim();
-  const dept = document.getElementById('fDept').value.trim();
-  const msg  = document.getElementById('fMsg').value.trim();
-  if (!name || !msg || !selectedCardUrl) return;
-
-  document.getElementById('btnSubmit').disabled = true;
-  document.getElementById('submitSpin').style.display = 'block';
-  document.getElementById('btnLabel').textContent = 'กำลังส่ง...';
-  document.getElementById('statusBox').className = 'status-box';
-
-  try {
-    await sb.post('wishes', {
-      name, dept,
-      message: msg,
-      avatar: selectedCardUrl,
-      top_pos:  Math.floor(Math.random() * 65) + 10,
-      left_pos: Math.floor(Math.random() * 78) + 5,
-      status: 'approved'
-    });
-
-    // Success screen
-    document.getElementById('successMsg').textContent = msg;
-    document.getElementById('successFrom').textContent = '— ' + name + (dept ? ` (${dept})` : '');
-    const si = document.getElementById('successImg');
-    si.src = selectedCardUrl;
-    si.classList.remove('hidden');
-    document.getElementById('successWrap').classList.add('show');
-
-  } catch(e) {
-    const sb2 = document.getElementById('statusBox');
-    sb2.className = 'status-box err';
-    sb2.innerHTML = '❌ ส่งไม่สำเร็จ: ' + e.message;
-    document.getElementById('btnSubmit').disabled = false;
-    document.getElementById('submitSpin').style.display = 'none';
-    document.getElementById('btnLabel').textContent = 'SEND GREETING ✦';
+  if (!filtered.length) {
+    grid.innerHTML = `<div class="empty" style="grid-column:1/-1">
+      <div class="empty-icon">✦</div>
+      <div class="empty-title">ยังไม่มีคำอวยพร</div>
+      <div class="empty-sub">เป็นคนแรกที่ส่งคำอวยพรได้เลย!</div>
+    </div>`;
+    buildDots(0);
+    return;
   }
+
+  grid.innerHTML = page.map((d, i) => {
+    const col    = colorFor(d.name);
+    const ni     = isNewEntry(d.created_at) ? '<span class="card-new">NEW</span>' : '';
+    const hasImg = d.avatar && d.avatar.startsWith('http');
+    return `<div class="card" style="animation-delay:${i*40}ms" onclick='openPop(${JSON.stringify(d).replace(/'/g,"&#39;")})'>
+      <div class="card-img-wrap">
+        ${hasImg
+          ? `<img class="card-img" src="${escHtml(d.avatar)}" alt="" loading="lazy" onclick='event.stopPropagation();openLightbox(${JSON.stringify(d).replace(/'/g,"&#39;")})'>`
+          : `<div class="card-img-placeholder">✦</div>`
+        }
+      </div>
+      <div class="card-bottom">
+        <div class="card-msg">${escHtml(d.message)}</div>
+        <div class="card-footer">
+          <div class="card-av" style="background:${col}">${initials(d.name)}</div>
+          <div class="card-name">${escHtml(d.name)}</div>
+          <div class="card-time">${new Date(d.created_at).toLocaleDateString('th-TH',{day:'numeric',month:'short',year:'2-digit'})}</div>
+          ${ni}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  buildDots(total);
+  document.getElementById('mainScroll').scrollTo(0, 0);
+  document.getElementById('btnPrev').disabled = curPage === 0;
+  document.getElementById('btnNext').disabled = curPage >= total - 1;
 }
 
-/* ── Reset ── */
-function resetForm() {
-  document.getElementById('successWrap').classList.remove('show');
-  document.getElementById('fName').value = '';
-  document.getElementById('fDept').value = '';
-  document.getElementById('fMsg').value = '';
-  document.querySelectorAll('.preset-item').forEach(b => b.classList.remove('selected'));
-  document.getElementById('btnSubmit').disabled = true;
-  document.getElementById('submitSpin').style.display = 'none';
-  document.getElementById('btnLabel').textContent = 'SEND GREETING ✦';
-  document.getElementById('statusBox').className = 'status-box';
-  updatePreview();
+function navigate(dir) {
+  const total = Math.ceil(filtered.length / PER_PAGE);
+  const np = Math.max(0, Math.min(total-1, curPage+dir));
+  if (np !== curPage) { curPage = np; renderPage(); }
 }
 
-init();
+function buildDots(total) {
+  const c = document.getElementById('dots');
+  c.innerHTML = '';
+  for (let i = 0; i < Math.min(total, 10); i++) {
+    const b = document.createElement('button');
+    b.className = 'dot' + (i===0?' active':'');
+    b.setAttribute('data-i', i);
+    b.onclick = () => { curPage = i; renderPage(); };
+    c.appendChild(b);
+  }
+  document.querySelectorAll('.dot[data-i]').forEach(b =>
+    b.classList.toggle('active', +b.getAttribute('data-i') === curPage)
+  );
+}
+
+function openLightbox(d) {
+  document.getElementById('lbImg').src = d.avatar;
+  document.getElementById('lbAv').textContent = initials(d.name);
+  document.getElementById('lbAv').style.background = colorFor(d.name);
+  document.getElementById('lbName').textContent = d.name + (d.dept ? ` (${d.dept})` : '');
+  document.getElementById('lbMsg').textContent = d.message;
+  document.getElementById('lightbox').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('show');
+  document.body.style.overflow = '';
+}
+
+function openPop(d) {
+  document.getElementById('popAv').style.background = colorFor(d.name);
+  document.getElementById('popAv').textContent = initials(d.name);
+  document.getElementById('popName').textContent = d.name;
+  document.getElementById('popDept').textContent = d.dept || '';
+  document.getElementById('popTime').textContent = new Date(d.created_at).toLocaleString('th-TH');
+  document.getElementById('popMsg').textContent = d.message;
+  const img = document.getElementById('popImg');
+  if (d.avatar && d.avatar.startsWith('http')) { img.src = d.avatar; img.classList.remove('hidden'); }
+  else img.classList.add('hidden');
+  document.getElementById('pop').classList.add('show');
+}
+function closePop(e) {
+  if (e && e.target !== document.getElementById('pop')) return;
+  document.getElementById('pop').classList.remove('show');
+}
+
+function showToast(t) {
+  const el = document.getElementById('toast');
+  el.textContent = t; el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2800);
+}
+
+setInterval(async () => {
+  try {
+    const data = await sb.get('wishes', '?status=eq.approved&order=created_at.desc');
+    if (data.length !== allData.length) {
+      allData = data;
+      applyFilter(curFilter);
+      if (data.length > allData.length) showToast('✦ มีคำอวยพรใหม่เข้ามา!');
+    }
+  } catch(_) {}
+}, 30000);
+
+loadData();
 </script>
 </body>
 </html>
