@@ -35,10 +35,17 @@ body{background:#EDE8E1;font-family:var(--thai);color:var(--gray2)}
 .btn-admin{font-size:11px;padding:5px 10px;border-radius:100px;border:var(--border);background:transparent;color:var(--gray1);cursor:pointer;text-decoration:none;transition:all .2s}
 .btn-admin:hover{background:#f5f3ef}
 
+/* MAIN SCROLL AREA */
+.main{
+  position:fixed;top:72px;left:0;right:0;bottom:48px;
+  overflow-y:auto;overflow-x:hidden;
+}
+
 /* BANNER */
-.banner-wrap{position:fixed;top:72px;left:0;right:0;z-index:30}
-.wall-banner{width:100%;height:auto;max-height:400px;object-fit:contain;display:block;background:#000}
+.wall-banner{width:100%;display:block;object-fit:contain;}
 .wall-banner.hidden{display:none}
+
+/* CTA */
 .banner-cta{
   width:100%;padding:12px 20px;
   background:rgba(255,255,255,.96);backdrop-filter:blur(10px);
@@ -53,7 +60,7 @@ body{background:#EDE8E1;font-family:var(--thai);color:var(--gray2)}
   box-shadow:0 4px 16px rgba(255,130,0,.35);
   display:inline-flex;align-items:center;gap:8px;
 }
-.btn-greet:hover{background:var(--od);transform:translateY(-2px);box-shadow:0 6px 20px rgba(255,130,0,.5)}
+.btn-greet:hover{background:var(--od);transform:translateY(-2px)}
 
 /* STATUS BAR */
 .nc-bar{position:fixed;top:72px;left:0;right:0;z-index:40;font-size:12px;padding:5px 20px;display:none;align-items:center;gap:8px;background:#fff8e1;border-bottom:0.5px solid #ffe082;color:#7c6000}
@@ -63,37 +70,36 @@ body{background:#EDE8E1;font-family:var(--thai);color:var(--gray2)}
 .nc-spinner{width:12px;height:12px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:spin .6s linear infinite;flex-shrink:0}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-/* STAGE */
-.stage{position:fixed;top:72px;left:0;right:0;bottom:48px;overflow:hidden;overflow-y:auto;padding:20px 20px 0}
-
-
-.page{position:relative;top:0;padding:20px;display:grid;grid-template-columns:repeat(4,1fr);gap:14px;transition:opacity .35s,transform .35s;will-change:transform,opacity}
-.page.out-left{opacity:0;transform:translateX(-40px)}
-.page.out-right{opacity:0;transform:translateX(40px)}
-.page.hidden{display:none}
+/* CARDS GRID */
+.cards-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+  padding:16px;
+}
 
 /* CARD */
-.card{background:#fff;border-radius:10px;border:var(--border);overflow:hidden;cursor:pointer;transition:box-shadow .2s,transform .2s;display:flex;flex-direction:column;min-height:160px;opacity:0;animation:cardIn .4s forwards;position:relative}
-.card:hover{box-shadow:0 0 0 2px rgba(255,130,0,.5), 0 0 20px rgba(255,130,0,.3), 0 8px 24px rgba(0,0,0,.15);transform:translateY(-3px)}
+.card{background:#fff;border-radius:10px;border:var(--border);overflow:hidden;cursor:pointer;transition:box-shadow .2s,transform .2s;display:flex;flex-direction:column;opacity:0;animation:cardIn .4s forwards}
+.card:hover{box-shadow:0 0 0 2px rgba(255,130,0,.5),0 0 20px rgba(255,130,0,.3),0 8px 24px rgba(0,0,0,.15);transform:translateY(-3px)}
 @keyframes cardIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-.card-img{width:100%;flex:1;object-fit:cover;display:block;min-height:110px;background:#f0ede8}
-.card-img-placeholder{width:100%;flex:1;min-height:110px;background:linear-gradient(135deg,#f0ede8,#e5e0d8);display:flex;align-items:center;justify-content:center;font-size:28px;opacity:.3}
-.card-bottom{padding:8px 10px;background:#fff;border-top:var(--border)}
+.card-img{width:100%;height:130px;object-fit:cover;display:block;background:#f0ede8}
+.card-img-placeholder{width:100%;height:130px;background:linear-gradient(135deg,#f0ede8,#e5e0d8);display:flex;align-items:center;justify-content:center;font-size:28px;opacity:.3}
+.card-bottom{padding:8px 10px}
 .card-msg{font-family:var(--serif);font-size:12px;line-height:1.5;color:var(--gray2);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:6px}
 .card-footer{display:flex;align-items:center;gap:6px}
-.card-av{width:22px;height:22px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;color:#fff}
+.card-av{width:20px;height:20px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:600;color:#fff}
 .card-name{font-size:11px;font-weight:500;color:var(--gray2);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .card-time{font-size:10px;color:var(--gray1)}
-.card-new{display:inline-flex;align-items:center;font-size:9px;background:#fff3e0;color:var(--o);border-radius:100px;padding:1px 6px;font-weight:600;letter-spacing:.04em}
+.card-new{font-size:9px;background:#fff3e0;color:var(--o);border-radius:100px;padding:1px 6px;font-weight:600}
 
 /* EMPTY */
-.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:calc(100vh - 52px - 48px);gap:12px;text-align:center}
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;gap:12px;text-align:center}
 .empty-icon{font-size:40px;opacity:.25}
 .empty-title{font-family:var(--disp);font-size:18px;color:var(--gray1);letter-spacing:.05em}
 .empty-sub{font-size:13px;color:var(--gray1);line-height:1.6}
 
 /* PAGINATION */
-.pager{position:fixed;bottom:0;left:0;right:0;height:48px;background:rgba(255,255,255,.96);backdrop-filter:blur(10px);border-top:var(--border);display:flex;align-items:center;justify-content:center;gap:10px}
+.pager{position:fixed;bottom:0;left:0;right:0;height:48px;background:rgba(255,255,255,.96);backdrop-filter:blur(10px);border-top:var(--border);display:flex;align-items:center;justify-content:center;gap:10px;z-index:50}
 .pager-btn{width:30px;height:30px;border-radius:50%;border:var(--border);background:transparent;cursor:pointer;font-size:16px;color:var(--gray2);display:flex;align-items:center;justify-content:center;transition:all .2s}
 .pager-btn:hover:not(:disabled){background:var(--o);color:#fff;border-color:var(--o)}
 .pager-btn:disabled{opacity:.3;cursor:not-allowed}
@@ -107,7 +113,7 @@ body{background:#EDE8E1;font-family:var(--thai);color:var(--gray2)}
 .pop-card{background:#fff;border-radius:16px;max-width:640px;width:100%;overflow:hidden;position:relative;animation:popIn .25s ease}
 @keyframes popIn{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:scale(1)}}
 .pop-close{position:absolute;top:12px;right:12px;width:30px;height:30px;border-radius:50%;border:none;background:rgba(0,0,0,.4);cursor:pointer;font-size:16px;color:#fff;display:flex;align-items:center;justify-content:center;z-index:10}
-.pop-img{width:100%;height:380px;object-fit:cover;display:block;background:#f0ede8}
+.pop-img{width:100%;height:300px;object-fit:cover;display:block}
 .pop-img.hidden{display:none}
 .pop-body{padding:20px 24px 24px}
 .pop-info{display:flex;align-items:center;gap:10px;margin-bottom:14px}
@@ -117,30 +123,30 @@ body{background:#EDE8E1;font-family:var(--thai);color:var(--gray2)}
 .pop-time{font-size:11px;color:var(--gray1);margin-left:auto;white-space:nowrap}
 .pop-msg{font-family:var(--serif);font-size:18px;line-height:1.8;color:var(--gray2);padding-top:14px;border-top:var(--border)}
 
-/* TOAST */
-.toast{position:fixed;bottom:60px;left:50%;transform:translateX(-50%) translateY(12px);background:rgba(34,34,33,.88);color:#fff;font-size:13px;padding:8px 18px;border-radius:100px;z-index:300;opacity:0;transition:all .25s;pointer-events:none;white-space:nowrap}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-
 /* LIGHTBOX */
 .lightbox{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.92);display:none;align-items:center;justify-content:center;cursor:zoom-out}
 .lightbox.show{display:flex}
-.lightbox img{max-width:95vw;max-height:92vh;object-fit:contain;border-radius:4px;animation:popIn .2s ease}
-.lightbox-close{position:absolute;top:16px;right:20px;color:#fff;font-size:28px;cursor:pointer;opacity:.7;transition:opacity .2s;background:none;border:none;line-height:1}
+.lightbox img{max-width:95vw;max-height:92vh;object-fit:contain;border-radius:4px}
+.lightbox-close{position:absolute;top:16px;right:20px;color:#fff;font-size:28px;cursor:pointer;opacity:.7;background:none;border:none;line-height:1}
 .lightbox-close:hover{opacity:1}
 .lb-info{position:absolute;bottom:0;left:0;right:0;padding:16px 24px;background:linear-gradient(transparent,rgba(0,0,0,.7));color:#fff;display:flex;align-items:center;gap:12px}
 .lb-av{width:36px;height:36px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:#fff}
 .lb-name{font-size:14px;font-weight:600}
 .lb-msg{font-size:13px;opacity:.8;margin-top:2px}
 
+/* TOAST */
+.toast{position:fixed;bottom:60px;left:50%;transform:translateX(-50%) translateY(12px);background:rgba(34,34,33,.88);color:#fff;font-size:13px;padding:8px 18px;border-radius:100px;z-index:300;opacity:0;transition:all .25s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
 /* RESPONSIVE */
 @media(max-width:768px){
-  .wall-banner{height:200px}
-  .btn-greet{font-size:12px;padding:10px 24px}
-  .page{grid-template-columns:repeat(2,1fr)}
+  .cards-grid{grid-template-columns:repeat(2,1fr);gap:10px;padding:12px}
   .wall-header{height:60px}
+  .main{top:60px}
 }
-@media(max-width:680px){.h-brand{font-size:15px}}
-@media(max-width:420px){.page{grid-template-columns:repeat(2,1fr)}!important}
+@media(max-width:420px){
+  .cards-grid{grid-template-columns:repeat(2,1fr)}
+}
 </style>
 </head>
 <body>
@@ -155,16 +161,7 @@ body{background:#EDE8E1;font-family:var(--thai);color:var(--gray2)}
   </div>
   <div class="h-right">
     <a class="btn-admin" href="aufsicht.html">⚙ Admin</a>
-    <!-- ปุ่มส่งคำอวยพร fallback (กรณีไม่มี banner) -->
     <a class="btn-greet" id="headerGreetBtn" href="anniversary-greeting.html" style="display:none">✦ ส่งคำอวยพร</a>
-  </div>
-</div>
-
-<!-- BANNER + ปุ่มส่งคำอวยพร -->
-<div class="banner-wrap hidden" id="bannerWrap">
-  <img class="wall-banner" id="wallBanner" src="" alt="banner">
-  <div class="banner-cta">
-    <a class="btn-greet" href="anniversary-greeting.html">✦ ส่งคำอวยพร</a>
   </div>
 </div>
 
@@ -173,14 +170,28 @@ body{background:#EDE8E1;font-family:var(--thai);color:var(--gray2)}
   <span id="ncMsg">กำลังโหลด...</span>
 </div>
 
-<div class="stage" id="stage"></div>
+<!-- MAIN SCROLL -->
+<div class="main" id="mainScroll">
+  <!-- BANNER -->
+  <div id="bannerSection" style="display:none">
+    <img class="wall-banner" id="wallBanner" src="" alt="banner">
+    <div class="banner-cta">
+      <a class="btn-greet" href="anniversary-greeting.html">✦ ส่งคำอวยพร</a>
+    </div>
+  </div>
 
-<div class="pager">
-  <button class="pager-btn" id="btnPrev" onclick="navigate(-1)">&#8592;</button>
-  <div class="dots" id="dots"></div>
-  <button class="pager-btn" id="btnNext" onclick="navigate(1)">&#8594;</button>
+  <!-- CARDS -->
+  <div class="cards-grid" id="cardsGrid"></div>
+
+  <!-- PAGINATION -->
+  <div style="display:flex;justify-content:center;align-items:center;gap:10px;padding:10px 0 60px">
+    <button class="pager-btn" id="btnPrev" onclick="navigate(-1)">&#8592;</button>
+    <div class="dots" id="dots"></div>
+    <button class="pager-btn" id="btnNext" onclick="navigate(1)">&#8594;</button>
+  </div>
 </div>
 
+<!-- POPUP -->
 <div class="pop-backdrop" id="pop" onclick="closePop(event)">
   <div class="pop-card">
     <button class="pop-close" onclick="closePop()">✕</button>
@@ -199,6 +210,7 @@ body{background:#EDE8E1;font-family:var(--thai);color:var(--gray2)}
   </div>
 </div>
 
+<!-- LIGHTBOX -->
 <div class="lightbox" id="lightbox" onclick="closeLightbox()">
   <button class="lightbox-close" onclick="closeLightbox()">✕</button>
   <img id="lbImg" src="" alt="">
@@ -216,7 +228,7 @@ body{background:#EDE8E1;font-family:var(--thai);color:var(--gray2)}
 <script src="supabase.js"></script>
 <script>
 let allData = [], filtered = [], curFilter = 'all', curPage = 0;
-const PER_PAGE = 9;
+const PER_PAGE = 12;
 let settings = {};
 
 function setBar(state, msg) {
@@ -235,22 +247,20 @@ async function loadData() {
       sb.get('settings', '?select=setting_key,setting_value')
     ]);
     sets.forEach(r => settings[r.setting_key] = r.setting_value);
+
     const year = settings.header_th?.match(/\d+/)?.[0] || '30';
     document.getElementById('hYear').textContent = ` — ${year} ปี`;
+
     if (settings.logo_image) {
-      const logo = document.getElementById('hLogo');
-      logo.src = settings.logo_image;
-      logo.style.display = 'block';
+      document.getElementById('hLogo').src = settings.logo_image;
+      document.getElementById('hLogo').style.display = 'block';
       document.getElementById('hBrand').style.display = 'none';
     }
 
     if (settings.banner_image) {
-      // มี banner — แสดง banner พร้อมปุ่มซ้อนอยู่
       document.getElementById('wallBanner').src = settings.banner_image;
-      document.getElementById('bannerWrap').classList.remove('hidden');
-      document.querySelector('.stage').classList.add('has-banner');
+      document.getElementById('bannerSection').style.display = 'block';
     } else {
-      // ไม่มี banner — แสดงปุ่มใน header แทน
       document.getElementById('headerGreetBtn').style.display = 'flex';
     }
 
@@ -259,82 +269,67 @@ async function loadData() {
     setBar('ok', `✓ โหลดสำเร็จ — ${wishes.length} คำอวยพร`);
   } catch(e) {
     setBar('err', '❌ โหลดไม่สำเร็จ: ' + e.message);
-    renderEmpty('โหลดข้อมูลไม่ได้', 'กรุณาลองใหม่อีกครั้ง');
   }
 }
 
 function applyFilter(f) {
   curFilter = f;
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', (f==='all'&&b.textContent==='ทั้งหมด')||(f==='new'&&b.textContent==='ใหม่')));
+  document.querySelectorAll('.filter-btn').forEach(b =>
+    b.classList.toggle('active', (f==='all'&&b.textContent==='ทั้งหมด')||(f==='new'&&b.textContent==='ใหม่'))
+  );
   filtered = f === 'new' ? allData.filter(d => isNewEntry(d.created_at)) : [...allData];
   document.getElementById('liveCount').textContent = filtered.length;
   curPage = 0;
-  buildPages();
-  showPage(0, 0);
+  renderPage();
 }
 function setFilter(f) { applyFilter(f); }
 
-function buildPages() {
-  const stage = document.getElementById('stage');
-  stage.innerHTML = '';
-  if (!filtered.length) { renderEmpty('ยังไม่มีคำอวยพร', 'เป็นคนแรกที่ส่งคำอวยพรได้เลย!'); return; }
+function renderPage() {
+  const grid = document.getElementById('cardsGrid');
   const total = Math.ceil(filtered.length / PER_PAGE);
-  for (let p = 0; p < total; p++) {
-    const div = document.createElement('div');
-    div.className = 'page hidden';
-    div.id = 'page-' + p;
-    filtered.slice(p * PER_PAGE, (p+1) * PER_PAGE).forEach((d, i) => {
-      const col = colorFor(d.name);
-      const ni = isNewEntry(d.created_at) ? '<span class="card-new">NEW</span>' : '';
-      const hasImg = d.avatar && d.avatar.startsWith('http');
-      div.innerHTML += `
-        <div class="card" style="animation-delay:${i*40}ms" onclick='openPop(${JSON.stringify(d).replace(/'/g,"&#39;")})'>
-          ${hasImg
-            ? `<img class="card-img" src="${escHtml(d.avatar)}" alt="" loading="lazy" onclick='event.stopPropagation();openLightbox(${JSON.stringify(d).replace(/'/g,"&#39;")})'>`
-            : `<div class="card-img-placeholder">✦</div>`
-          }
-          <div class="card-bottom">
-            <div class="card-msg">${escHtml(d.message)}</div>
-            <div class="card-footer">
-              <div class="card-av" style="background:${col}">${initials(d.name)}</div>
-              <div class="card-name">${escHtml(d.name)}</div>
-              <div class="card-time">${timeAgo(d.created_at)}</div>
-              ${ni}
-            </div>
-          </div>
-        </div>`;
-    });
-    stage.appendChild(div);
+  const page  = filtered.slice(curPage * PER_PAGE, (curPage+1) * PER_PAGE);
+
+  if (!filtered.length) {
+    grid.innerHTML = `<div class="empty" style="grid-column:1/-1">
+      <div class="empty-icon">✦</div>
+      <div class="empty-title">ยังไม่มีคำอวยพร</div>
+      <div class="empty-sub">เป็นคนแรกที่ส่งคำอวยพรได้เลย!</div>
+    </div>`;
+    buildDots(0);
+    return;
   }
+
+  grid.innerHTML = page.map((d, i) => {
+    const col    = colorFor(d.name);
+    const ni     = isNewEntry(d.created_at) ? '<span class="card-new">NEW</span>' : '';
+    const hasImg = d.avatar && d.avatar.startsWith('http');
+    return `<div class="card" style="animation-delay:${i*40}ms" onclick='openPop(${JSON.stringify(d).replace(/'/g,"&#39;")})'>
+      ${hasImg
+        ? `<img class="card-img" src="${escHtml(d.avatar)}" alt="" loading="lazy" onclick='event.stopPropagation();openLightbox(${JSON.stringify(d).replace(/'/g,"&#39;")})'>`
+        : `<div class="card-img-placeholder">✦</div>`
+      }
+      <div class="card-bottom">
+        <div class="card-msg">${escHtml(d.message)}</div>
+        <div class="card-footer">
+          <div class="card-av" style="background:${col}">${initials(d.name)}</div>
+          <div class="card-name">${escHtml(d.name)}</div>
+          <div class="card-time">${timeAgo(d.created_at)}</div>
+          ${ni}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
   buildDots(total);
-}
-
-function renderEmpty(title, sub) {
-  document.getElementById('stage').innerHTML = `<div class="empty"><div class="empty-icon">✦</div><div class="empty-title">${title}</div><div class="empty-sub">${sub}</div></div>`;
-  buildDots(0);
-}
-
-function showPage(idx, dir) {
-  const pages = document.querySelectorAll('.page');
-  if (!pages.length) return;
-  const prev = document.getElementById('page-' + curPage);
-  if (prev && prev !== pages[idx]) {
-    prev.classList.remove('hidden');
-    prev.classList.add(dir > 0 ? 'out-left' : 'out-right');
-    setTimeout(() => { prev.classList.add('hidden'); prev.classList.remove('out-left','out-right'); }, 350);
-  }
-  curPage = idx;
-  const cur = document.getElementById('page-' + curPage);
-  if (cur) cur.classList.remove('hidden','out-left','out-right');
-  updateDots();
+  document.getElementById('mainScroll').scrollTo(0, 0);
   document.getElementById('btnPrev').disabled = curPage === 0;
-  document.getElementById('btnNext').disabled = curPage >= document.querySelectorAll('.page').length - 1;
+  document.getElementById('btnNext').disabled = curPage >= total - 1;
 }
 
 function navigate(dir) {
-  const total = document.querySelectorAll('.page').length;
+  const total = Math.ceil(filtered.length / PER_PAGE);
   const np = Math.max(0, Math.min(total-1, curPage+dir));
-  if (np !== curPage) showPage(np, dir);
+  if (np !== curPage) { curPage = np; renderPage(); }
 }
 
 function buildDots(total) {
@@ -342,14 +337,14 @@ function buildDots(total) {
   c.innerHTML = '';
   for (let i = 0; i < Math.min(total, 10); i++) {
     const b = document.createElement('button');
-    b.className = 'dot' + (i===0 ? ' active' : '');
+    b.className = 'dot' + (i===0?' active':'');
     b.setAttribute('data-i', i);
-    b.onclick = () => showPage(i, i > curPage ? 1 : -1);
+    b.onclick = () => { curPage = i; renderPage(); };
     c.appendChild(b);
   }
-}
-function updateDots() {
-  document.querySelectorAll('.dot[data-i]').forEach(b => b.classList.toggle('active', +b.getAttribute('data-i') === curPage));
+  document.querySelectorAll('.dot[data-i]').forEach(b =>
+    b.classList.toggle('active', +b.getAttribute('data-i') === curPage)
+  );
 }
 
 function openLightbox(d) {
@@ -391,12 +386,11 @@ function showToast(t) {
 
 setInterval(async () => {
   try {
-    const prev = allData.length;
     const data = await sb.get('wishes', '?status=eq.approved&order=created_at.desc');
-    if (data.length !== prev) {
+    if (data.length !== allData.length) {
       allData = data;
       applyFilter(curFilter);
-      if (data.length > prev) showToast('✦ มีคำอวยพรใหม่เข้ามา!');
+      if (data.length > allData.length) showToast('✦ มีคำอวยพรใหม่เข้ามา!');
     }
   } catch(_) {}
 }, 30000);
